@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Message sent confirmation page.">
+    <title>Thank You | Chandra Prakash</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #070b14;
+            --panel: #0f172a;
+            --soft: #131d34;
+            --text: #e5ecff;
+            --muted: #9daccc;
+            --accent: #57c7ff;
+            --accent-2: #7df7c5;
+            --border: rgba(188, 206, 255, 0.2);
+            --shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Manrope", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(900px 480px at 8% -8%, rgba(87, 199, 255, 0.26), transparent 60%),
+                radial-gradient(760px 420px at 100% 10%, rgba(125, 247, 197, 0.2), transparent 65%),
+                var(--bg);
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .thanks-shell {
+            position: relative;
+            width: min(1020px, 100%);
+            display: grid;
+            grid-template-columns: 320px 1.1fr;
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        .glow {
+            position: absolute;
+            pointer-events: none;
+            inset: 0;
+            z-index: -1;
+        }
+
+        .glow::before,
+        .glow::after {
+            content: "";
+            position: absolute;
+            border-radius: 999px;
+            filter: blur(36px);
+            opacity: 0.45;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .glow::before {
+            width: 180px;
+            height: 180px;
+            top: -38px;
+            left: -36px;
+            background: rgba(87, 199, 255, 0.45);
+        }
+
+        .glow::after {
+            width: 220px;
+            height: 220px;
+            right: -52px;
+            bottom: -52px;
+            background: rgba(125, 247, 197, 0.35);
+            animation-delay: 1.5s;
+        }
+
+        .thanks-card {
+            background: color-mix(in oklab, var(--panel) 92%, transparent);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            padding: 34px;
+            backdrop-filter: blur(8px);
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--accent);
+            background: color-mix(in oklab, var(--accent) 17%, transparent);
+            border: 1px solid var(--border);
+        }
+
+        h1 {
+            margin: 14px 0 10px;
+            font-family: "Sora", sans-serif;
+            font-size: clamp(2rem, 5vw, 2.9rem);
+            line-height: 1.12;
+        }
+
+        .lead {
+            margin: 0;
+            font-size: 1.02rem;
+            color: var(--muted);
+            max-width: 48ch;
+        }
+
+        .meta {
+            margin-top: 18px;
+            display: grid;
+            gap: 10px;
+        }
+
+        .meta-item {
+            display: grid;
+            grid-template-columns: 26px 1fr;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: color-mix(in oklab, var(--soft) 88%, transparent);
+            color: var(--muted);
+            font-size: 0.94rem;
+        }
+
+        .meta-item strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .actions {
+            margin-top: 22px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 11px 16px;
+            border: 1px solid transparent;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .btn-primary {
+            color: #07101f;
+            background: linear-gradient(120deg, var(--accent), var(--accent-2));
+        }
+
+        .btn-secondary {
+            color: var(--text);
+            background: var(--soft);
+            border-color: var(--border);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .side-panel {
+            background: color-mix(in oklab, var(--panel) 88%, transparent);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            box-shadow: var(--shadow);
+            padding: 16px;
+            display: grid;
+            gap: 12px;
+            align-content: start;
+        }
+
+        .sticker {
+            width: 100%;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            display: block;
+        }
+
+        .code-note {
+            margin: 0;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 10px 12px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.84rem;
+            line-height: 1.4;
+            color: var(--muted);
+            background: color-mix(in oklab, var(--soft) 85%, transparent);
+        }
+
+        .social-list {
+            margin: 4px 0 0;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .bounce-line {
+            height: 2px;
+            width: 88%;
+            margin: 2px auto 0;
+            border-radius: 999px;
+            background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--accent) 60%, var(--border)), transparent);
+            box-shadow: 0 0 10px color-mix(in oklab, var(--accent) 35%, transparent);
+        }
+
+        .social-link {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--soft);
+            color: var(--text);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+            animation: bounceA 1.35s cubic-bezier(0.32, 0, 0.2, 1) infinite;
+        }
+
+        .social-link:nth-child(2) {
+            animation: bounceB 1.58s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+            animation-delay: 0.08s;
+        }
+
+        .social-link:nth-child(3) {
+            animation: bounceC 1.27s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+            animation-delay: 0.16s;
+        }
+
+        .social-link:hover {
+            color: var(--accent);
+            border-color: color-mix(in oklab, var(--accent) 50%, var(--border));
+        }
+
+        .social-link svg {
+            width: 19px;
+            height: 19px;
+            fill: currentColor;
+        }
+
+        .mini-panel {
+            margin-top: 8px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: color-mix(in oklab, var(--soft) 82%, transparent);
+            padding: 10px 12px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .mini-title {
+            margin: 0;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .mini-row {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes bounceA {
+            0%, 100% { transform: translateY(0); }
+            22% { transform: translateY(-9px); }
+            40% { transform: translateY(1px); }
+            58% { transform: translateY(-5px); }
+            76% { transform: translateY(0); }
+        }
+
+        @keyframes bounceB {
+            0%, 100% { transform: translateY(0); }
+            18% { transform: translateY(-5px); }
+            33% { transform: translateY(0); }
+            52% { transform: translateY(-11px); }
+            70% { transform: translateY(1px); }
+            84% { transform: translateY(-3px); }
+        }
+
+        @keyframes bounceC {
+            0%, 100% { transform: translateY(0); }
+            16% { transform: translateY(-10px); }
+            31% { transform: translateY(1px); }
+            47% { transform: translateY(-4px); }
+            66% { transform: translateY(-8px); }
+            82% { transform: translateY(0); }
+        }
+
+        @media (max-width: 860px) {
+            .thanks-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .side-panel {
+                max-width: 320px;
+                margin-inline: auto;
+            }
+        }
+
+        @media (max-width: 560px) {
+            body {
+                padding: 14px;
+                display: block;
+            }
+
+            .thanks-card {
+                padding: 22px 18px;
+                border-radius: 18px;
+            }
+
+            .side-panel {
+                width: 100%;
+                max-width: none;
+            }
+
+            .thanks-shell {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="thanks-shell">
+        <div class="glow" aria-hidden="true"></div>
+
+        <aside class="side-panel" aria-label="Thank you side panel">
+            <img class="sticker" src="sticker.png" alt="Sticker illustration">
+            <p class="code-note">return "Thanks for reaching out. I will contact you soon.";</p>
+            <div class="social-list" aria-label="Social media profiles">
+                <a class="social-link" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram profile">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M7.75 2h8.5A5.76 5.76 0 0 1 22 7.75v8.5A5.76 5.76 0 0 1 16.25 22h-8.5A5.76 5.76 0 0 1 2 16.25v-8.5A5.76 5.76 0 0 1 7.75 2Zm0 1.8A3.96 3.96 0 0 0 3.8 7.75v8.5A3.96 3.96 0 0 0 7.75 20.2h8.5a3.96 3.96 0 0 0 3.95-3.95v-8.5a3.96 3.96 0 0 0-3.95-3.95h-8.5ZM17.2 6.2a1.05 1.05 0 1 1 0 2.1 1.05 1.05 0 0 1 0-2.1ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.8a3.2 3.2 0 1 0 0 6.4 3.2 3.2 0 0 0 0-6.4Z"/>
+                    </svg>
+                </a>
+                <a class="social-link" href="https://github.com/Chandra170905" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.17c-3.34.73-4.04-1.42-4.04-1.42-.55-1.36-1.33-1.72-1.33-1.72-1.09-.73.08-.72.08-.72 1.2.08 1.83 1.23 1.83 1.23 1.08 1.83 2.82 1.3 3.5 1 .11-.78.42-1.31.76-1.61-2.66-.3-5.47-1.31-5.47-5.92 0-1.31.47-2.39 1.24-3.24-.13-.3-.54-1.53.12-3.2 0 0 1-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.6a11.7 11.7 0 0 1 3 .4c2.3-1.55 3.3-1.23 3.3-1.23.66 1.67.25 2.9.12 3.2.77.85 1.24 1.93 1.24 3.24 0 4.62-2.81 5.61-5.49 5.91.43.37.82 1.09.82 2.2v3.26c0 .32.22.69.83.58A12 12 0 0 0 12 .5Z"/>
+                    </svg>
+                </a>
+                <a class="social-link" href="https://www.linkedin.com/in/chandra-prakash-2960553a0/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5 2.5 2.5 0 0 0 4.98 3.5ZM3 9.5h4v11H3v-11Zm7 0h3.84v1.6h.05c.53-1 1.84-2.05 3.8-2.05 4.06 0 4.81 2.67 4.81 6.14v5.31h-4v-4.7c0-1.12-.02-2.56-1.56-2.56-1.56 0-1.8 1.22-1.8 2.48v4.78h-4v-11Z"/>
+                    </svg>
+                </a>
+            </div>
+            <div class="bounce-line" aria-hidden="true"></div>
+            <div class="mini-panel">
+                <p class="mini-title">Quick Info</p>
+                <p class="mini-row">Reply window: 24-48 hours</p>
+                <p class="mini-row">Best contact: chandra170905@gmail.com</p>
+            </div>
+        </aside>
+
+        <section class="thanks-card">
+            <span class="tag">Message Received</span>
+            <h1>Thank you. Your request just landed in my inbox.</h1>
+            <p class="lead">I have received your details successfully. I will review your message and reply within 24-48 hours.</p>
+
+            <div class="meta">
+                <div class="meta-item">
+                    <span>1.</span>
+                    <p><strong>Status:</strong> Form submitted successfully.</p>
+                </div>
+                <div class="meta-item">
+                    <span>2.</span>
+                    <p><strong>Response Time:</strong> Usually within 1-2 business days.</p>
+                </div>
+                <div class="meta-item">
+                    <span>3.</span>
+                    <p><strong>Direct Email:</strong> chandra170905@gmail.com</p>
+                </div>
+            </div>
+
+            <div class="actions">
+                <a class="btn btn-primary" href="index.html">Back To Home</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

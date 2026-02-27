@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Chandra Prakash - Frontend-focused web developer portfolio.">
+    <title>Chandra Prakash | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-row">
+            <a class="brand" href="#home">Chandra Prakash</a>
+            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primaryNav">
+                <span></span><span></span><span></span>
+                <span class="sr-only">Toggle navigation</span>
+            </button>
+            <nav class="nav" id="primaryNav">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#projects">Projects</a>
+                <a href="#certificates">Certificates</a>
+                <a href="#coding">Coding</a>
+                <a href="#experience">Experience</a>
+                <a href="#contact">Contact</a>
+                <a href="about.html">More About</a>
+            </nav>
+            <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">Dark</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero section" id="home">
+            <div class="container hero-grid reveal">
+                <div class="hero-content">
+                    <p class="eyebrow">Open To Frontend Opportunities</p>
+                    <h1>Building clean, responsive, user-first web experiences.</h1>
+                    <p class="subtext">I am Chandra, a <span id="typingText" class="typed"></span> focused on modern UI, performance, and accessibility.</p>
+                    <div class="cta-row">
+                        <button class="btn btn-primary" id="hireMeBtn" type="button">Hire Me</button>
+                        <a class="btn btn-secondary" href="#projects">View Projects</a>
+                    </div>
+                    <ul class="quick-stats">
+                        <li><strong>15+</strong><span>UI Components</span></li>
+                        <li><strong>8+</strong><span>Projects Built</span></li>
+                        <li><strong>100%</strong><span>Responsive Design</span></li>
+                    </ul>
+                </div>
+                <div class="hero-photo-wrap">
+                    <img class="hero-photo" src="pfp.jpg" alt="Portrait of Chandra Prakash">
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="about">
+            <div class="container split reveal">
+                <div>
+                    <h2>About Me</h2>
+                    <p>I design and build websites that feel smooth on mobile, clear on desktop, and usable for real users. My workflow combines practical design thinking with solid frontend development.</p>
+                    <p>I enjoy transforming rough ideas into polished interfaces and improving existing products with better layout structure, hierarchy, and interaction feedback.</p>
+                    <a class="text-link" href="about.html">Read detailed profile</a>
+                </div>
+                <div class="panel">
+                    <h3>Core Stack</h3>
+                    <div class="skill-bars">
+                        <div class="skill-item"><span>HTML / Semantic Layout</span><div class="bar"><i style="width:92%"></i></div></div>
+                        <div class="skill-item"><span>CSS / Responsive UI</span><div class="bar"><i style="width:90%"></i></div></div>
+                        <div class="skill-item"><span>JavaScript / DOM UX</span><div class="bar"><i style="width:84%"></i></div></div>
+                        <div class="skill-item"><span>UI/UX Thinking</span><div class="bar"><i style="width:86%"></i></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="projects">
+            <div class="container reveal">
+                <div class="section-head">
+                    <h2>Featured Projects</h2>
+                    <div class="filters" id="projectFilters">
+                        <button class="chip active" data-filter="all" type="button">All</button>
+                        <button class="chip" data-filter="business" type="button">Business</button>
+                        <button class="chip" data-filter="web" type="button">Web Apps</button>
+                        <button class="chip" data-filter="landing" type="button">Landing</button>
+                    </div>
+                    <div class="slider-controls" aria-label="Project slider controls">
+                        <button class="slider-btn" data-target="projectGrid" data-dir="prev" type="button" aria-label="Previous projects">‹</button>
+                        <button class="slider-btn" data-target="projectGrid" data-dir="next" type="button" aria-label="Next projects">›</button>
+                    </div>
+                </div>
+                <div class="slider-track project-slider" id="projectGrid">
+                    <article class="project-card" data-category="business">
+                        <h3>Friday - Your Local Buddy</h3>
+                        <p>Community-focused web platform for local support and discovery.</p>
+                        <span>Web App</span>
+                        <div class="project-preview">
+                            <iframe src="https://chandra170905.github.io/Friday-your-Local-buddy/" title="Friday - Your Local Buddy Preview" loading="lazy"></iframe>
+                        </div>
+                        <div class="project-actions">
+                            <a class="btn btn-secondary" href="https://chandra170905.github.io/Friday-your-Local-buddy/" target="_blank" rel="noopener noreferrer">Open Live Project</a>
+                        </div>
+                    </article>
+                    <article class="project-card" data-category="landing">
+                        <h3>Hexa Clothing</h3>
+                        <p>Modern clothing storefront with focused product presentation.</p>
+                        <span>Ecommerce / Landing</span>
+                        <div class="project-preview">
+                            <iframe src="https://hexaclothing.onrender.com" title="Hexa Clothing Preview" loading="lazy"></iframe>
+                        </div>
+                        <div class="project-actions">
+                            <a class="btn btn-secondary" href="https://hexaclothing.onrender.com" target="_blank" rel="noopener noreferrer">Open Live Project</a>
+                        </div>
+                    </article>
+                    <article class="project-card" data-category="web">
+                        <h3>Swift Movers</h3>
+                        <p>Service website for relocation and moving solutions.</p>
+                        <span>Business Website</span>
+                        <div class="project-preview">
+                            <iframe src="https://swift-movers.onrender.com" title="Swift Movers Preview" loading="lazy"></iframe>
+                        </div>
+                        <div class="project-actions">
+                            <a class="btn btn-secondary" href="https://swift-movers.onrender.com" target="_blank" rel="noopener noreferrer">Open Live Project</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="certificates">
+            <div class="container reveal">
+                <h2>Certificates</h2>
+                <p class="section-subtext">Organized by category from your full certificate collection.</p>
+                <div class="slider-controls" aria-label="Certificate slider controls">
+                    <button class="slider-btn" data-target="certificateGrid" data-dir="prev" type="button" aria-label="Previous certificates">‹</button>
+                    <button class="slider-btn" data-target="certificateGrid" data-dir="next" type="button" aria-label="Next certificates">›</button>
+                </div>
+                <div class="slider-track cert-slider" id="certificateGrid">
+                    <article class="cert-card">
+                        <p class="cert-tag">Programming Foundations</p>
+                        <h3>C Certificate</h3>
+                        <div class="cert-preview"><iframe src="certificates/C%20certificate.pdf#toolbar=0" title="C Certificate Preview" loading="lazy"></iframe></div>
+                        <a class="btn btn-secondary" href="certificates/C%20certificate.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Programming Foundations</p>
+                        <h3>C++ Certificate</h3>
+                        <div class="cert-preview"><iframe src="certificates/C%2B%2B%20certificate.pdf#toolbar=0" title="C++ Certificate Preview" loading="lazy"></iframe></div>
+                        <a class="btn btn-secondary" href="certificates/C%2B%2B%20certificate.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Programming Foundations</p>
+                        <h3>Java Certificate</h3>
+                        <div class="cert-preview"><iframe src="certificates/java%20certificate.pdf#toolbar=0" title="Java Certificate Preview" loading="lazy"></iframe></div>
+                        <a class="btn btn-secondary" href="certificates/java%20certificate.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Programming Foundations</p>
+                        <h3>DSA Certificate</h3>
+                        <div class="cert-preview"><iframe src="certificates/DSA%20certificate.pdf#toolbar=0" title="DSA Certificate Preview" loading="lazy"></iframe></div>
+                        <a class="btn btn-secondary" href="certificates/DSA%20certificate.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Web Development</p>
+                        <h3>freeCodeCamp</h3>
+                        <div class="cert-preview"><iframe src="certificates/freecode%20camp.pdf#toolbar=0" title="freeCodeCamp Certificate Preview" loading="lazy"></iframe></div>
+                        <a class="btn btn-secondary" href="certificates/freecode%20camp.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Web Development</p>
+                        <h3>Web Developer Certificate</h3>
+                        <div class="cert-preview"><img src="certificates/webdevloper.jpg" alt="Web Developer Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/webdevloper.jpg" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Web Development</p>
+                        <h3>Skillstone Certificate</h3>
+                        <div class="cert-preview"><img src="certificates/Skillstone.png" alt="Skillstone Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/Skillstone.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">AI and Generative AI</p>
+                        <h3>Build Generative AI Apps</h3>
+                        <div class="cert-preview"><iframe src="certificates/Build%20Generative%20AI%20Apps.pdf#toolbar=0" title="Build Generative AI Apps Preview" loading="lazy"></iframe></div>
+                        <a class="btn btn-secondary" href="certificates/Build%20Generative%20AI%20Apps.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">AI and Generative AI</p>
+                        <h3>Master Generative AI</h3>
+                        <div class="cert-preview"><iframe src="certificates/Master%20Generative%20AI.pdf#toolbar=0" title="Master Generative AI Preview" loading="lazy"></iframe></div>
+                        <a class="btn btn-secondary" href="certificates/Master%20Generative%20AI.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">AI and Generative AI</p>
+                        <h3>Udemy ChatGPT AI</h3>
+                        <div class="cert-preview"><iframe src="certificates/Udemy%20chatgpt%20AI.pdf#toolbar=0" title="Udemy ChatGPT AI Preview" loading="lazy"></iframe></div>
+                        <a class="btn btn-secondary" href="certificates/Udemy%20chatgpt%20AI.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Cloud and Systems</p>
+                        <h3>Cloud Computing</h3>
+                        <div class="cert-preview"><iframe src="certificates/Cloud%20Computing.pdf#toolbar=0" title="Cloud Computing Certificate Preview" loading="lazy"></iframe></div>
+                        <a class="btn btn-secondary" href="certificates/Cloud%20Computing.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Cloud and Systems</p>
+                        <h3>Hardware and OS</h3>
+                        <div class="cert-preview"><iframe src="certificates/HardwareOS.pdf#toolbar=0" title="Hardware and OS Certificate Preview" loading="lazy"></iframe></div>
+                        <a class="btn btn-secondary" href="certificates/HardwareOS.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Cloud and Systems</p>
+                        <h3>Bits and Bytes</h3>
+                        <div class="cert-preview"><iframe src="certificates/Bits%20and%20bytes.pdf#toolbar=0" title="Bits and Bytes Certificate Preview" loading="lazy"></iframe></div>
+                        <a class="btn btn-secondary" href="certificates/Bits%20and%20bytes.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Networking</p>
+                        <h3>Networking</h3>
+                        <div class="cert-preview"><iframe src="certificates/Networking.pdf#toolbar=0" title="Networking Certificate Preview" loading="lazy"></iframe></div>
+                        <a class="btn btn-secondary" href="certificates/Networking.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Networking</p>
+                        <h3>Packet Switching</h3>
+                        <div class="cert-preview"><iframe src="certificates/Packet%20switching.pdf#toolbar=0" title="Packet Switching Certificate Preview" loading="lazy"></iframe></div>
+                        <a class="btn btn-secondary" href="certificates/Packet%20switching.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Networking</p>
+                        <h3>Peer to Peer</h3>
+                        <div class="cert-preview"><iframe src="certificates/peer%20to%20peer.pdf#toolbar=0" title="Peer to Peer Certificate Preview" loading="lazy"></iframe></div>
+                        <a class="btn btn-secondary" href="certificates/peer%20to%20peer.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Networking</p>
+                        <h3>TCP</h3>
+                        <div class="cert-preview"><iframe src="certificates/TCP.pdf#toolbar=0" title="TCP Certificate Preview" loading="lazy"></iframe></div>
+                        <a class="btn btn-secondary" href="certificates/TCP.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Events and Other</p>
+                        <h3>Devfest</h3>
+                        <div class="cert-preview"><iframe src="certificates/Devfest.pdf#toolbar=0" title="Devfest Certificate Preview" loading="lazy"></iframe></div>
+                        <a class="btn btn-secondary" href="certificates/Devfest.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Events and Other</p>
+                        <h3>EncryptEdge</h3>
+                        <div class="cert-preview"><iframe src="certificates/EncryptEdge.pdf#toolbar=0" title="EncryptEdge Certificate Preview" loading="lazy"></iframe></div>
+                        <a class="btn btn-secondary" href="certificates/EncryptEdge.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Events and Other</p>
+                        <h3>Non Technical</h3>
+                        <div class="cert-preview"><iframe src="certificates/nontechinacl.pdf#toolbar=0" title="Non Technical Certificate Preview" loading="lazy"></iframe></div>
+                        <a class="btn btn-secondary" href="certificates/nontechinacl.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Achievement</p>
+                        <h3>Achievement Certificate 1</h3>
+                        <div class="cert-preview"><img src="certificates/6c26aa5b-6aa8-4edf-9b59-d5ff6c54e735.png" alt="Achievement Certificate 1 Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/6c26aa5b-6aa8-4edf-9b59-d5ff6c54e735.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Achievement</p>
+                        <h3>Achievement Certificate 2</h3>
+                        <div class="cert-preview"><img src="certificates/Screenshot%202023-11-17%20231849.png" alt="Achievement Certificate 2 Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/Screenshot%202023-11-17%20231849.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Achievement</p>
+                        <h3>Achievement Certificate 3</h3>
+                        <div class="cert-preview"><img src="certificates/Screenshot%202024-02-08%20121831.png" alt="Achievement Certificate 3 Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/Screenshot%202024-02-08%20121831.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card">
+                        <p class="cert-tag">Achievement</p>
+                        <h3>Achievement Certificate 4</h3>
+                        <div class="cert-preview"><img src="certificates/Screenshot%202024-04-23%20075619.png" alt="Achievement Certificate 4 Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/Screenshot%202024-04-23%20075619.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="coding">
+            <div class="container reveal">
+                <h2>Coding Platforms</h2>
+                <p class="section-subtext">Profiles and practice platforms I use for problem solving and contests.</p>
+                <div class="platform-grid">
+                    <a class="platform-card" href="https://www.geeksforgeeks.org/" target="_blank" rel="noopener noreferrer" aria-label="GeeksforGeeks">
+                        <span class="platform-icon">G</span>
+                        <div>
+                            <h3>GeeksforGeeks</h3>
+                            <p>Practice and learning resources</p>
+                        </div>
+                    </a>
+                    <a class="platform-card" href="https://www.hackerrank.com/contests" target="_blank" rel="noopener noreferrer" aria-label="HackerRank Contests">
+                        <span class="platform-icon">H</span>
+                        <div>
+                            <h3>HackerRank</h3>
+                            <p>Contests and challenge tracks</p>
+                        </div>
+                    </a>
+                    <a class="platform-card" href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer" aria-label="AtCoder">
+                        <span class="platform-icon">A</span>
+                        <div>
+                            <h3>AtCoder</h3>
+                            <p>Competitive programming contests</p>
+                        </div>
+                    </a>
+                    <a class="platform-card" href="https://codeforces.com/" target="_blank" rel="noopener noreferrer" aria-label="Codeforces">
+                        <span class="platform-icon">C</span>
+                        <div>
+                            <h3>Codeforces</h3>
+                            <p>Rated contests and editorials</p>
+                        </div>
+                    </a>
+                    <a class="platform-card" href="https://www.codechef.com/practice" target="_blank" rel="noopener noreferrer" aria-label="CodeChef Practice">
+                        <span class="platform-icon">CC</span>
+                        <div>
+                            <h3>CodeChef</h3>
+                            <p>Practice problems by difficulty</p>
+                        </div>
+                    </a>
+                    <a class="platform-card" href="https://leetcode.com/u/Chandra1709/" target="_blank" rel="noopener noreferrer" aria-label="LeetCode profile">
+                        <span class="platform-icon">LC</span>
+                        <div>
+                            <h3>LeetCode</h3>
+                            <p>My profile and solved problems</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="experience">
+            <div class="container reveal">
+                <h2>Experience Snapshot</h2>
+                <div class="timeline">
+                    <article>
+                        <h3>Frontend Projects Practice</h3>
+                        <p>Built portfolio-ready practice projects emphasizing responsive design and micro-interactions.</p>
+                    </article>
+                    <article>
+                        <h3>UI Refinement Workflow</h3>
+                        <p>Iterated layout spacing, typography scale, and component consistency based on usability checks.</p>
+                    </article>
+                    <article>
+                        <h3>Performance Basics</h3>
+                        <p>Improved loading and visual stability using lightweight assets and structured sections.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="contact">
+            <div class="container reveal contact-wrap">
+                <div>
+                    <h2>Let us build something solid.</h2>
+                    <p>Available for internships, freelance work, and junior frontend roles.</p>
+                    <p>Email: <a class="text-link" href="mailto:chandra170905@gmail.com">chandra170905@gmail.com</a></p>
+                    <p>GitHub: <a class="text-link" href="https://github.com/Chandra170905" target="_blank" rel="noopener noreferrer">github.com/Chandra170905</a></p>
+                    <p>LinkedIn: <a class="text-link" href="https://www.linkedin.com/in/chandra-prakash-2960553a0/" target="_blank" rel="noopener noreferrer">linkedin.com/in/chandra-prakash-2960553a0</a></p>
+                    <div class="contact-direct">
+                        <a class="btn btn-primary" href="mailto:chandra170905@gmail.com?subject=Portfolio%20Inquiry">Contact Me by Email</a>
+                        <button class="btn btn-secondary" id="copyEmailBtn" type="button" data-email="chandra170905@gmail.com">Copy Email</button>
+                        <p class="copy-status" id="copyStatus" aria-live="polite"></p>
+                    </div>
+                    <div class="social-links" aria-label="Social links">
+                        <a class="social-icon" href="https://github.com/Chandra170905" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.17c-3.34.73-4.04-1.42-4.04-1.42-.55-1.36-1.33-1.72-1.33-1.72-1.09-.73.08-.72.08-.72 1.2.08 1.83 1.23 1.83 1.23 1.08 1.83 2.82 1.3 3.5 1 .11-.78.42-1.31.76-1.61-2.66-.3-5.47-1.31-5.47-5.92 0-1.31.47-2.39 1.24-3.24-.13-.3-.54-1.53.12-3.2 0 0 1-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.6a11.7 11.7 0 0 1 3 .4c2.3-1.55 3.3-1.23 3.3-1.23.66 1.67.25 2.9.12 3.2.77.85 1.24 1.93 1.24 3.24 0 4.62-2.81 5.61-5.49 5.91.43.37.82 1.09.82 2.2v3.26c0 .32.22.69.83.58A12 12 0 0 0 12 .5Z"/>
+                            </svg>
+                        </a>
+                        <a class="social-icon" href="https://www.linkedin.com/in/chandra-prakash-2960553a0/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5 2.5 2.5 0 0 0 4.98 3.5ZM3 9.5h4v11H3v-11Zm7 0h3.84v1.6h.05c.53-1 1.84-2.05 3.8-2.05 4.06 0 4.81 2.67 4.81 6.14v5.31h-4v-4.7c0-1.12-.02-2.56-1.56-2.56-1.56 0-1.8 1.22-1.8 2.48v4.78h-4v-11Z"/>
+                            </svg>
+                        </a>
+                        <a class="social-icon" href="mailto:chandra170905@gmail.com" aria-label="Send email">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M3 5.5h18a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1Zm9 7.1 8.74-5.1H3.26L12 12.6Zm9 4.9V8.65l-8.49 4.96a1 1 0 0 1-1.02 0L3 8.65V17.5h18Z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <form class="contact-form" id="contactForm" action="https://formsubmit.co/chandra170905@gmail.com" method="post">
+                    <input type="hidden" name="_subject" value="New Portfolio Message">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_template" value="table">
+                    <label for="name">Name</label>
+                    <input id="name" name="name" required type="text" placeholder="Your name">
+                    <label for="email">Email</label>
+                    <input id="email" name="email" required type="email" placeholder="you@example.com">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" required rows="5" placeholder="Tell me about your project"></textarea>
+                    <button class="btn btn-primary" type="submit">Send Message</button>
+                    <p class="form-hint">Messages are sent directly to my inbox.</p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal" id="hireModal" role="dialog" aria-modal="true" aria-labelledby="hireModalTitle" aria-hidden="true">
+        <div class="modal-backdrop" data-modal-close></div>
+        <div class="modal-panel" role="document">
+            <button class="modal-close" type="button" aria-label="Close hire form" data-modal-close>×</button>
+            <h2 id="hireModalTitle">Hire Me</h2>
+            <p class="modal-subtext">Share a few details and I will reply quickly.</p>
+            <form class="modal-form" id="hireForm" action="https://formsubmit.co/chandra170905@gmail.com" method="post">
+                <input type="hidden" name="_subject" value="New Hire Request">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_template" value="table">
+                <input type="text" name="_honey" class="honeypot" tabindex="-1" autocomplete="off">
+                <label for="hireName">Full Name</label>
+                <input id="hireName" name="name" required type="text" placeholder="Your name">
+                <label for="hireEmail">Email</label>
+                <input id="hireEmail" name="email" required type="email" placeholder="you@example.com">
+                <label for="hirePhone">Phone (optional)</label>
+                <input id="hirePhone" name="phone" type="tel" placeholder="+1 555 123 4567" pattern="^[+0-9 ()-]{7,}$">
+                <p class="field-hint" data-hint-for="hirePhone" data-default="Use digits, spaces, +, or dashes."></p>
+                <label for="hireWork">Work Needed</label>
+                <select id="hireWork" name="work_type" required>
+                    <option value="" disabled selected>Select the work type</option>
+                    <option value="landing">Landing page</option>
+                    <option value="business">Business website</option>
+                    <option value="webapp">Web app / dashboard</option>
+                    <option value="redesign">Redesign / UI cleanup</option>
+                    <option value="other">Other</option>
+                </select>
+                <label for="hireDetails">Project Details</label>
+                <textarea id="hireDetails" name="project_details" required rows="4" placeholder="Describe goals, timeline, and features"></textarea>
+                <label for="hireStart">Preferred Start Date (optional)</label>
+                <input id="hireStart" name="start_date" type="date">
+                <label for="hireRange">Budget Range</label>
+                <select id="hireRange" name="budget_range" required>
+                    <option value="" disabled selected>Select a range</option>
+                    <option value="under_200">Under $200</option>
+                    <option value="200_500">$200 - $500</option>
+                    <option value="500_1000">$500 - $1,000</option>
+                    <option value="1000_2000">$1,000 - $2,000</option>
+                    <option value="2000_plus">$2,000+</option>
+                </select>
+                <label for="hireBudget">Proposed Amount (USD)</label>
+                <input id="hireBudget" name="budget" required type="number" min="1" step="1" placeholder="e.g. 500">
+                <p class="field-hint" data-hint-for="hireBudget" data-default="Enter your estimated budget in USD."></p>
+                <button class="btn btn-primary" type="submit">Send Request</button>
+                <p class="form-hint" id="hireFormHint">Request goes to my inbox.</p>
+            </form>
+            <div class="toast" id="hireToast" role="status" aria-live="polite">Request sent. Redirecting...</div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container footer-row">
+            <p>Copyright <span id="year"></span> Chandra Prakash</p>
+            <a href="#home" class="text-link">Back to top</a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

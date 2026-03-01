@@ -7,10 +7,16 @@
     <title>Chandra Prakash | Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+    <div class="bg-3d" aria-hidden="true">
+        <span class="bg-layer layer-a"></span>
+        <span class="bg-layer layer-b"></span>
+        <span class="bg-layer layer-c"></span>
+    </div>
     <header class="site-header">
         <div class="container header-row">
             <a class="brand" href="#home">Chandra Prakash</a>
@@ -392,11 +398,14 @@
                     <input type="hidden" name="_captcha" value="false">
                     <input type="hidden" name="_template" value="table">
                     <label for="name">Name</label>
-                    <input id="name" name="name" required type="text" placeholder="Your name">
+                    <input id="name" name="name" required type="text" placeholder="Your name" minlength="2" maxlength="60" pattern="^[A-Za-z][A-Za-z .'-]{1,59}$" autocomplete="name">
+                    <p class="field-hint" data-hint-for="name" data-default="2-60 characters. Letters, spaces, ., ' and - only."></p>
                     <label for="email">Email</label>
-                    <input id="email" name="email" required type="email" placeholder="you@example.com">
+                    <input id="email" name="email" required type="email" placeholder="you@example.com" maxlength="120" autocomplete="email">
+                    <p class="field-hint" data-hint-for="email" data-default="Enter a valid email address."></p>
                     <label for="message">Message</label>
-                    <textarea id="message" name="message" required rows="5" placeholder="Tell me about your project"></textarea>
+                    <textarea id="message" name="message" required rows="5" placeholder="Tell me about your project" minlength="20" maxlength="1200"></textarea>
+                    <p class="field-hint" data-hint-for="message" data-default="Minimum 20 characters, maximum 1200."></p>
                     <button class="btn btn-primary" type="submit">Send Message</button>
                     <p class="form-hint">Messages are sent directly to my inbox.</p>
                 </form>
@@ -416,12 +425,19 @@
                 <input type="hidden" name="_template" value="table">
                 <input type="text" name="_honey" class="honeypot" tabindex="-1" autocomplete="off">
                 <label for="hireName">Full Name</label>
-                <input id="hireName" name="name" required type="text" placeholder="Your name">
+                <input id="hireName" name="name" required type="text" placeholder="Your name" minlength="2" maxlength="60" pattern="^[A-Za-z][A-Za-z .'-]{1,59}$" autocomplete="name">
                 <label for="hireEmail">Email</label>
-                <input id="hireEmail" name="email" required type="email" placeholder="you@example.com">
-                <label for="hirePhone">Phone (optional)</label>
-                <input id="hirePhone" name="phone" type="tel" placeholder="+1 555 123 4567" pattern="^[+0-9 ()-]{7,}$">
-                <p class="field-hint" data-hint-for="hirePhone" data-default="Use digits, spaces, +, or dashes."></p>
+                <input id="hireEmail" name="email" required type="email" placeholder="you@example.com" maxlength="120" autocomplete="email">
+                <label for="hireMarket">Client Region</label>
+                <select id="hireMarket" name="client_region" required>
+                    <option value="" disabled selected>Select client region</option>
+                    <option value="india">India (INR)</option>
+                    <option value="international">International (USD)</option>
+                </select>
+                <p class="field-hint" data-hint-for="hireMarket" data-default="Choose region to set phone and budget rules."></p>
+                <label for="hirePhone">Phone</label>
+                <input id="hirePhone" name="phone" required type="tel" placeholder="10-digit mobile number" pattern="^[6-9][0-9]{9}$" inputmode="tel" autocomplete="tel">
+                <p class="field-hint" data-hint-for="hirePhone" data-default="India: 10 digits starting 6-9. International: country code with + allowed."></p>
                 <label for="hireWork">Work Needed</label>
                 <select id="hireWork" name="work_type" required>
                     <option value="" disabled selected>Select the work type</option>
@@ -432,21 +448,16 @@
                     <option value="other">Other</option>
                 </select>
                 <label for="hireDetails">Project Details</label>
-                <textarea id="hireDetails" name="project_details" required rows="4" placeholder="Describe goals, timeline, and features"></textarea>
+                <textarea id="hireDetails" name="project_details" required rows="4" placeholder="Describe goals, timeline, and features" minlength="20" maxlength="1500"></textarea>
                 <label for="hireStart">Preferred Start Date (optional)</label>
                 <input id="hireStart" name="start_date" type="date">
                 <label for="hireRange">Budget Range</label>
                 <select id="hireRange" name="budget_range" required>
                     <option value="" disabled selected>Select a range</option>
-                    <option value="under_200">Under $200</option>
-                    <option value="200_500">$200 - $500</option>
-                    <option value="500_1000">$500 - $1,000</option>
-                    <option value="1000_2000">$1,000 - $2,000</option>
-                    <option value="2000_plus">$2,000+</option>
                 </select>
-                <label for="hireBudget">Proposed Amount (USD)</label>
-                <input id="hireBudget" name="budget" required type="number" min="1" step="1" placeholder="e.g. 500">
-                <p class="field-hint" data-hint-for="hireBudget" data-default="Enter your estimated budget in USD."></p>
+                <label for="hireBudget">Proposed Amount (<span id="hireCurrency">INR</span>)</label>
+                <input id="hireBudget" name="budget" required type="number" min="1000" step="100" placeholder="e.g. 15000" inputmode="numeric">
+                <p class="field-hint" data-hint-for="hireBudget" data-default="Enter your estimated budget in INR or USD based on region."></p>
                 <button class="btn btn-primary" type="submit">Send Request</button>
                 <p class="form-hint" id="hireFormHint">Request goes to my inbox.</p>
             </form>
@@ -456,7 +467,7 @@
 
     <footer class="site-footer">
         <div class="container footer-row">
-            <p>Copyright <span id="year"></span> Chandra Prakash</p>
+            <p>&copy; <span id="year"></span> Chandra Prakash</p>
             <a href="#home" class="text-link">Back to top</a>
         </div>
     </footer>

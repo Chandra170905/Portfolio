@@ -7,20 +7,32 @@ const themeToggle = document.getElementById("themeToggle");
 const year = document.getElementById("year");
 const typingText = document.getElementById("typingText");
 const revealItems = document.querySelectorAll(".reveal");
+const timelineGroups = document.querySelectorAll(".timeline");
 const filterGroup = document.getElementById("projectFilters");
 const cards = document.querySelectorAll(".project-card");
 const sliderButtons = document.querySelectorAll(".slider-btn");
+const scrollProgress = document.getElementById("scrollProgress");
+const bgLayers = document.querySelectorAll(".bg-layer");
+const heroPhotoWrap = document.querySelector(".hero-photo-wrap");
+const heroPhoto = document.querySelector(".hero-photo");
 const copyEmailBtn = document.getElementById("copyEmailBtn");
 const copyStatus = document.getElementById("copyStatus");
 const contactForm = document.getElementById("contactForm");
+const contactNameInput = document.getElementById("name");
+const contactEmailInput = document.getElementById("email");
+const contactMessageInput = document.getElementById("message");
 const hireMeBtn = document.getElementById("hireMeBtn");
 const hireModal = document.getElementById("hireModal");
 const hireForm = document.getElementById("hireForm");
 const hireFormHint = document.getElementById("hireFormHint");
+const hireName = document.getElementById("hireName");
+const hireMarket = document.getElementById("hireMarket");
 const hirePhone = document.getElementById("hirePhone");
 const hireBudget = document.getElementById("hireBudget");
 const hireRange = document.getElementById("hireRange");
+const hireCurrency = document.getElementById("hireCurrency");
 const hireToast = document.getElementById("hireToast");
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 if (menuToggle && nav) {
     menuToggle.addEventListener("click", () => {
@@ -42,6 +54,104 @@ const setThemeLabel = () => {
     themeToggle.textContent = document.body.classList.contains("light") ? "Light" : "Dark";
 };
 
+const updateScrollProgress = () => {
+    if (!scrollProgress) return;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
+    scrollProgress.style.transform = `scaleX(${progress})`;
+};
+
+const prepareRevealStagger = () => {
+    revealItems.forEach((block) => {
+        const children = Array.from(block.children);
+        children.forEach((child, index) => {
+            child.classList.add("reveal-item");
+            child.style.setProperty("--reveal-delay", `${Math.min(index, 7) * 90}ms`);
+        });
+    });
+};
+
+const updateBackgroundDepth = () => {
+    if (bgLayers.length === 0) return;
+    const scrollY = window.scrollY || 0;
+    bgLayers.forEach((layer) => {
+        const speed = layer.classList.contains("layer-a") ? 0.12 : layer.classList.contains("layer-b") ? 0.2 : 0.08;
+        const drift = layer.classList.contains("layer-b") ? scrollY * 0.02 : scrollY * -0.015;
+        const y = scrollY * speed;
+        layer.style.transform = `translate3d(${drift}px, ${y}px, 0)`;
+    });
+};
+
+const setupHeroTilt = () => {
+    if (!heroPhotoWrap || !heroPhoto || prefersReducedMotion) return;
+
+    const resetTilt = () => {
+        heroPhoto.style.setProperty("--hero-rx", "0deg");
+        heroPhoto.style.setProperty("--hero-ry", "0deg");
+    };
+
+    heroPhotoWrap.addEventListener("pointermove", (event) => {
+        const rect = heroPhotoWrap.getBoundingClientRect();
+        const px = (event.clientX - rect.left) / rect.width;
+        const py = (event.clientY - rect.top) / rect.height;
+        const rx = (0.5 - py) * 9;
+        const ry = (px - 0.5) * 12;
+        heroPhoto.style.setProperty("--hero-rx", `${rx.toFixed(2)}deg`);
+        heroPhoto.style.setProperty("--hero-ry", `${ry.toFixed(2)}deg`);
+    });
+
+    heroPhotoWrap.addEventListener("pointerleave", resetTilt);
+    heroPhotoWrap.addEventListener("pointerup", resetTilt);
+};
+
+const setupProjectTilt = () => {
+    if (cards.length === 0 || prefersReducedMotion) return;
+
+    cards.forEach((card) => {
+        const resetCard = () => {
+            card.style.setProperty("--card-rx", "0deg");
+            card.style.setProperty("--card-ry", "0deg");
+            card.style.setProperty("--card-lift", "0px");
+        };
+
+        card.addEventListener("pointermove", (event) => {
+            const rect = card.getBoundingClientRect();
+            const px = (event.clientX - rect.left) / rect.width;
+            const py = (event.clientY - rect.top) / rect.height;
+            const rx = (0.5 - py) * 8;
+            const ry = (px - 0.5) * 10;
+            card.style.setProperty("--card-rx", `${rx.toFixed(2)}deg`);
+            card.style.setProperty("--card-ry", `${ry.toFixed(2)}deg`);
+            card.style.setProperty("--card-lift", "-6px");
+        });
+
+        card.addEventListener("pointerleave", resetCard);
+        card.addEventListener("pointerup", resetCard);
+    });
+};
+
+const updateFieldHint = (fieldId, message = "") => {
+    const hint = document.querySelector(`[data-hint-for="${fieldId}"]`);
+    if (!hint) return;
+    const defaultText = hint.getAttribute("data-default") || "";
+    hint.textContent = message || defaultText;
+    hint.classList.toggle("error", Boolean(message));
+};
+
+const validateNameField = (input, fieldId) => {
+    if (!input) return true;
+    const value = input.value.trim();
+    const valid = /^[A-Za-z][A-Za-z .'-]{1,59}$/.test(value);
+    if (!valid) {
+        input.setCustomValidity("Use 2-60 characters with letters, spaces, ., ' or -.");
+        updateFieldHint(fieldId, input.validationMessage);
+        return false;
+    }
+    input.setCustomValidity("");
+    updateFieldHint(fieldId, "");
+    return true;
+};
+
 if (themeToggle) {
     const storedTheme = localStorage.getItem("portfolio-theme");
     if (storedTheme === "light") {
@@ -54,6 +164,9 @@ if (themeToggle) {
         setThemeLabel();
     });
 }
+
+setupHeroTilt();
+setupProjectTilt();
 
 if (year) {
     year.textContent = new Date().getFullYear();
@@ -104,6 +217,7 @@ if (typingText) {
 }
 
 if (revealItems.length > 0) {
+    prepareRevealStagger();
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
             if (entry.isIntersecting) {
@@ -114,6 +228,18 @@ if (revealItems.length > 0) {
     }, { threshold: 0.16 });
 
     revealItems.forEach((item) => observer.observe(item));
+}
+
+if (timelineGroups.length > 0) {
+    const timelineObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("timeline-visible");
+            timelineObserver.unobserve(entry.target);
+        });
+    }, { threshold: 0.25 });
+
+    timelineGroups.forEach((timeline) => timelineObserver.observe(timeline));
 }
 
 if (filterGroup) {
@@ -167,10 +293,54 @@ if (copyEmailBtn) {
 }
 
 if (contactForm) {
+    const validateContactEmail = () => {
+        if (!contactEmailInput) return true;
+        if (contactEmailInput.validity.typeMismatch) {
+            contactEmailInput.setCustomValidity("Please enter a valid email address.");
+            updateFieldHint("email", contactEmailInput.validationMessage);
+            return false;
+        }
+        contactEmailInput.setCustomValidity("");
+        updateFieldHint("email", "");
+        return true;
+    };
+
+    const validateContactMessage = () => {
+        if (!contactMessageInput) return true;
+        const length = contactMessageInput.value.trim().length;
+        if (length < 20) {
+            contactMessageInput.setCustomValidity("Message must be at least 20 characters.");
+            updateFieldHint("message", contactMessageInput.validationMessage);
+            return false;
+        }
+        if (length > 1200) {
+            contactMessageInput.setCustomValidity("Message must be under 1200 characters.");
+            updateFieldHint("message", contactMessageInput.validationMessage);
+            return false;
+        }
+        contactMessageInput.setCustomValidity("");
+        updateFieldHint("message", "");
+        return true;
+    };
+
+    contactNameInput?.addEventListener("input", () => validateNameField(contactNameInput, "name"));
+    contactEmailInput?.addEventListener("input", validateContactEmail);
+    contactMessageInput?.addEventListener("input", validateContactMessage);
+
     contactForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         const hint = contactForm.querySelector(".form-hint");
+        const contactValid = validateNameField(contactNameInput, "name")
+            && validateContactEmail()
+            && validateContactMessage()
+            && contactForm.reportValidity();
+
+        if (!contactValid) {
+            if (hint) hint.textContent = "Please fix the highlighted fields and try again.";
+            return;
+        }
+
         if (hint) hint.textContent = "Sending message...";
 
         try {
@@ -249,58 +419,158 @@ window.addEventListener("keydown", (event) => {
 });
 
 if (hireForm) {
-    const applyHint = (field, message = "") => {
-        const hint = document.querySelector(`[data-hint-for="${field.id}"]`);
-        if (!hint) return;
-        const defaultText = hint.getAttribute("data-default") || "";
-        hint.textContent = message || defaultText;
-        hint.classList.toggle("error", Boolean(message));
+    const marketConfigs = {
+        india: {
+            currency: "INR",
+            phonePattern: "^[6-9][0-9]{9}$",
+            phonePlaceholder: "10-digit mobile number",
+            phoneMessage: "Enter a valid 10-digit Indian mobile number (starts with 6-9).",
+            budgetMin: 1000,
+            budgetStep: 100,
+            budgetPlaceholder: "e.g. 15000",
+            budgetMessage: "Enter your estimated budget in INR.",
+            ranges: [
+                { value: "under_10000", label: "Under INR 10,000", amount: 8000 },
+                { value: "10000_30000", label: "INR 10,000 - 30,000", amount: 20000 },
+                { value: "30000_70000", label: "INR 30,000 - 70,000", amount: 45000 },
+                { value: "70000_150000", label: "INR 70,000 - 1,50,000", amount: 90000 },
+                { value: "150000_plus", label: "INR 1,50,000+", amount: 180000 }
+            ]
+        },
+        international: {
+            currency: "USD",
+            phonePattern: "^\\+?[1-9][0-9]{7,14}$",
+            phonePlaceholder: "+1 5551234567",
+            phoneMessage: "Use international format with country code (8-15 digits, optional +).",
+            budgetMin: 50,
+            budgetStep: 10,
+            budgetPlaceholder: "e.g. 500",
+            budgetMessage: "Enter your estimated budget in USD.",
+            ranges: [
+                { value: "under_200", label: "Under $200", amount: 150 },
+                { value: "200_500", label: "$200 - $500", amount: 350 },
+                { value: "500_1000", label: "$500 - $1,000", amount: 750 },
+                { value: "1000_2000", label: "$1,000 - $2,000", amount: 1500 },
+                { value: "2000_plus", label: "$2,000+", amount: 2500 }
+            ]
+        }
     };
 
-    if (hirePhone) {
-        hirePhone.addEventListener("input", () => {
-            if (hirePhone.validity.patternMismatch) {
-                hirePhone.setCustomValidity("Please use digits, spaces, +, or dashes.");
-                applyHint(hirePhone, hirePhone.validationMessage);
-            } else {
-                hirePhone.setCustomValidity("");
-                applyHint(hirePhone, "");
-            }
-        });
-    }
+    const getSelectedMarket = () => {
+        if (!hireMarket?.value) return "india";
+        return hireMarket.value === "international" ? "international" : "india";
+    };
 
-    if (hireBudget) {
-        hireBudget.addEventListener("input", () => {
-            if (hireBudget.value && Number(hireBudget.value) <= 0) {
-                hireBudget.setCustomValidity("Budget must be greater than 0.");
-                applyHint(hireBudget, hireBudget.validationMessage);
-            } else {
-                hireBudget.setCustomValidity("");
-                applyHint(hireBudget, "");
-            }
+    const setHireRangeOptions = (market) => {
+        if (!hireRange) return;
+        const config = marketConfigs[market];
+        hireRange.innerHTML = '<option value="" disabled selected>Select a range</option>';
+        config.ranges.forEach((item) => {
+            const option = document.createElement("option");
+            option.value = item.value;
+            option.textContent = item.label;
+            option.dataset.amount = String(item.amount);
+            hireRange.appendChild(option);
         });
-    }
+    };
+
+    const applyMarketConstraints = (market) => {
+        const config = marketConfigs[market];
+        if (!config) return;
+
+        if (hireCurrency) hireCurrency.textContent = config.currency;
+        if (hirePhone) {
+            hirePhone.pattern = config.phonePattern;
+            hirePhone.placeholder = config.phonePlaceholder;
+            hirePhone.setCustomValidity("");
+            updateFieldHint("hirePhone", config.phoneMessage);
+        }
+        if (hireBudget) {
+            hireBudget.min = String(config.budgetMin);
+            hireBudget.step = String(config.budgetStep);
+            hireBudget.placeholder = config.budgetPlaceholder;
+            hireBudget.setCustomValidity("");
+            updateFieldHint("hireBudget", config.budgetMessage);
+        }
+        setHireRangeOptions(market);
+        if (hireRange) hireRange.setCustomValidity("");
+    };
+
+    const validateHireMarket = () => {
+        if (!hireMarket) return true;
+        if (!hireMarket.value) {
+            hireMarket.setCustomValidity("Please choose India or International.");
+            updateFieldHint("hireMarket", hireMarket.validationMessage);
+            return false;
+        }
+        hireMarket.setCustomValidity("");
+        updateFieldHint("hireMarket", "");
+        return true;
+    };
+
+    const validateHirePhone = () => {
+        if (!hirePhone) return true;
+        const market = getSelectedMarket();
+        if (hirePhone.validity.patternMismatch) {
+            hirePhone.setCustomValidity(marketConfigs[market].phoneMessage);
+            updateFieldHint("hirePhone", hirePhone.validationMessage);
+            return false;
+        }
+        hirePhone.setCustomValidity("");
+        updateFieldHint("hirePhone", "");
+        return true;
+    };
+
+    const validateHireBudget = () => {
+        if (!hireBudget) return true;
+        const market = getSelectedMarket();
+        const amount = Number(hireBudget.value);
+        const minBudget = marketConfigs[market].budgetMin;
+
+        if (hireBudget.value && (Number.isNaN(amount) || amount < minBudget)) {
+            hireBudget.setCustomValidity(`Minimum budget for ${marketConfigs[market].currency} is ${minBudget}.`);
+            updateFieldHint("hireBudget", hireBudget.validationMessage);
+            return false;
+        }
+        hireBudget.setCustomValidity("");
+        updateFieldHint("hireBudget", "");
+        return true;
+    };
+
+    hireMarket?.addEventListener("change", () => {
+        const market = getSelectedMarket();
+        applyMarketConstraints(market);
+        validateHireMarket();
+        if (hireBudget) hireBudget.value = "";
+    });
+
+    hirePhone?.addEventListener("input", validateHirePhone);
+    hireBudget?.addEventListener("input", validateHireBudget);
+    hireName?.addEventListener("input", () => validateNameField(hireName, "hireName"));
 
     if (hireRange && hireBudget) {
         hireRange.addEventListener("change", () => {
-            const map = {
-                under_200: 150,
-                200_500: 350,
-                500_1000: 750,
-                1000_2000: 1500,
-                "2000_plus": 2500
-            };
-            const next = map[hireRange.value];
-            if (next && !hireBudget.value) {
-                hireBudget.value = String(next);
+            const selectedOption = hireRange.options[hireRange.selectedIndex];
+            if (selectedOption && selectedOption.dataset.amount && !hireBudget.value) {
+                hireBudget.value = selectedOption.dataset.amount;
                 hireBudget.dispatchEvent(new Event("input", { bubbles: true }));
             }
         });
     }
 
+    applyMarketConstraints(getSelectedMarket());
+
     hireForm.addEventListener("submit", async (event) => {
         event.preventDefault();
-        if (!hireForm.reportValidity()) return;
+        const hireValid = validateNameField(hireName, "hireName")
+            && validateHireMarket()
+            && validateHirePhone()
+            && validateHireBudget()
+            && hireForm.reportValidity();
+        if (!hireValid) {
+            if (hireFormHint) hireFormHint.textContent = "Please fix the highlighted fields and try again.";
+            return;
+        }
         if (hireFormHint) hireFormHint.textContent = "Sending request...";
 
         try {
@@ -360,7 +630,17 @@ window.addEventListener("scroll", () => {
     ticking = true;
     requestAnimationFrame(() => {
         updateActiveLink();
+        updateScrollProgress();
+        updateBackgroundDepth();
         ticking = false;
     });
 }, { passive: true });
-window.addEventListener("load", updateActiveLink);
+window.addEventListener("load", () => {
+    updateActiveLink();
+    updateScrollProgress();
+    updateBackgroundDepth();
+});
+window.addEventListener("resize", () => {
+    updateScrollProgress();
+    updateBackgroundDepth();
+});

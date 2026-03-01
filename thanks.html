@@ -7,184 +7,108 @@
     <title>Thank You | Chandra Prakash</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #070b14;
-            --panel: #0f172a;
-            --soft: #131d34;
-            --text: #e5ecff;
-            --muted: #9daccc;
-            --accent: #57c7ff;
-            --accent-2: #7df7c5;
-            --border: rgba(188, 206, 255, 0.2);
-            --shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+            --bg: #f6f5f1;
+            --surface: #ffffff;
+            --surface-soft: #efeee8;
+            --text: #1c1f1d;
+            --muted: #5f655f;
+            --accent: #1f8a70;
+            --accent-strong: #136a56;
+            --line: rgba(28, 31, 29, 0.12);
+            --line-strong: rgba(28, 31, 29, 0.24);
+            --shadow: 0 18px 40px rgba(17, 21, 19, 0.08);
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
             min-height: 100vh;
-            font-family: "Manrope", sans-serif;
+            font-family: "Instrument Sans", sans-serif;
             color: var(--text);
             background:
-                radial-gradient(900px 480px at 8% -8%, rgba(87, 199, 255, 0.26), transparent 60%),
-                radial-gradient(760px 420px at 100% 10%, rgba(125, 247, 197, 0.2), transparent 65%),
+                radial-gradient(720px 380px at 85% -5%, color-mix(in oklab, var(--accent) 22%, transparent), transparent 70%),
+                radial-gradient(680px 330px at 0% 8%, color-mix(in oklab, var(--surface-soft) 90%, transparent), transparent 76%),
                 var(--bg);
             display: grid;
             place-items: center;
             padding: 24px;
-            overflow-x: hidden;
-            overflow-y: auto;
+        }
+
+        .bg-3d {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        .bg-layer {
+            position: absolute;
+            filter: blur(1px);
+            transform: translate3d(0, 0, 0);
+            will-change: transform;
+        }
+
+        .bg-layer.layer-a {
+            width: min(42vw, 520px);
+            aspect-ratio: 1 / 1;
+            left: -8vw;
+            top: 12vh;
+            border-radius: 42% 58% 62% 38% / 42% 37% 63% 58%;
+            background: color-mix(in oklab, var(--accent) 22%, transparent);
+        }
+
+        .bg-layer.layer-b {
+            width: min(34vw, 420px);
+            aspect-ratio: 1 / 1;
+            right: -8vw;
+            top: 18vh;
+            border-radius: 62% 38% 52% 48% / 55% 44% 56% 45%;
+            background: color-mix(in oklab, var(--surface-soft) 88%, transparent);
+        }
+
+        .bg-layer.layer-c {
+            width: min(52vw, 700px);
+            height: min(26vh, 240px);
+            left: 18vw;
+            bottom: -8vh;
+            border-radius: 999px;
+            background: color-mix(in oklab, var(--accent) 10%, transparent);
+        }
+
+        body.theme-dark {
+            --bg: #111513;
+            --surface: #161d19;
+            --surface-soft: #1d2621;
+            --text: #edf2ee;
+            --muted: #a3b0a7;
+            --accent: #3ec7a2;
+            --accent-strong: #2ea487;
+            --line: rgba(237, 242, 238, 0.14);
+            --line-strong: rgba(237, 242, 238, 0.26);
+            --shadow: 0 20px 44px rgba(0, 0, 0, 0.35);
         }
 
         .thanks-shell {
-            position: relative;
             width: min(1020px, 100%);
             display: grid;
-            grid-template-columns: 320px 1.1fr;
+            grid-template-columns: 320px 1fr;
             gap: 18px;
             align-items: stretch;
         }
 
-        .glow {
-            position: absolute;
-            pointer-events: none;
-            inset: 0;
-            z-index: -1;
-        }
-
-        .glow::before,
-        .glow::after {
-            content: "";
-            position: absolute;
-            border-radius: 999px;
-            filter: blur(36px);
-            opacity: 0.45;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .glow::before {
-            width: 180px;
-            height: 180px;
-            top: -38px;
-            left: -36px;
-            background: rgba(87, 199, 255, 0.45);
-        }
-
-        .glow::after {
-            width: 220px;
-            height: 220px;
-            right: -52px;
-            bottom: -52px;
-            background: rgba(125, 247, 197, 0.35);
-            animation-delay: 1.5s;
-        }
-
-        .thanks-card {
-            background: color-mix(in oklab, var(--panel) 92%, transparent);
-            border: 1px solid var(--border);
-            border-radius: 24px;
+        .panel {
+            background: color-mix(in oklab, var(--surface) 90%, transparent);
+            border: 1px solid var(--line);
+            border-radius: 20px;
             box-shadow: var(--shadow);
-            padding: 34px;
-            backdrop-filter: blur(8px);
-        }
-
-        .tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 12px;
-            border-radius: 999px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            color: var(--accent);
-            background: color-mix(in oklab, var(--accent) 17%, transparent);
-            border: 1px solid var(--border);
-        }
-
-        h1 {
-            margin: 14px 0 10px;
-            font-family: "Sora", sans-serif;
-            font-size: clamp(2rem, 5vw, 2.9rem);
-            line-height: 1.12;
-        }
-
-        .lead {
-            margin: 0;
-            font-size: 1.02rem;
-            color: var(--muted);
-            max-width: 48ch;
-        }
-
-        .meta {
-            margin-top: 18px;
-            display: grid;
-            gap: 10px;
-        }
-
-        .meta-item {
-            display: grid;
-            grid-template-columns: 26px 1fr;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            background: color-mix(in oklab, var(--soft) 88%, transparent);
-            color: var(--muted);
-            font-size: 0.94rem;
-        }
-
-        .meta-item strong {
-            color: var(--text);
-            font-weight: 700;
-        }
-
-        .actions {
-            margin-top: 22px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            font-weight: 700;
-            border-radius: 12px;
-            padding: 11px 16px;
-            border: 1px solid transparent;
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-
-        .btn-primary {
-            color: #07101f;
-            background: linear-gradient(120deg, var(--accent), var(--accent-2));
-        }
-
-        .btn-secondary {
-            color: var(--text);
-            background: var(--soft);
-            border-color: var(--border);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
         }
 
         .side-panel {
-            background: color-mix(in oklab, var(--panel) 88%, transparent);
-            border: 1px solid var(--border);
-            border-radius: 22px;
-            box-shadow: var(--shadow);
             padding: 16px;
             display: grid;
             gap: 12px;
@@ -194,101 +118,61 @@
         .sticker {
             width: 100%;
             border-radius: 14px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--line);
             display: block;
         }
 
         .code-note {
             margin: 0;
             border-radius: 12px;
-            border: 1px solid var(--border);
-            padding: 10px 12px;
-            font-family: "JetBrains Mono", monospace;
-            font-size: 0.84rem;
-            line-height: 1.4;
+            border: 1px solid var(--line);
+            padding: 11px 12px;
+            font-size: 0.88rem;
             color: var(--muted);
-            background: color-mix(in oklab, var(--soft) 85%, transparent);
+            background: var(--surface-soft);
         }
 
         .social-list {
-            margin: 4px 0 0;
+            margin: 2px 0 0;
             display: flex;
             gap: 10px;
             justify-content: center;
-        }
-
-        .bounce-line {
-            height: 2px;
-            width: 88%;
-            margin: 2px auto 0;
-            border-radius: 999px;
-            background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--accent) 60%, var(--border)), transparent);
-            box-shadow: 0 0 10px color-mix(in oklab, var(--accent) 35%, transparent);
         }
 
         .social-link {
             width: 42px;
             height: 42px;
             border-radius: 12px;
-            border: 1px solid var(--border);
-            background: var(--soft);
+            border: 1px solid var(--line-strong);
+            background: var(--surface);
             color: var(--text);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-            animation: bounceA 1.35s cubic-bezier(0.32, 0, 0.2, 1) infinite;
+            transition: transform .2s ease, border-color .2s ease, color .2s ease;
+            animation: bounceA 2.1s cubic-bezier(0.32, 0, 0.2, 1) infinite;
         }
 
         .social-link:nth-child(2) {
-            animation: bounceB 1.58s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
-            animation-delay: 0.08s;
+            animation: bounceB 2.35s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+            animation-delay: 0.14s;
         }
 
         .social-link:nth-child(3) {
-            animation: bounceC 1.27s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
-            animation-delay: 0.16s;
+            animation: bounceC 1.95s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+            animation-delay: 0.22s;
         }
 
         .social-link:hover {
-            color: var(--accent);
-            border-color: color-mix(in oklab, var(--accent) 50%, var(--border));
+            transform: translateY(-2px);
+            border-color: color-mix(in oklab, var(--accent) 46%, var(--line));
+            color: var(--accent-strong);
         }
 
         .social-link svg {
             width: 19px;
             height: 19px;
             fill: currentColor;
-        }
-
-        .mini-panel {
-            margin-top: 8px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            background: color-mix(in oklab, var(--soft) 82%, transparent);
-            padding: 10px 12px;
-            display: grid;
-            gap: 8px;
-        }
-
-        .mini-title {
-            margin: 0;
-            font-size: 0.82rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--accent);
-            font-weight: 700;
-        }
-
-        .mini-row {
-            margin: 0;
-            color: var(--muted);
-            font-size: 0.88rem;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
         }
 
         @keyframes bounceA {
@@ -317,6 +201,126 @@
             82% { transform: translateY(0); }
         }
 
+        .mini-panel {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: var(--surface-soft);
+            padding: 10px 12px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .mini-title {
+            margin: 0;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-strong);
+            font-weight: 700;
+        }
+
+        .mini-row {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
+        .thanks-card {
+            padding: 34px;
+            display: grid;
+            gap: 14px;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            width: fit-content;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--accent-strong);
+            background: color-mix(in oklab, var(--accent) 11%, transparent);
+            border: 1px solid color-mix(in oklab, var(--accent) 36%, var(--line));
+        }
+
+        h1 {
+            margin: 0;
+            font-family: "Space Grotesk", sans-serif;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            font-size: clamp(2rem, 4vw, 2.9rem);
+            max-width: 18ch;
+        }
+
+        .lead {
+            margin: 0;
+            color: var(--muted);
+            max-width: 58ch;
+        }
+
+        .meta {
+            margin-top: 4px;
+            display: grid;
+            gap: 10px;
+        }
+
+        .meta-item {
+            display: grid;
+            grid-template-columns: 26px 1fr;
+            gap: 10px;
+            align-items: center;
+            padding: 11px 12px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: var(--surface-soft);
+            color: var(--muted);
+            font-size: 0.94rem;
+        }
+
+        .meta-item strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .actions {
+            margin-top: 8px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 999px;
+            padding: 11px 16px;
+            border: 1px solid transparent;
+            transform: translateY(0);
+            transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+            box-shadow: 0 7px 0 color-mix(in oklab, var(--line-strong) 72%, transparent);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 0 color-mix(in oklab, var(--line-strong) 72%, transparent);
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 3px 0 color-mix(in oklab, var(--line-strong) 72%, transparent);
+        }
+
+        .btn-primary {
+            color: #f8fffc;
+            background: var(--accent);
+            box-shadow: 0 8px 22px color-mix(in oklab, var(--accent) 30%, transparent);
+        }
+
         @media (max-width: 860px) {
             .thanks-shell {
                 grid-template-columns: 1fr;
@@ -329,10 +333,7 @@
         }
 
         @media (max-width: 560px) {
-            body {
-                padding: 14px;
-                display: block;
-            }
+            body { padding: 14px; }
 
             .thanks-card {
                 padding: 22px 18px;
@@ -343,20 +344,25 @@
                 width: 100%;
                 max-width: none;
             }
+        }
 
-            .thanks-shell {
-                width: 100%;
+        @media (prefers-reduced-motion: reduce) {
+            .bg-3d {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
+    <div class="bg-3d" aria-hidden="true">
+        <span class="bg-layer layer-a"></span>
+        <span class="bg-layer layer-b"></span>
+        <span class="bg-layer layer-c"></span>
+    </div>
     <main class="thanks-shell">
-        <div class="glow" aria-hidden="true"></div>
-
-        <aside class="side-panel" aria-label="Thank you side panel">
+        <aside class="panel side-panel" aria-label="Thank you side panel">
             <img class="sticker" src="sticker.png" alt="Sticker illustration">
-            <p class="code-note">return "Thanks for reaching out. I will contact you soon.";</p>
+            <p class="code-note">Thank you for your message. I will get back to you soon.</p>
             <div class="social-list" aria-label="Social media profiles">
                 <a class="social-link" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram profile">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -374,7 +380,6 @@
                     </svg>
                 </a>
             </div>
-            <div class="bounce-line" aria-hidden="true"></div>
             <div class="mini-panel">
                 <p class="mini-title">Quick Info</p>
                 <p class="mini-row">Reply window: 24-48 hours</p>
@@ -382,7 +387,7 @@
             </div>
         </aside>
 
-        <section class="thanks-card">
+        <section class="panel thanks-card">
             <span class="tag">Message Received</span>
             <h1>Thank you. Your request just landed in my inbox.</h1>
             <p class="lead">I have received your details successfully. I will review your message and reply within 24-48 hours.</p>
@@ -407,5 +412,39 @@
             </div>
         </section>
     </main>
+    <script>
+        (function () {
+            const storedTheme = localStorage.getItem("portfolio-theme");
+            const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            // Main portfolio uses "light" key value for the dark visual theme.
+            const useDarkVisualTheme = storedTheme === "light"
+                ? true
+                : storedTheme === "dark"
+                    ? false
+                    : systemPrefersDark;
+
+            document.body.classList.toggle("theme-dark", useDarkVisualTheme);
+        })();
+
+        (function () {
+            const layers = document.querySelectorAll(".bg-layer");
+            if (!layers.length || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+            const updateBackgroundDepth = () => {
+                const scrollY = window.scrollY || 0;
+                layers.forEach((layer) => {
+                    const speed = layer.classList.contains("layer-a") ? 0.12 : layer.classList.contains("layer-b") ? 0.2 : 0.08;
+                    const drift = layer.classList.contains("layer-b") ? scrollY * 0.02 : scrollY * -0.015;
+                    const y = scrollY * speed;
+                    layer.style.transform = `translate3d(${drift}px, ${y}px, 0)`;
+                });
+            };
+
+            window.addEventListener("scroll", updateBackgroundDepth, { passive: true });
+            window.addEventListener("resize", updateBackgroundDepth);
+            window.addEventListener("load", updateBackgroundDepth);
+            updateBackgroundDepth();
+        })();
+    </script>
 </body>
 </html>

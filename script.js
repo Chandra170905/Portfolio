@@ -10,11 +10,17 @@ const revealItems = document.querySelectorAll(".reveal");
 const timelineGroups = document.querySelectorAll(".timeline");
 const filterGroup = document.getElementById("projectFilters");
 const cards = document.querySelectorAll(".project-card");
+const skillFilterGroup = document.getElementById("skillFilters");
+const skillCategories = document.querySelectorAll(".skill-category");
+const certificateFilterGroup = document.getElementById("certificateFilters");
+const certificateCards = document.querySelectorAll(".cert-card");
 const sliderButtons = document.querySelectorAll(".slider-btn");
 const scrollProgress = document.getElementById("scrollProgress");
 const bgLayers = document.querySelectorAll(".bg-layer");
 const heroPhotoWrap = document.querySelector(".hero-photo-wrap");
+const heroPhotoCard = document.querySelector(".hero-photo-card");
 const heroPhoto = document.querySelector(".hero-photo");
+const rotatePhotoBtn = document.getElementById("rotatePhotoBtn");
 const copyEmailBtn = document.getElementById("copyEmailBtn");
 const copyStatus = document.getElementById("copyStatus");
 const contactForm = document.getElementById("contactForm");
@@ -82,12 +88,63 @@ const updateBackgroundDepth = () => {
     });
 };
 
+const getSiteData = () => {
+    try {
+        return JSON.parse(localStorage.getItem('portfolio_site')) || {};
+    } catch {
+        return {};
+    }
+};
+
+const renderQuickStats = (stats = []) => {
+    const container = document.getElementById('quickStats');
+    if (!container) return;
+
+    const defaultStats = [
+        { value: '15+', label: 'UI Components' },
+        { value: '8+', label: 'Projects Built' },
+        { value: '100%', label: 'Responsive Design' }
+    ];
+
+    const items = Array.isArray(stats) && stats.length ? stats : defaultStats;
+    container.innerHTML = items
+        .map(stat => `<li><strong>${stat.value}</strong><span>${stat.label}</span></li>`)
+        .join('');
+};
+
+let typingRoles = ["Frontend Developer", "Full Stack Developer", "UI Builder", "Web Designer"];
+
+const applySiteData = () => {
+    const data = getSiteData();
+
+    const brand = document.getElementById('brandName');
+    if (brand && data.brand) brand.textContent = data.brand;
+
+    const headline = document.getElementById('heroHeadline');
+    if (headline && data.hero?.headline) headline.textContent = data.hero.headline;
+
+    const heroIntro = document.getElementById('heroIntro');
+    if (heroIntro && data.hero?.intro) heroIntro.textContent = data.hero.intro;
+
+    const heroOutro = document.getElementById('heroOutro');
+    if (heroOutro && data.hero?.outro) heroOutro.textContent = data.hero.outro;
+
+    if (data.hero?.roles && Array.isArray(data.hero.roles) && data.hero.roles.length) {
+        typingRoles = data.hero.roles;
+        if (!typingRoles.includes("Full Stack Developer")) {
+            typingRoles.push("Full Stack Developer");
+        }
+    }
+
+    renderQuickStats(data.stats);
+};
+
 const setupHeroTilt = () => {
-    if (!heroPhotoWrap || !heroPhoto || prefersReducedMotion) return;
+    if (!heroPhotoWrap || prefersReducedMotion) return;
 
     const resetTilt = () => {
-        heroPhoto.style.setProperty("--hero-rx", "0deg");
-        heroPhoto.style.setProperty("--hero-ry", "0deg");
+        heroPhotoWrap.style.setProperty("--hero-rx", "0deg");
+        heroPhotoWrap.style.setProperty("--hero-ry", "0deg");
     };
 
     heroPhotoWrap.addEventListener("pointermove", (event) => {
@@ -96,8 +153,8 @@ const setupHeroTilt = () => {
         const py = (event.clientY - rect.top) / rect.height;
         const rx = (0.5 - py) * 9;
         const ry = (px - 0.5) * 12;
-        heroPhoto.style.setProperty("--hero-rx", `${rx.toFixed(2)}deg`);
-        heroPhoto.style.setProperty("--hero-ry", `${ry.toFixed(2)}deg`);
+        heroPhotoWrap.style.setProperty("--hero-rx", `${rx.toFixed(2)}deg`);
+        heroPhotoWrap.style.setProperty("--hero-ry", `${ry.toFixed(2)}deg`);
     });
 
     heroPhotoWrap.addEventListener("pointerleave", resetTilt);
@@ -167,13 +224,19 @@ if (themeToggle) {
 
 setupHeroTilt();
 setupProjectTilt();
+applySiteData();
+
+if (rotatePhotoBtn) {
+    rotatePhotoBtn.addEventListener('click', () => {
+        heroPhotoCard?.classList.toggle('flipped');
+    });
+}
 
 if (year) {
     year.textContent = new Date().getFullYear();
 }
 
 if (typingText) {
-    const roles = ["Frontend Developer", "UI Builder", "Web Designer"];
     let roleIndex = 0;
     let charIndex = 0;
     let deleting = false;
@@ -182,12 +245,12 @@ if (typingText) {
     const type = () => {
         if (typingStopped) return;
         if (window.scrollY > 120) {
-            typingText.textContent = roles[0];
+            typingText.textContent = typingRoles[0];
             typingStopped = true;
             return;
         }
 
-        const current = roles[roleIndex];
+        const current = typingRoles[roleIndex];
         typingText.textContent = current.slice(0, charIndex);
 
         if (!deleting && charIndex < current.length) {
@@ -209,7 +272,7 @@ if (typingText) {
         }
 
         deleting = false;
-        roleIndex = (roleIndex + 1) % roles.length;
+        roleIndex = (roleIndex + 1) % typingRoles.length;
         setTimeout(type, 250);
     };
 
@@ -247,7 +310,7 @@ if (filterGroup) {
         const target = event.target.closest(".chip");
         if (!target) return;
 
-        document.querySelectorAll(".chip").forEach((chip) => chip.classList.remove("active"));
+        filterGroup.querySelectorAll(".chip").forEach((chip) => chip.classList.remove("active"));
         target.classList.add("active");
 
         const selected = target.getAttribute("data-filter");
@@ -258,6 +321,42 @@ if (filterGroup) {
 
         const projectTrack = document.getElementById("projectGrid");
         projectTrack?.scrollTo({ left: 0, behavior: "smooth" });
+    });
+}
+
+if (skillFilterGroup) {
+    skillFilterGroup.addEventListener("click", (event) => {
+        const target = event.target.closest(".chip");
+        if (!target) return;
+
+        skillFilterGroup.querySelectorAll(".chip").forEach((chip) => chip.classList.remove("active"));
+        target.classList.add("active");
+
+        const selected = target.getAttribute("data-filter");
+        skillCategories.forEach((category) => {
+            const match = selected === "all" || category.getAttribute("data-category") === selected;
+            category.style.display = match ? "block" : "none";
+        });
+    });
+}
+
+if (certificateFilterGroup) {
+    certificateFilterGroup.addEventListener("click", (event) => {
+        const target = event.target.closest(".chip");
+        if (!target) return;
+
+        certificateFilterGroup.querySelectorAll(".chip").forEach((chip) => chip.classList.remove("active"));
+        target.classList.add("active");
+
+        const selected = target.getAttribute("data-filter");
+        certificateCards.forEach((card) => {
+            const match = selected === "all" || card.getAttribute("data-category") === selected;
+            card.style.display = match ? "block" : "none";
+        });
+
+        // Reset certificate slider to beginning when filtering
+        const certificateTrack = document.getElementById("certificateGrid");
+        certificateTrack?.scrollTo({ left: 0, behavior: "smooth" });
     });
 }
 

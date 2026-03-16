@@ -80,9 +80,35 @@ const initPlatformLogos = () => {
 
 initPlatformLogos();
 
+const initPacmanEgg = () => {
+    const pacmanEgg = document.getElementById("pacmanEgg");
+    if (!pacmanEgg) return;
+
+    const move = () => {
+        const rect = pacmanEgg.getBoundingClientRect();
+        const w = rect.width || 56;
+        const h = rect.height || 56;
+        const margin = 16;
+        const maxX = Math.max(margin, window.innerWidth - w - margin);
+        const maxY = Math.max(margin, window.innerHeight - h - margin);
+        const x = Math.floor(margin + Math.random() * (maxX - margin));
+        const y = Math.floor(margin + Math.random() * (maxY - margin));
+        pacmanEgg.style.transform = `translate(${x}px, ${y}px)`;
+    };
+
+    if (prefersReducedMotion) {
+        move();
+        return;
+    }
+
+    pacmanEgg.style.transition = "transform 3200ms linear";
+    move();
+    window.setInterval(move, 3400);
+};
+
 const initEasterEgg = () => {
-    const brandLinks = Array.from(document.querySelectorAll('a.brand, #brandName')).filter(Boolean);
-    if (brandLinks.length === 0) return;
+    const trigger = document.getElementById("pacmanEgg");
+    if (!trigger) return;
 
     const prefersReduce = prefersReducedMotion;
     const STORAGE_KEY = 'portfolio_eegg_best';
@@ -186,22 +212,136 @@ const initEasterEgg = () => {
     };
 
     let overlay;
-    let state = 'intro'; // intro | playing | over
+    let state = 'intro'; // intro | starting | playing | over
     let raf = 0;
+    let countdownRaf = 0;
     let score = 0;
     let introTimer = 0;
     let glitch = null;
+    let startGateToken = 0;
+    let sfxPrimed = false;
     const sfxStart = new Audio('start.mp3');
     const sfxEnd = new Audio('end.mp3');
     const sfxGlitch = new Audio('glitch.mp3');
 
     const playSfx = (audio) => {
         try {
+            if (audio.readyState < 2) audio.load?.();
             audio.pause();
             audio.currentTime = 0;
             const p = audio.play();
             if (p && typeof p.catch === 'function') p.catch(() => {});
         } catch {}
+    };
+
+    const primeAudio = async (audio) => {
+        try {
+            audio.load?.();
+            const prevMuted = audio.muted;
+            const prevVol = audio.volume;
+            audio.muted = true;
+            audio.volume = 0;
+            audio.pause();
+            audio.currentTime = 0;
+            const p = audio.play();
+            if (p && typeof p.then === 'function') await p;
+            audio.pause();
+            audio.currentTime = 0;
+            audio.muted = prevMuted;
+            audio.volume = prevVol;
+        } catch {}
+    };
+
+    const primeSfx = async () => {
+        if (sfxPrimed) return;
+        sfxPrimed = true;
+        await Promise.all([primeAudio(sfxStart), primeAudio(sfxEnd), primeAudio(sfxGlitch)]);
+    };
+
+    const playSfxAndWait = (audio) => {
+        return new Promise((resolve) => {
+            let done = false;
+            const onEnded = () => finish();
+            const onError = () => finish();
+            const finish = () => {
+                if (done) return;
+                done = true;
+                try { audio.removeEventListener('ended', onEnded); } catch {}
+                try { audio.removeEventListener('error', onError); } catch {}
+                resolve();
+            };
+
+            try {
+                if (audio.readyState < 2) audio.load?.();
+                audio.loop = false;
+                audio.pause();
+                audio.currentTime = 0;
+
+                audio.addEventListener('ended', onEnded);
+                audio.addEventListener('error', onError);
+
+                const p = audio.play();
+                if (p && typeof p.catch === 'function') p.catch(() => finish());
+            } catch {
+                finish();
+            }
+        });
+    };
+
+    const stopCountdown = () => {
+        cancelAnimationFrame(countdownRaf);
+        countdownRaf = 0;
+    };
+
+    const countdownTmp = document.createElement('canvas');
+    const countdownTmpCtx = countdownTmp.getContext('2d');
+
+    const drawPixelatedCountdown = (ctx, text, t) => {
+        const s = String(text);
+        const tmp = countdownTmp;
+        const tctx = countdownTmpCtx;
+
+        const fontSize = 22;
+        const padX = 16;
+        const padY = 12;
+        const font = `900 ${fontSize}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace`;
+        tctx.font = font;
+        const w = Math.ceil(tctx.measureText(s).width) + padX * 2;
+        const h = Math.ceil(fontSize * 1.1) + padY * 2;
+
+        tmp.width = Math.max(1, w);
+        tmp.height = Math.max(1, h);
+
+        tctx.imageSmoothingEnabled = false;
+        tctx.font = font;
+        tctx.textAlign = 'center';
+        tctx.textBaseline = 'middle';
+
+        // Backplate
+        tctx.fillStyle = 'rgba(11, 16, 32, 0.72)';
+        tctx.fillRect(0, 0, tmp.width, tmp.height);
+
+        // Outline + glow-ish shadow (kept chunky for pixel look)
+        tctx.fillStyle = '#0b1020';
+        for (const [dx, dy] of [[-2, 0], [2, 0], [0, -2], [0, 2], [-2, -2], [2, 2], [-2, 2], [2, -2]]) {
+            tctx.fillText(s, tmp.width / 2 + dx, tmp.height / 2 + dy);
+        }
+
+        const pulse = prefersReduce ? 1 : (0.9 + 0.1 * Math.sin(t / 120));
+        tctx.fillStyle = '#fef08a';
+        tctx.fillText(s, tmp.width / 2, tmp.height / 2);
+
+        const scale = 8 * pulse;
+        const dw = tmp.width * scale;
+        const dh = tmp.height * scale;
+        const x = (ctx.canvas.width - dw) / 2;
+        const y = Math.max(0, ctx.canvas.height * 0.14 - dh / 2);
+
+        ctx.save();
+        ctx.imageSmoothingEnabled = false;
+        ctx.globalAlpha = 0.98;
+        ctx.drawImage(tmp, x, y, dw, dh);
+        ctx.restore();
     };
 
     sfxStart.preload = 'auto';
@@ -245,8 +385,8 @@ const initEasterEgg = () => {
         const onResize = () => resize();
         window.addEventListener('resize', onResize);
 
-        // Dark-mode themed "TV glitch" palette (navy + neon accents)
-        const palette = ['#0b1020', '#111827', '#1e293b', '#22d3ee', '#fef08a'];
+        // "TV glitch" palette (black + off-white + charcoal grey)
+        const palette = ['#000000', '#0a0a0a', '#111827', '#1f2937', '#e5e7eb', '#f8fafc'];
         const startT = performance.now();
         let rafId = 0;
         let stopped = false;
@@ -262,12 +402,12 @@ const initEasterEgg = () => {
 
             // Fade previous frames slowly for a "TV smear" feel.
             ctx.globalAlpha = 1;
-            ctx.fillStyle = 'rgba(11, 16, 32, 0.22)';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.24)';
             ctx.fillRect(0, 0, w, h);
 
             // Scanline base
             ctx.globalAlpha = 0.14;
-            ctx.fillStyle = '#0b1020';
+            ctx.fillStyle = '#000000';
             for (let y = 0; y < h; y += 4) ctx.fillRect(0, y, w, 1);
 
             // Horizontal bands with small lateral jitter (classic TV glitch)
@@ -287,9 +427,9 @@ const initEasterEgg = () => {
                 ctx.drawImage(canvas, 0, sy, w, sh, dx, sy, w, sh);
             }
 
-            // Neon accent sync-ish bursts
+            // Off-white accent bursts
             ctx.globalAlpha = 0.16;
-            const accent = Math.random() < 0.55 ? '#22d3ee' : '#fef08a';
+            const accent = Math.random() < 0.55 ? '#f8fafc' : '#e5e7eb';
             ctx.fillStyle = accent;
             for (let i = 0; i < 4; i++) {
                 const sh = Math.floor(Math.random() * 18) + 4;
@@ -394,6 +534,32 @@ const initEasterEgg = () => {
 
     const cleanName = (raw) => String(raw || '').replace(/[^\w\- ]+/g, '').trim().slice(0, 14);
 
+    const readMeta = (name) => {
+        try {
+            const meta = document.querySelector(`meta[name="${name}"]`);
+            return String(meta?.getAttribute('content') || '').trim();
+        } catch {
+            return '';
+        }
+    };
+
+    const SUPABASE_URL = (() => {
+        const url = readMeta('eegg-supabase-url');
+        if (!url) return '';
+        if (!/^https?:\/\//i.test(url)) return '';
+        return url.replace(/\/+$/, '');
+    })();
+
+    const SUPABASE_ANON_KEY = readMeta('eegg-supabase-anon-key');
+    const SUPABASE_TABLE = readMeta('eegg-supabase-table') || 'eegg_scores';
+
+    const REMOTE_SCORES_ENDPOINT = (() => {
+        const url = readMeta('eegg-scores-endpoint');
+        if (!url) return '';
+        if (!/^https?:\/\//i.test(url)) return '';
+        return url;
+    })();
+
     const loadScores = () => {
         try {
             const raw = localStorage.getItem(SCORES_KEY);
@@ -416,6 +582,120 @@ const initEasterEgg = () => {
 
     const saveScores = (scores) => {
         localStorage.setItem(SCORES_KEY, JSON.stringify(scores.slice(0, 50)));
+    };
+
+    const normalizeScores = (arr) => {
+        if (!Array.isArray(arr)) return [];
+        return arr
+            .filter((x) => x && typeof x === 'object')
+            .map((x) => ({
+                id: String(x.id || ''),
+                name: cleanName(x.name || 'PLAYER-1'),
+                score: Number(x.score || 0),
+                ts: Number(x.ts || 0)
+            }))
+            .filter((x) => x.id && x.name && Number.isFinite(x.score) && Number.isFinite(x.ts));
+    };
+
+    const mergeScores = (a, b) => {
+        const map = new Map();
+        for (const e of [...a, ...b]) {
+            const key = e.id || `${e.name}-${e.score}-${e.ts}`;
+            if (!map.has(key)) map.set(key, e);
+        }
+        const out = Array.from(map.values());
+        out.sort((x, y) => (y.score - x.score) || (y.ts - x.ts));
+        return out.slice(0, 50);
+    };
+
+    const withTimeout = async (promise, ms = 2500) => {
+        const ctrl = new AbortController();
+        const to = window.setTimeout(() => ctrl.abort(), ms);
+        try {
+            return await promise(ctrl.signal);
+        } finally {
+            window.clearTimeout(to);
+        }
+    };
+
+    const fetchRemoteScores = async () => {
+        if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+            try {
+                const scores = await withTimeout(async (signal) => {
+                    const res = await fetch(`${SUPABASE_URL}/rest/v1/${encodeURIComponent(SUPABASE_TABLE)}?select=id,name,score,ts&order=score.desc,ts.desc&limit=50`, {
+                        method: 'GET',
+                        signal,
+                        cache: 'no-store',
+                        headers: {
+                            apikey: SUPABASE_ANON_KEY,
+                            authorization: `Bearer ${SUPABASE_ANON_KEY}`
+                        }
+                    });
+                    if (!res.ok) return null;
+                    const data = await res.json();
+                    return normalizeScores(data);
+                });
+                return scores;
+            } catch {
+                return null;
+            }
+        }
+
+        if (!REMOTE_SCORES_ENDPOINT) return null;
+        try {
+            const scores = await withTimeout(async (signal) => {
+                const res = await fetch(REMOTE_SCORES_ENDPOINT, { method: 'GET', signal, cache: 'no-store' });
+                if (!res.ok) return null;
+                const data = await res.json();
+                const arr = Array.isArray(data) ? data : (Array.isArray(data?.scores) ? data.scores : null);
+                return normalizeScores(arr);
+            });
+            return scores;
+        } catch {
+            return null;
+        }
+    };
+
+    const pushRemoteScore = async (entry) => {
+        if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+            try {
+                await withTimeout(async (signal) => {
+                    await fetch(`${SUPABASE_URL}/rest/v1/${encodeURIComponent(SUPABASE_TABLE)}`, {
+                        method: 'POST',
+                        headers: {
+                            'content-type': 'application/json',
+                            apikey: SUPABASE_ANON_KEY,
+                            authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+                            prefer: 'return=minimal'
+                        },
+                        body: JSON.stringify([entry]),
+                        signal
+                    });
+                });
+            } catch {}
+            return;
+        }
+
+        if (!REMOTE_SCORES_ENDPOINT) return;
+        try {
+            await withTimeout(async (signal) => {
+                await fetch(REMOTE_SCORES_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'content-type': 'application/json' },
+                    body: JSON.stringify(entry),
+                    signal
+                });
+            });
+        } catch {}
+    };
+
+    const syncRemoteScores = async () => {
+        const remote = await fetchRemoteScores();
+        if (!remote || remote.length === 0) return;
+        const local = loadScores();
+        const merged = mergeScores(local, remote);
+        saveScores(merged);
+        renderIntroLeaderboard();
     };
 
     const getTopScores = (limit = 5) => {
@@ -475,6 +755,7 @@ const initEasterEgg = () => {
             sync();
         }
         renderIntroLeaderboard();
+        syncRemoteScores();
     };
 
     const openInstant = () => {
@@ -511,6 +792,8 @@ const initEasterEgg = () => {
             return;
         }
 
+        // Run under a user gesture (opening the overlay) to reduce SFX start latency.
+        await primeSfx();
         playSfx(sfxGlitch);
 
         // Prepare a pitch-black overlay underneath the glitch (no fade-in perceived).
@@ -551,7 +834,9 @@ const initEasterEgg = () => {
     const close = () => {
         window.clearTimeout(introTimer);
         stopGlitch();
-        try { sfxStart.pause(); } catch {}
+        stopCountdown();
+        startGateToken++;
+        try { sfxStart.pause(); sfxStart.currentTime = 0; } catch {}
         try { sfxEnd.pause(); } catch {}
         try { sfxGlitch.pause(); } catch {}
         document.body.style.overflow = '';
@@ -583,7 +868,8 @@ const initEasterEgg = () => {
         all.push(entry);
         all.sort((a, b) => (b.score - a.score) || (b.ts - a.ts));
         saveScores(all.slice(0, 25));
-        const top = getTopScores(7);
+        const top = getTopScores(10);
+        pushRemoteScore(entry);
 
         overlay.querySelector('#eeggIntro').style.display = '';
         overlay.classList.add('intro-show');
@@ -625,12 +911,13 @@ const initEasterEgg = () => {
     let pellets;
     let pac;
     let ghosts;
-    let dir = { x: 1, y: 0 };
-    let nextDir = { x: 1, y: 0 };
+    let dir = { x: 0, y: 0 }; // movement (one-tile steps)
+    let nextDir = { x: 0, y: 0 }; // queued step direction
+    let facing = { x: 1, y: 0 }; // for drawing even when standing still
     let lastStep = 0;
 
     const resetEntities = () => {
-        pac = { x: 1, y: 1, px: 1 * tile, py: 1 * tile, speed: 9.6 };
+        pac = { x: 1, y: 1, px: 1 * tile, py: 1 * tile, speed: 14.5 };
         ghosts = [
             { x: gridW - 2, y: gridH - 2, px: (gridW - 2) * tile, py: (gridH - 2) * tile, speed: 8.4, color: '#fb7185' },
             { x: gridW - 2, y: 1, px: (gridW - 2) * tile, py: 1 * tile, speed: 8.1, color: '#60a5fa' },
@@ -638,17 +925,25 @@ const initEasterEgg = () => {
             { x: Math.floor(gridW / 2), y: 1, px: Math.floor(gridW / 2) * tile, py: 1 * tile, speed: 8.2, color: '#fbbf24' },
             { x: Math.floor(gridW / 2), y: gridH - 2, px: Math.floor(gridW / 2) * tile, py: (gridH - 2) * tile, speed: 8.3, color: '#a78bfa' }
         ];
-        dir = { x: 1, y: 0 };
-        nextDir = { x: 1, y: 0 };
+        dir = { x: 0, y: 0 };
+        nextDir = { x: 0, y: 0 };
+        facing = { x: 1, y: 0 };
         lastStep = 0;
     };
 
     const canMove = (x, y) => inBounds(x, y) && !walls[y][x];
 
     const tryTurn = () => {
+        if (!nextDir.x && !nextDir.y) return false;
         const nx = pac.x + nextDir.x;
         const ny = pac.y + nextDir.y;
-        if (canMove(nx, ny)) dir = { ...nextDir };
+        if (canMove(nx, ny)) {
+            dir = { ...nextDir };
+            facing = { ...nextDir };
+            nextDir = { x: 0, y: 0 };
+            return true;
+        }
+        return false;
     };
 
     const stepEntity = (ent, vx, vy) => {
@@ -707,7 +1002,7 @@ const initEasterEgg = () => {
 
         // Pacman
         const mouth = prefersReduce ? 0.08 : (0.18 + 0.08 * Math.sin(performance.now() / 110));
-        const angle = dir.x === 1 ? 0 : dir.x === -1 ? Math.PI : dir.y === 1 ? Math.PI / 2 : -Math.PI / 2;
+        const angle = facing.x === 1 ? 0 : facing.x === -1 ? Math.PI : facing.y === 1 ? Math.PI / 2 : -Math.PI / 2;
         ctx.fillStyle = '#facc15';
         ctx.beginPath();
         ctx.moveTo(pac.px + tile / 2, pac.py + tile / 2);
@@ -744,9 +1039,18 @@ const initEasterEgg = () => {
         if (atTile) {
             pac.px = targetX;
             pac.py = targetY;
-            tryTurn();
-            const moved = stepEntity(pac, dir.x, dir.y);
-            if (!moved) dir = { x: 0, y: 0 };
+
+            // One-tile step only when user requests a direction.
+            if (!dir.x && !dir.y) {
+                const stepped = tryTurn();
+                if (stepped) {
+                    stepEntity(pac, dir.x, dir.y);
+                    dir = { x: 0, y: 0 };
+                }
+            } else {
+                // Safety: movement is step-based; don't auto-continue.
+                dir = { x: 0, y: 0 };
+            }
         }
 
         pac.px += (pac.x * tile - pac.px) * Math.min(1, movePx(pac, pac.speed) / tile);
@@ -793,8 +1097,10 @@ const initEasterEgg = () => {
         raf = requestAnimationFrame((t) => update(t, ctx));
     };
 
-    const start = () => {
+    const start = async () => {
         if (!overlay) return;
+        if (state === 'starting' || state === 'playing') return;
+        await primeSfx();
         const nameInput = overlay.querySelector('#eeggNameInput');
         const err = overlay.querySelector('#eeggNameError');
 
@@ -835,8 +1141,8 @@ const initEasterEgg = () => {
             return;
         }
 
-        playSfx(sfxStart);
-        state = 'playing';
+        const token = ++startGateToken;
+        state = 'starting';
         score = 0;
         overlay.querySelector('#eeggScore').textContent = '0';
         overlay.querySelector('#eeggBest').textContent = String(getBest());
@@ -858,14 +1164,58 @@ const initEasterEgg = () => {
 
         cancelAnimationFrame(raf);
         lastStep = 0;
-        raf = requestAnimationFrame((t) => update(t, ctx));
+
+        stopCountdown();
+
+        playSfx(sfxStart);
+
+        const tickMs = 650;
+        const totalCountdownMs = tickMs * 3;
+        let countdownStart = 0;
+
+        const beginPlaying = () => {
+            stopCountdown();
+            if (!overlay || !overlay.classList.contains('open')) return;
+            if (token !== startGateToken) return;
+            if (state !== 'starting') return;
+
+            state = 'playing';
+            lastStep = 0;
+            raf = requestAnimationFrame((tt) => update(tt, ctx));
+        };
+
+        const runCountdown = (t) => {
+            if (!overlay || !overlay.classList.contains('open')) return;
+            if (state !== 'starting') return;
+            if (token !== startGateToken) return;
+            if (!countdownStart) countdownStart = t;
+
+            const elapsed = t - countdownStart;
+            if (elapsed >= totalCountdownMs) {
+                beginPlaying();
+                return;
+            }
+
+            const step = Math.min(2, Math.floor(elapsed / tickMs)); // 0,1,2
+            const n = 3 - step;
+
+            draw(ctx);
+            drawPixelatedCountdown(ctx, String(n), t);
+
+            countdownRaf = requestAnimationFrame(runCountdown);
+        };
+
+        runCountdown(performance.now());
+        countdownRaf = requestAnimationFrame(runCountdown);
     };
 
     const setDir = (d) => {
+        if (state !== 'playing') return;
         if (d === 'up') nextDir = { x: 0, y: -1 };
         if (d === 'down') nextDir = { x: 0, y: 1 };
         if (d === 'left') nextDir = { x: -1, y: 0 };
         if (d === 'right') nextDir = { x: 1, y: 0 };
+        if (nextDir.x || nextDir.y) facing = { ...nextDir };
     };
 
     const onKey = (e) => {
@@ -909,18 +1259,14 @@ const initEasterEgg = () => {
         });
     };
 
-    brandLinks.forEach((a) => {
-        a.addEventListener('click', (e) => {
-            // Only intercept "nav brand" clicks; allow other anchors if modifier keys
-            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-            e.preventDefault();
-            openSequenced();
-        });
+    trigger.addEventListener("click", () => {
+        openSequenced();
     });
 
     window.addEventListener('keydown', onKey);
 };
 
+initPacmanEgg();
 initEasterEgg();
 
 if (menuToggle && nav) {
@@ -1119,6 +1465,25 @@ if (rotatePhotoBtn) {
 
 if (year) {
     year.textContent = new Date().getFullYear();
+}
+
+const sitTrigger = document.getElementById("sitTrigger");
+if (sitTrigger) {
+    let clicks = 0;
+    let resetTimer = 0;
+
+    sitTrigger.addEventListener("click", () => {
+        clicks += 1;
+        window.clearTimeout(resetTimer);
+        resetTimer = window.setTimeout(() => {
+            clicks = 0;
+        }, 1500);
+
+        if (clicks >= 4) {
+            clicks = 0;
+            window.location.href = new URL("login.html", window.location.href).toString();
+        }
+    });
 }
 
 if (typingText) {

@@ -8,6 +8,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Orbitron:wght@500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <script>
+        (function () {
+            const AUTH_KEY = "portfolio_admin_auth_v1";
+            const raw = sessionStorage.getItem(AUTH_KEY);
+            const token = raw ? (() => { try { return JSON.parse(raw); } catch { return null; } })() : null;
+            const isAuthed = Boolean(token && token.ok === true && typeof token.exp === "number" && Date.now() < token.exp);
+            if (isAuthed) return;
+            sessionStorage.removeItem(AUTH_KEY);
+            const url = new URL("login.html", window.location.href);
+            url.searchParams.set("next", "admin.html");
+            window.location.replace(url.toString());
+        })();
+    </script>
     <style>
         .admin-container {
             max-width: 1200px;
@@ -26,6 +39,17 @@
             gap: 10px;
             margin-bottom: 30px;
             flex-wrap: wrap;
+        }
+
+        .nav a.admin-logout {
+            color: #ff7a7a;
+            font-weight: 700;
+        }
+
+        .nav a.admin-logout:hover {
+            color: white;
+            background: #dc3545;
+            border-color: #dc3545;
         }
 
         .admin-nav-btn {
@@ -379,6 +403,7 @@
                 <a href="index.html#certificates">Certificates</a>
                 <a href="index.html#contact">Contact</a>
                 <a href="admin.html" class="active">Admin</a>
+                <a href="#" id="logoutAdminBtn" class="admin-logout">Logout</a>
             </nav>
             <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">Dark</button>
         </div>
@@ -900,6 +925,16 @@
             const openPreviewBtn = document.getElementById('openPreviewBtn');
             openPreviewBtn?.addEventListener('click', () => {
                 window.open('index.html', '_blank', 'noopener,noreferrer');
+            });
+
+            const logoutAdminBtn = document.getElementById('logoutAdminBtn');
+            logoutAdminBtn?.addEventListener('click', (event) => {
+                event?.preventDefault?.();
+                const AUTH_KEY = "portfolio_admin_auth_v1";
+                sessionStorage.removeItem(AUTH_KEY);
+                const url = new URL("login.html", window.location.href);
+                url.searchParams.set("next", "admin.html");
+                window.location.replace(url.toString());
             });
 
             wireSectionControls('projects');

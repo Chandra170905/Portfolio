@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Chandra Prakash - Frontend-focused web developer portfolio.">
+    <!-- Global leaderboard (recommended): Supabase (public anon key is OK) -->
+    <meta name="eegg-supabase-url" content="">
+    <meta name="eegg-supabase-anon-key" content="">
+    <meta name="eegg-supabase-table" content="eegg_scores">
+    <!-- Alternative: custom API endpoint that returns/accepts leaderboard scores as JSON -->
+    <meta name="eegg-scores-endpoint" content="">
     <title>Chandra Prakash | Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,6 +27,35 @@
         <span class="bg-layer layer-b"></span>
         <span class="bg-layer layer-c"></span>
     </div>
+    <button class="pacman-egg" id="pacmanEgg" type="button" aria-label=" ">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false" shape-rendering="crispEdges">
+            <rect width="16" height="16" fill="none"></rect>
+            <!-- Pixel Pac-Man (open mouth) -->
+            <g fill="#fef08a">
+                <rect x="5" y="1" width="6" height="1" />
+                <rect x="3" y="2" width="10" height="1" />
+                <rect x="2" y="3" width="12" height="1" />
+                <rect x="1" y="4" width="14" height="1" />
+                <rect x="1" y="5" width="6" height="1" />
+                <rect x="10" y="5" width="5" height="1" />
+                <rect x="1" y="6" width="5" height="1" />
+                <rect x="11" y="6" width="4" height="1" />
+                <rect x="1" y="7" width="4" height="1" />
+                <rect x="12" y="7" width="3" height="1" />
+                <rect x="1" y="8" width="4" height="1" />
+                <rect x="12" y="8" width="3" height="1" />
+                <rect x="1" y="9" width="5" height="1" />
+                <rect x="11" y="9" width="4" height="1" />
+                <rect x="1" y="10" width="6" height="1" />
+                <rect x="10" y="10" width="5" height="1" />
+                <rect x="1" y="11" width="14" height="1" />
+                <rect x="2" y="12" width="12" height="1" />
+                <rect x="3" y="13" width="10" height="1" />
+                <rect x="5" y="14" width="6" height="1" />
+            </g>
+            <rect x="10" y="4" width="1" height="1" fill="#0b1020"></rect>
+        </svg>
+    </button>
     <header class="site-header">
         <div class="container header-row">
             <a id="brandName" class="brand" href="">Chandra Prakash</a>
@@ -612,6 +647,11 @@
                                 <path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5 2.5 2.5 0 0 0 4.98 3.5ZM3 9.5h4v11H3v-11Zm7 0h3.84v1.6h.05c.53-1 1.84-2.05 3.8-2.05 4.06 0 4.81 2.67 4.81 6.14v5.31h-4v-4.7c0-1.12-.02-2.56-1.56-2.56-1.56 0-1.8 1.22-1.8 2.48v4.78h-4v-11Z"/>
                             </svg>
                         </a>
+                    </div>
+                    <div class="contact-gate" aria-hidden="true">
+                        <button class="sit-trigger" id="sitTrigger" type="button" tabindex="-1">
+                            <img src="sit.png" alt="" loading="lazy" decoding="async">
+                        </button>
                     </div>
                 </div>
                 <form class="contact-form" id="contactForm" action="https://formsubmit.co/chandra170905@gmail.com" method="post">

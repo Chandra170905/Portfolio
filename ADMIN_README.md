@@ -2,6 +2,13 @@
 
 This admin panel allows you to manage your portfolio content without editing code directly. All changes are saved to your browser's local storage.
 
+## Login (Local)
+
+- Open `login.html` (or open `admin.html` and you will be redirected).
+- Username: `Chandra05`
+- Password: `Chandra#2005`
+- Login is stored for the current browser session (auto-expires after ~2 hours).
+
 ## Features
 
 ### Content Management
@@ -48,3 +55,40 @@ If you're new to the admin panel:
 ## Integration with Main Portfolio
 
 The admin panel manages data that can be integrated with your main portfolio website. The data structure is designed to work seamlessly with the existing portfolio layout.
+
+## Global Game Leaderboard (Supabase Recommended)
+
+By default the game leaderboard is stored in `localStorage` (only on the same device). To make it global across devices/users, use Supabase:
+
+1. Create a Supabase project.
+2. In Supabase SQL editor, create a table:
+
+```sql
+create table if not exists public.eegg_scores (
+  id text primary key,
+  name text not null,
+  score int not null,
+  ts bigint not null
+);
+
+alter table public.eegg_scores enable row level security;
+
+create policy "public read scores"
+on public.eegg_scores for select
+to anon
+using (true);
+
+create policy "public insert scores"
+on public.eegg_scores for insert
+to anon
+with check (true);
+```
+
+3. In `index.html`, set:
+   - `eegg-supabase-url` to your project URL (like `https://xxxx.supabase.co`)
+   - `eegg-supabase-anon-key` to your anon public key
+   - `eegg-supabase-table` (optional) default is `eegg_scores`
+
+Notes:
+- The anon key is meant to be public. RLS policies control what can be read/written.
+- This setup allows anyone to insert scores; for stricter anti-cheat you’ll need a server-side function to validate writes.

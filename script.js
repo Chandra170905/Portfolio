@@ -39,6 +39,889 @@ const hireRange = document.getElementById("hireRange");
 const hireCurrency = document.getElementById("hireCurrency");
 const hireToast = document.getElementById("hireToast");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const THEME_TRANSITION_MS = 420;
+
+const withThemeTransition = (fn) => {
+    if (prefersReducedMotion) {
+        fn();
+        return;
+    }
+
+    document.body.classList.add("theme-transition");
+    requestAnimationFrame(() => {
+        fn();
+        window.setTimeout(() => {
+            document.body.classList.remove("theme-transition");
+        }, THEME_TRANSITION_MS);
+    });
+};
+
+const initPlatformLogos = () => {
+    const logos = document.querySelectorAll(".platform-logo");
+    if (logos.length === 0) return;
+
+    logos.forEach((img) => {
+        const wrap = img.closest(".platform-icon");
+        if (!wrap) return;
+
+        const markLoaded = () => wrap.classList.add("has-logo");
+
+        if (img.complete && img.naturalWidth > 0) {
+            markLoaded();
+        } else {
+            img.addEventListener("load", markLoaded, { once: true });
+        }
+
+        img.addEventListener("error", () => {
+            img.remove();
+        }, { once: true });
+    });
+};
+
+initPlatformLogos();
+
+const initEasterEgg = () => {
+    const brandLinks = Array.from(document.querySelectorAll('a.brand, #brandName')).filter(Boolean);
+    if (brandLinks.length === 0) return;
+
+    const prefersReduce = prefersReducedMotion;
+    const STORAGE_KEY = 'portfolio_eegg_best';
+    const SCORES_KEY = 'portfolio_eegg_scores';
+    const NAME_KEY = 'portfolio_eegg_name';
+
+    const introCardHTML = () => `
+        <div class="eegg-intro-grid">
+            <div class="eegg-intro-spritewrap" aria-hidden="true">
+                <img class="eegg-intro-sprite" src="sprite.png" alt="" loading="eager" decoding="async">
+            </div>
+
+            <div class="eegg-intro-content">
+                <h2 class="eegg-title">Congrats! You found the Easter Egg.</h2>
+
+                <div class="eegg-field" aria-label="Player name">
+                    <label class="eegg-label" for="eeggNameInput">Player Name</label>
+                    <div class="eegg-field-row">
+                        <input class="eegg-input" id="eeggNameInput" name="playerName" maxlength="14" autocomplete="nickname" placeholder="ENTER NAME">
+                        <span class="eegg-name-error" id="eeggNameError" style="display:none;">Enter your name to start.</span>
+                        <span class="eegg-mini">Press <span class="eegg-kbd">Enter</span> to start</span>
+                    </div>
+                </div>
+
+                <div class="eegg-meta" aria-label="Game info">
+                    <span class="eegg-chip">Best: <strong id="eeggBestIntro">0</strong></span>
+                    <span class="eegg-chip">Ghosts: <strong>5</strong></span>
+                    <span class="eegg-chip">Speed: <strong>FAST</strong></span>
+                </div>
+
+                <div class="eegg-body">
+                    <p class="eegg-sub">Eat pellets, avoid ghosts, and clear the board for a bonus.</p>
+
+                    <div class="eegg-panels" aria-label="How to play">
+                        <div class="eegg-panel">
+                            <div class="eegg-panel-title">Controls</div>
+                            <div class="eegg-panel-row"><span class="eegg-kbd">↑</span><span class="eegg-kbd">↓</span><span class="eegg-kbd">←</span><span class="eegg-kbd">→</span> or <span class="eegg-kbd">W</span><span class="eegg-kbd">A</span><span class="eegg-kbd">S</span><span class="eegg-kbd">D</span></div>
+                            <div class="eegg-panel-row">Exit: <span class="eegg-kbd">Esc</span></div>
+                            <div class="eegg-panel-row">Start: <span class="eegg-kbd">Enter</span></div>
+                        </div>
+                        <div class="eegg-panel">
+                            <div class="eegg-panel-title">Scoring</div>
+                            <div class="eegg-panel-row">Pellet: +10</div>
+                            <div class="eegg-panel-row">Clear all: +200</div>
+                        </div>
+                    </div>
+
+                    <div class="eegg-tip" aria-label="Tip"><span class="eegg-blink">PRESS START</span> · Don’t get cornered.</div>
+                </div>
+
+                <div class="eegg-actions">
+                    <button class="eegg-btn primary" id="eeggStartBtn" type="button" disabled>Start</button>
+                    <button class="eegg-btn" id="eeggCloseBtn" type="button">Back</button>
+                </div>
+
+                <div class="eegg-leader" aria-label="Leaderboard">
+                    <div class="eegg-panel-title">Leaderboard</div>
+                    <ol class="eegg-leader-list" id="eeggLeaderIntro"></ol>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const createOverlay = () => {
+        const overlay = document.createElement('div');
+        overlay.className = 'eegg-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-label', 'Easter egg game');
+        overlay.innerHTML = `
+            <div class="eegg-shell">
+                <div class="eegg-intro" id="eeggIntro">
+                    <div class="eegg-card eegg-card--intro" id="eeggCard">
+                        ${introCardHTML()}
+                    </div>
+                </div>
+
+                <div class="eegg-gamewrap" id="eeggGameWrap" style="display:none;">
+                    <div class="eegg-hud">
+                        <span>Score: <span id="eeggScore">0</span></span>
+                        <span>Best: <span id="eeggBest">0</span></span>
+                        <span><button class="eegg-btn" id="eeggExitBtn" type="button" style="padding:6px 10px;">Exit</button></span>
+                    </div>
+                    <canvas class="eegg-canvas" id="eeggCanvas" width="672" height="480"></canvas>
+                </div>
+
+                <div class="eegg-dpad" id="eeggDpad" style="display:none;">
+                    <div class="col">
+                        <button type="button" data-dir="up">↑</button>
+                        <button type="button" data-dir="down">↓</button>
+                    </div>
+                    <div class="col">
+                        <button type="button" data-dir="left">←</button>
+                        <button type="button" data-dir="right">→</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        return overlay;
+    };
+
+    let overlay;
+    let state = 'intro'; // intro | playing | over
+    let raf = 0;
+    let score = 0;
+    let introTimer = 0;
+    let glitch = null;
+    const sfxStart = new Audio('start.mp3');
+    const sfxEnd = new Audio('end.mp3');
+    const sfxGlitch = new Audio('glitch.mp3');
+
+    const playSfx = (audio) => {
+        try {
+            audio.pause();
+            audio.currentTime = 0;
+            const p = audio.play();
+            if (p && typeof p.catch === 'function') p.catch(() => {});
+        } catch {}
+    };
+
+    sfxStart.preload = 'auto';
+    sfxEnd.preload = 'auto';
+    sfxGlitch.preload = 'auto';
+    sfxStart.volume = 0.75;
+    sfxEnd.volume = 0.8;
+    sfxGlitch.volume = 0.8;
+
+    const stopGlitch = () => {
+        if (!glitch) return;
+        glitch.stop?.();
+        glitch = null;
+    };
+
+    const runGlitch = (durationMs = 2000) => {
+        if (prefersReduce) return Promise.resolve();
+
+        stopGlitch();
+
+        const canvas = document.createElement('canvas');
+        canvas.className = 'eegg-glitch';
+        canvas.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(canvas);
+
+        const ctx = canvas.getContext('2d', { alpha: true });
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
+
+        const resize = () => {
+            const w = Math.max(1, window.innerWidth);
+            const h = Math.max(1, window.innerHeight);
+            canvas.width = Math.floor(w * dpr);
+            canvas.height = Math.floor(h * dpr);
+            canvas.style.width = `${w}px`;
+            canvas.style.height = `${h}px`;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        };
+
+        resize();
+
+        const onResize = () => resize();
+        window.addEventListener('resize', onResize);
+
+        // Dark-mode themed "TV glitch" palette (navy + neon accents)
+        const palette = ['#0b1020', '#111827', '#1e293b', '#22d3ee', '#fef08a'];
+        const startT = performance.now();
+        let rafId = 0;
+        let stopped = false;
+        const fadeMs = 650;
+        let resolved = false;
+        let resolveDone = () => {};
+
+        const drawFrame = (t) => {
+            if (stopped) return;
+            const elapsed = t - startT;
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+
+            // Fade previous frames slowly for a "TV smear" feel.
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = 'rgba(11, 16, 32, 0.22)';
+            ctx.fillRect(0, 0, w, h);
+
+            // Scanline base
+            ctx.globalAlpha = 0.14;
+            ctx.fillStyle = '#0b1020';
+            for (let y = 0; y < h; y += 4) ctx.fillRect(0, y, w, 1);
+
+            // Horizontal bands with small lateral jitter (classic TV glitch)
+            ctx.globalAlpha = 0.6;
+            const bands = 18;
+            for (let i = 0; i < bands; i++) {
+                const sh = Math.floor(Math.random() * 28) + 6;
+                const sy = Math.floor(Math.random() * (h - sh));
+                const dx = (Math.random() - 0.5) * 70;
+                const c = palette[Math.floor(Math.random() * palette.length)];
+
+                ctx.fillStyle = c;
+                ctx.globalAlpha = 0.08 + Math.random() * 0.22;
+                ctx.fillRect(0, sy, w, sh);
+
+                ctx.globalAlpha = 0.2 + Math.random() * 0.24;
+                ctx.drawImage(canvas, 0, sy, w, sh, dx, sy, w, sh);
+            }
+
+            // Neon accent sync-ish bursts
+            ctx.globalAlpha = 0.16;
+            const accent = Math.random() < 0.55 ? '#22d3ee' : '#fef08a';
+            ctx.fillStyle = accent;
+            for (let i = 0; i < 4; i++) {
+                const sh = Math.floor(Math.random() * 18) + 4;
+                const sy = Math.floor(Math.random() * (h - sh));
+                ctx.fillRect(0, sy, w, sh);
+            }
+
+            ctx.globalAlpha = 1;
+
+            if (elapsed < durationMs) {
+                rafId = requestAnimationFrame(drawFrame);
+            } else {
+                canvas.classList.add('fade');
+                if (!resolved) {
+                    resolved = true;
+                    window.setTimeout(() => resolveDone(), fadeMs);
+                }
+                window.setTimeout(() => {
+                    window.removeEventListener('resize', onResize);
+                    canvas.remove();
+                }, fadeMs + 80);
+            }
+        };
+
+        rafId = requestAnimationFrame(drawFrame);
+
+        glitch = {
+            stop: () => {
+                stopped = true;
+                cancelAnimationFrame(rafId);
+                window.removeEventListener('resize', onResize);
+                canvas.remove();
+            }
+        };
+
+        return new Promise((resolve) => {
+            resolveDone = resolve;
+        });
+    };
+
+    const tile = 24;
+    const gridW = 28;
+    const gridH = 20;
+
+    const makeMaze = () => {
+        const walls = Array.from({ length: gridH }, () => Array.from({ length: gridW }, () => 0));
+        for (let x = 0; x < gridW; x++) {
+            walls[0][x] = 1;
+            walls[gridH - 1][x] = 1;
+        }
+        for (let y = 0; y < gridH; y++) {
+            walls[y][0] = 1;
+            walls[y][gridW - 1] = 1;
+        }
+
+        const addRect = (x1, y1, x2, y2) => {
+            for (let y = y1; y <= y2; y++) {
+                for (let x = x1; x <= x2; x++) walls[y][x] = 1;
+            }
+        };
+
+        addRect(3, 3, 6, 4);
+        addRect(9, 3, 12, 4);
+        addRect(15, 3, 18, 4);
+        addRect(21, 3, 24, 4);
+        addRect(3, 8, 5, 12);
+        addRect(22, 8, 24, 12);
+        addRect(10, 8, 17, 9);
+        addRect(10, 13, 17, 14);
+        addRect(12, 10, 15, 12);
+
+        return walls;
+    };
+
+    const inBounds = (x, y) => x >= 0 && y >= 0 && x < gridW && y < gridH;
+
+    const initPellets = (walls) => {
+        const pellets = Array.from({ length: gridH }, () => Array.from({ length: gridW }, () => 0));
+        for (let y = 1; y < gridH - 1; y++) {
+            for (let x = 1; x < gridW - 1; x++) {
+                if (!walls[y][x]) pellets[y][x] = 1;
+            }
+        }
+        // Clear spawn areas
+        pellets[1][1] = 0;
+        pellets[1][2] = 0;
+        pellets[gridH - 2][gridW - 2] = 0;
+        pellets[gridH - 2][gridW - 3] = 0;
+        return pellets;
+    };
+
+    const getBest = () => {
+        const n = Number(localStorage.getItem(STORAGE_KEY) || 0);
+        return Number.isFinite(n) ? n : 0;
+    };
+
+    const setBest = (n) => localStorage.setItem(STORAGE_KEY, String(n));
+
+    const getSavedName = () => String(localStorage.getItem(NAME_KEY) || '').trim().slice(0, 14);
+
+    const setSavedName = (name) => localStorage.setItem(NAME_KEY, name);
+
+    const cleanName = (raw) => String(raw || '').replace(/[^\w\- ]+/g, '').trim().slice(0, 14);
+
+    const loadScores = () => {
+        try {
+            const raw = localStorage.getItem(SCORES_KEY);
+            const arr = JSON.parse(raw || '[]');
+            if (!Array.isArray(arr)) return [];
+            return arr
+                .filter((x) => x && typeof x === 'object')
+                .map((x) => ({
+                    id: String(x.id || ''),
+                    name: cleanName(x.name || 'PLAYER-1'),
+                    score: Number(x.score || 0),
+                    ts: Number(x.ts || 0)
+                }))
+                .filter((x) => x.id && x.name && Number.isFinite(x.score) && Number.isFinite(x.ts))
+                .slice(0, 50);
+        } catch {
+            return [];
+        }
+    };
+
+    const saveScores = (scores) => {
+        localStorage.setItem(SCORES_KEY, JSON.stringify(scores.slice(0, 50)));
+    };
+
+    const getTopScores = (limit = 5) => {
+        const scores = loadScores();
+        scores.sort((a, b) => (b.score - a.score) || (b.ts - a.ts));
+        return scores.slice(0, limit);
+    };
+
+    const renderIntroLeaderboard = () => {
+        if (!overlay) return;
+        const list = overlay.querySelector('#eeggLeaderIntro');
+        if (!list) return;
+        const entries = getTopScores(10);
+        if (entries.length === 0) {
+            list.innerHTML = `<li class="eegg-leader-empty">No scores yet. Be the first.</li>`;
+            return;
+        }
+        list.innerHTML = entries.map((e, i) => `
+            <li class="eegg-leader-item">
+                <span class="eegg-rank">#${i + 1}</span>
+                <span class="eegg-name">${e.name}</span>
+                <span class="eegg-points">${e.score}</span>
+            </li>
+        `).join('');
+    };
+
+    const ensureIntroCard = () => {
+        if (!overlay) return;
+        const card = overlay.querySelector('#eeggCard');
+        if (!card) return;
+        card.innerHTML = introCardHTML();
+        const bestNode = overlay.querySelector('#eeggBestIntro');
+        if (bestNode) bestNode.textContent = String(getBest());
+        const nameInput = overlay.querySelector('#eeggNameInput');
+        const startBtn = overlay.querySelector('#eeggStartBtn');
+        const err = overlay.querySelector('#eeggNameError');
+
+        const sync = () => {
+            if (!nameInput) return;
+            const name = cleanName(nameInput.value);
+            if (name !== nameInput.value) nameInput.value = name;
+            const ok = Boolean(name);
+            const touched = nameInput.dataset.touched === '1';
+            if (startBtn) startBtn.disabled = !ok;
+            if (err) err.style.display = (!ok && touched) ? '' : 'none';
+            nameInput.classList.toggle('eegg-input--error', !ok && touched);
+        };
+
+        if (nameInput) {
+            nameInput.value = '';
+            nameInput.dataset.touched = '0';
+            nameInput.addEventListener('input', sync);
+            nameInput.addEventListener('blur', () => {
+                nameInput.dataset.touched = '1';
+                sync();
+            });
+            sync();
+        }
+        renderIntroLeaderboard();
+    };
+
+    const openInstant = () => {
+        if (!overlay) overlay = createOverlay();
+        ensureIntroCard();
+        overlay.classList.remove('slow');
+        overlay.classList.remove('blackout');
+        overlay.classList.remove('blackout-off');
+        overlay.classList.add('open');
+        overlay.classList.add('intro-show');
+        document.body.style.overflow = 'hidden';
+        state = 'intro';
+        score = 0;
+        overlay.querySelector('#eeggScore').textContent = '0';
+        overlay.querySelector('#eeggBest').textContent = String(getBest());
+        overlay.querySelector('#eeggIntro').style.display = '';
+        overlay.querySelector('#eeggCard').style.display = 'block';
+        overlay.querySelector('#eeggGameWrap').style.display = 'none';
+        overlay.querySelector('#eeggDpad').style.display = 'none';
+        cancelAnimationFrame(raf);
+    };
+
+    const openSequenced = async () => {
+        if (!overlay) overlay = createOverlay();
+        if (overlay.classList.contains('open')) return;
+        wireOverlayEvents();
+        ensureIntroCard();
+
+        window.clearTimeout(introTimer);
+        stopGlitch();
+
+        if (prefersReduce) {
+            openInstant();
+            return;
+        }
+
+        playSfx(sfxGlitch);
+
+        // Prepare a pitch-black overlay underneath the glitch (no fade-in perceived).
+        overlay.classList.add('open');
+        overlay.classList.remove('slow');
+        overlay.classList.add('blackout');
+        overlay.classList.remove('blackout-off');
+        overlay.classList.remove('intro-show');
+        document.body.style.overflow = 'hidden';
+
+        state = 'intro';
+        score = 0;
+        overlay.querySelector('#eeggScore').textContent = '0';
+        overlay.querySelector('#eeggBest').textContent = String(getBest());
+        overlay.querySelector('#eeggIntro').style.display = '';
+        overlay.querySelector('#eeggCard').style.display = 'block';
+        overlay.querySelector('#eeggGameWrap').style.display = 'none';
+        overlay.querySelector('#eeggDpad').style.display = 'none';
+        cancelAnimationFrame(raf);
+
+        await runGlitch(2000);
+        if (!overlay) return;
+
+        // When glitch ends, fade the blackout away to reveal the intro card.
+        requestAnimationFrame(() => {
+            if (!overlay) return;
+            overlay.classList.add('blackout-off');
+        });
+
+        introTimer = window.setTimeout(() => {
+            if (!overlay) return;
+            overlay.classList.add('intro-show');
+            overlay.classList.remove('blackout');
+            overlay.classList.remove('blackout-off');
+        }, 1800);
+    };
+
+    const close = () => {
+        window.clearTimeout(introTimer);
+        stopGlitch();
+        try { sfxStart.pause(); } catch {}
+        try { sfxEnd.pause(); } catch {}
+        try { sfxGlitch.pause(); } catch {}
+        document.body.style.overflow = '';
+        if (overlay) overlay.classList.remove('open');
+        if (overlay) overlay.classList.remove('blackout');
+        if (overlay) overlay.classList.remove('blackout-off');
+        if (overlay) overlay.classList.remove('intro-show');
+        cancelAnimationFrame(raf);
+        state = 'intro';
+    };
+
+    let playerName = '';
+
+    const showGameOver = (finalScore) => {
+        state = 'over';
+        cancelAnimationFrame(raf);
+        window.clearTimeout(introTimer);
+        playSfx(sfxEnd);
+        const best = Math.max(getBest(), finalScore);
+        setBest(best);
+
+        const entry = {
+            id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+            name: playerName || 'PLAYER-1',
+            score: finalScore,
+            ts: Date.now()
+        };
+        const all = loadScores();
+        all.push(entry);
+        all.sort((a, b) => (b.score - a.score) || (b.ts - a.ts));
+        saveScores(all.slice(0, 25));
+        const top = getTopScores(7);
+
+        overlay.querySelector('#eeggIntro').style.display = '';
+        overlay.classList.add('intro-show');
+        overlay.classList.remove('slow');
+        const card = overlay.querySelector('#eeggCard');
+        card.innerHTML = `
+            <h2 class="eegg-title">Game Over</h2>
+            <p class="eegg-sub">Score: <strong>${finalScore}</strong> · Best: <strong>${best}</strong></p>
+            <div class="eegg-board" aria-label="Scoreboard">
+                <div class="eegg-panel-title">Scoreboard</div>
+                <ol class="eegg-board-list">
+                    ${top.map((e, i) => `
+                        <li class="eegg-board-item ${e.id === entry.id ? 'is-you' : ''}">
+                            <span class="eegg-rank">#${i + 1}</span>
+                            <span class="eegg-name">${e.name}</span>
+                            <span class="eegg-points">${e.score}</span>
+                        </li>
+                    `).join('')}
+                </ol>
+            </div>
+            <div class="eegg-actions">
+                <button class="eegg-btn primary" id="eeggPlayAgainBtn" type="button">Play Again</button>
+                <button class="eegg-btn" id="eeggBackBtn" type="button">Back</button>
+            </div>
+        `;
+        overlay.querySelector('#eeggGameWrap').style.display = 'none';
+        overlay.querySelector('#eeggDpad').style.display = 'none';
+        card.style.display = 'block';
+
+        card.querySelector('#eeggPlayAgainBtn').addEventListener('click', start, { once: true });
+        card.querySelector('#eeggBackBtn').addEventListener('click', () => {
+            close();
+            overlay.remove();
+            overlay = null;
+        }, { once: true });
+    };
+
+    let walls;
+    let pellets;
+    let pac;
+    let ghosts;
+    let dir = { x: 1, y: 0 };
+    let nextDir = { x: 1, y: 0 };
+    let lastStep = 0;
+
+    const resetEntities = () => {
+        pac = { x: 1, y: 1, px: 1 * tile, py: 1 * tile, speed: 9.6 };
+        ghosts = [
+            { x: gridW - 2, y: gridH - 2, px: (gridW - 2) * tile, py: (gridH - 2) * tile, speed: 8.4, color: '#fb7185' },
+            { x: gridW - 2, y: 1, px: (gridW - 2) * tile, py: 1 * tile, speed: 8.1, color: '#60a5fa' },
+            { x: 1, y: gridH - 2, px: 1 * tile, py: (gridH - 2) * tile, speed: 8.0, color: '#34d399' },
+            { x: Math.floor(gridW / 2), y: 1, px: Math.floor(gridW / 2) * tile, py: 1 * tile, speed: 8.2, color: '#fbbf24' },
+            { x: Math.floor(gridW / 2), y: gridH - 2, px: Math.floor(gridW / 2) * tile, py: (gridH - 2) * tile, speed: 8.3, color: '#a78bfa' }
+        ];
+        dir = { x: 1, y: 0 };
+        nextDir = { x: 1, y: 0 };
+        lastStep = 0;
+    };
+
+    const canMove = (x, y) => inBounds(x, y) && !walls[y][x];
+
+    const tryTurn = () => {
+        const nx = pac.x + nextDir.x;
+        const ny = pac.y + nextDir.y;
+        if (canMove(nx, ny)) dir = { ...nextDir };
+    };
+
+    const stepEntity = (ent, vx, vy) => {
+        const tx = ent.x + vx;
+        const ty = ent.y + vy;
+        if (!canMove(tx, ty)) return false;
+        ent.x = tx;
+        ent.y = ty;
+        return true;
+    };
+
+    const chooseGhostDir = (g) => {
+        const options = [
+            { x: 1, y: 0 },
+            { x: -1, y: 0 },
+            { x: 0, y: 1 },
+            { x: 0, y: -1 }
+        ].filter((d) => canMove(g.x + d.x, g.y + d.y));
+
+        if (options.length === 0) return { x: 0, y: 0 };
+
+        // Greedy towards Pacman with small randomness
+        const rand = Math.random();
+        if (rand < 0.26) return options[Math.floor(Math.random() * options.length)];
+
+        options.sort((a, b) => {
+            const da = Math.abs((g.x + a.x) - pac.x) + Math.abs((g.y + a.y) - pac.y);
+            const db = Math.abs((g.x + b.x) - pac.x) + Math.abs((g.y + b.y) - pac.y);
+            return da - db;
+        });
+        return options[0];
+    };
+
+    const draw = (ctx) => {
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+        // Maze
+        ctx.fillStyle = '#0b1020';
+        for (let y = 0; y < gridH; y++) {
+            for (let x = 0; x < gridW; x++) {
+                if (!walls[y][x]) continue;
+                ctx.fillRect(x * tile, y * tile, tile, tile);
+            }
+        }
+
+        // Pellets
+        ctx.fillStyle = '#fef08a';
+        for (let y = 0; y < gridH; y++) {
+            for (let x = 0; x < gridW; x++) {
+                if (!pellets[y][x]) continue;
+                ctx.beginPath();
+                ctx.arc(x * tile + tile / 2, y * tile + tile / 2, 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Pacman
+        const mouth = prefersReduce ? 0.08 : (0.18 + 0.08 * Math.sin(performance.now() / 110));
+        const angle = dir.x === 1 ? 0 : dir.x === -1 ? Math.PI : dir.y === 1 ? Math.PI / 2 : -Math.PI / 2;
+        ctx.fillStyle = '#facc15';
+        ctx.beginPath();
+        ctx.moveTo(pac.px + tile / 2, pac.py + tile / 2);
+        ctx.arc(pac.px + tile / 2, pac.py + tile / 2, tile * 0.42, angle + mouth, angle + Math.PI * 2 - mouth);
+        ctx.closePath();
+        ctx.fill();
+
+        // Ghost
+        ghosts.forEach((g) => {
+            ctx.fillStyle = g.color;
+            ctx.beginPath();
+            ctx.arc(g.px + tile / 2, g.py + tile / 2, tile * 0.42, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#0b1020';
+            ctx.beginPath();
+            ctx.arc(g.px + tile / 2 - 5, g.py + tile / 2 - 4, 3, 0, Math.PI * 2);
+            ctx.arc(g.px + tile / 2 + 5, g.py + tile / 2 - 4, 3, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    };
+
+    const update = (ts, ctx) => {
+        if (state !== 'playing') return;
+        if (!lastStep) lastStep = ts;
+        const dt = Math.min(32, ts - lastStep);
+        lastStep = ts;
+
+        const movePx = (ent, speed) => (speed * dt) / 1000 * tile;
+
+        // Pacman tile snapping
+        const targetX = pac.x * tile;
+        const targetY = pac.y * tile;
+        const atTile = Math.abs(pac.px - targetX) < 0.5 && Math.abs(pac.py - targetY) < 0.5;
+        if (atTile) {
+            pac.px = targetX;
+            pac.py = targetY;
+            tryTurn();
+            const moved = stepEntity(pac, dir.x, dir.y);
+            if (!moved) dir = { x: 0, y: 0 };
+        }
+
+        pac.px += (pac.x * tile - pac.px) * Math.min(1, movePx(pac, pac.speed) / tile);
+        pac.py += (pac.y * tile - pac.py) * Math.min(1, movePx(pac, pac.speed) / tile);
+
+        // Pellet check on tile center
+        if (pellets[pac.y]?.[pac.x]) {
+            pellets[pac.y][pac.x] = 0;
+            score += 10;
+            overlay.querySelector('#eeggScore').textContent = String(score);
+        }
+
+        // Ghosts movement: choose at tile centers
+        ghosts.forEach((g) => {
+            const gTargetX = g.x * tile;
+            const gTargetY = g.y * tile;
+            const gAtTile = Math.abs(g.px - gTargetX) < 0.5 && Math.abs(g.py - gTargetY) < 0.5;
+            if (gAtTile) {
+                g.px = gTargetX;
+                g.py = gTargetY;
+                const gd = chooseGhostDir(g);
+                stepEntity(g, gd.x, gd.y);
+            }
+            g.px += (g.x * tile - g.px) * Math.min(1, movePx(g, g.speed) / tile);
+            g.py += (g.y * tile - g.py) * Math.min(1, movePx(g, g.speed) / tile);
+        });
+
+        // Collision
+        for (const g of ghosts) {
+            const dx = (pac.px - g.px);
+            const dy = (pac.py - g.py);
+            if (Math.hypot(dx, dy) < tile * 0.52) {
+                showGameOver(score);
+                return;
+            }
+        }
+
+        // Win (no pellets)
+        let remaining = 0;
+        for (let y = 0; y < gridH; y++) for (let x = 0; x < gridW; x++) remaining += pellets[y][x] ? 1 : 0;
+        if (remaining === 0) showGameOver(score + 200);
+
+        draw(ctx);
+        raf = requestAnimationFrame((t) => update(t, ctx));
+    };
+
+    const start = () => {
+        if (!overlay) return;
+        const nameInput = overlay.querySelector('#eeggNameInput');
+        const err = overlay.querySelector('#eeggNameError');
+
+        const resolvedName = (() => {
+            if (nameInput) {
+                const n = cleanName(nameInput.value || '');
+                if (!n) return '';
+                playerName = n;
+                setSavedName(playerName);
+                return n;
+            }
+            if (playerName) return playerName;
+            const saved = getSavedName();
+            if (saved) {
+                playerName = saved;
+                return saved;
+            }
+            return '';
+        })();
+
+        if (!resolvedName) {
+            // Force back to intro to collect a name.
+            ensureIntroCard();
+            overlay.querySelector('#eeggIntro').style.display = '';
+            overlay.querySelector('#eeggGameWrap').style.display = 'none';
+            overlay.querySelector('#eeggDpad').style.display = 'none';
+            overlay.classList.add('intro-show');
+
+            const input = overlay.querySelector('#eeggNameInput');
+            const error = overlay.querySelector('#eeggNameError');
+            if (input) {
+                input.dataset.touched = '1';
+                input.classList.add('eegg-input--error');
+                input.focus();
+            }
+            if (error) error.style.display = '';
+            if (err) err.style.display = '';
+            return;
+        }
+
+        playSfx(sfxStart);
+        state = 'playing';
+        score = 0;
+        overlay.querySelector('#eeggScore').textContent = '0';
+        overlay.querySelector('#eeggBest').textContent = String(getBest());
+
+        walls = makeMaze();
+        pellets = initPellets(walls);
+        resetEntities();
+
+        const intro = overlay.querySelector('#eeggIntro');
+        const wrap = overlay.querySelector('#eeggGameWrap');
+        const dpad = overlay.querySelector('#eeggDpad');
+        intro.style.display = 'none';
+        wrap.style.display = 'block';
+        dpad.style.display = '';
+
+        const canvas = overlay.querySelector('#eeggCanvas');
+        const ctx = canvas.getContext('2d');
+        draw(ctx);
+
+        cancelAnimationFrame(raf);
+        lastStep = 0;
+        raf = requestAnimationFrame((t) => update(t, ctx));
+    };
+
+    const setDir = (d) => {
+        if (d === 'up') nextDir = { x: 0, y: -1 };
+        if (d === 'down') nextDir = { x: 0, y: 1 };
+        if (d === 'left') nextDir = { x: -1, y: 0 };
+        if (d === 'right') nextDir = { x: 1, y: 0 };
+    };
+
+    const onKey = (e) => {
+        if (!overlay || !overlay.classList.contains('open')) return;
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            close();
+            return;
+        }
+        const nameEl = overlay.querySelector('#eeggNameInput');
+        const focusOnName = nameEl && document.activeElement === nameEl;
+        if (state === 'intro' && overlay.classList.contains('intro-show') && ((e.key === 'Enter') || (!focusOnName && e.key === ' '))) {
+            e.preventDefault();
+            start();
+            return;
+        }
+        if (state !== 'playing') return;
+        if (['ArrowUp', 'w', 'W'].includes(e.key)) setDir('up');
+        if (['ArrowDown', 's', 'S'].includes(e.key)) setDir('down');
+        if (['ArrowLeft', 'a', 'A'].includes(e.key)) setDir('left');
+        if (['ArrowRight', 'd', 'D'].includes(e.key)) setDir('right');
+    };
+
+    const wireOverlayEvents = () => {
+        if (!overlay) return;
+        if (overlay.dataset.wired === '1') return;
+        overlay.dataset.wired = '1';
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) close();
+        });
+        overlay.addEventListener('click', (e) => {
+            const t = e.target;
+            if (!(t instanceof Element)) return;
+            if (t.id === 'eeggCloseBtn') close();
+            if (t.id === 'eeggStartBtn') start();
+        });
+        overlay.querySelector('#eeggExitBtn')?.addEventListener('click', close);
+
+        overlay.querySelectorAll('#eeggDpad button[data-dir]').forEach((btn) => {
+            btn.addEventListener('click', () => setDir(btn.getAttribute('data-dir')));
+        });
+    };
+
+    brandLinks.forEach((a) => {
+        a.addEventListener('click', (e) => {
+            // Only intercept "nav brand" clicks; allow other anchors if modifier keys
+            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+            e.preventDefault();
+            openSequenced();
+        });
+    });
+
+    window.addEventListener('keydown', onKey);
+};
+
+initEasterEgg();
 
 if (menuToggle && nav) {
     menuToggle.addEventListener("click", () => {
@@ -216,9 +1099,11 @@ if (themeToggle) {
     }
     setThemeLabel();
     themeToggle.addEventListener("click", () => {
-        document.body.classList.toggle("light");
-        localStorage.setItem("portfolio-theme", document.body.classList.contains("light") ? "light" : "dark");
-        setThemeLabel();
+        withThemeTransition(() => {
+            document.body.classList.toggle("light");
+            localStorage.setItem("portfolio-theme", document.body.classList.contains("light") ? "light" : "dark");
+            setThemeLabel();
+        });
     });
 }
 

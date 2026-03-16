@@ -1,27 +1,35 @@
 :root {
-    --bg: #f6f5f1;
-    --surface: #ffffff;
-    --surface-soft: #efeee8;
-    --text: #1c1f1d;
-    --muted: #5f655f;
-    --accent: #1f8a70;
-    --accent-strong: #136a56;
-    --line: rgba(28, 31, 29, 0.12);
-    --line-strong: rgba(28, 31, 29, 0.24);
-    --shadow: 0 18px 40px rgba(17, 21, 19, 0.08);
+    --bg: #101010;
+    --surface: #1c1c1c;
+    --surface-soft: #2b2b2b;
+    --text: #e8e8e8;
+    --muted: #a2a2a2;
+    --accent: #d4d4d4;
+    --accent-strong: #b3b3b3;
+    --title: color-mix(in oklab, #7dd3fc 28%, var(--text));
+    --title-glow: color-mix(in oklab, #22c55e 22%, transparent);
+    --line: rgba(255, 255, 255, 0.08);
+    --line-strong: rgba(255, 255, 255, 0.16);
+    --shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+    --font-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-display: "Space Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-sci: "Orbitron", "Space Grotesk", system-ui, sans-serif;
+    --font-retro: "Press Start 2P", "Space Grotesk", system-ui, sans-serif;
 }
 
 body.light {
-    --bg: #111513;
-    --surface: #161d19;
-    --surface-soft: #1d2621;
-    --text: #edf2ee;
-    --muted: #a3b0a7;
-    --accent: #3ec7a2;
-    --accent-strong: #2ea487;
-    --line: rgba(237, 242, 238, 0.14);
-    --line-strong: rgba(237, 242, 238, 0.26);
-    --shadow: 0 20px 44px rgba(0, 0, 0, 0.35);
+    --bg: #fafafa;
+    --surface: #e4e5f1;
+    --surface-soft: #d2d3db;
+    --text: #484b6a;
+    --muted: #9394a5;
+    --accent: #484b6a;
+    --accent-strong: #9394a5;
+    --title: color-mix(in oklab, #1d4ed8 22%, var(--text));
+    --title-glow: color-mix(in oklab, #1d4ed8 12%, transparent);
+    --line: rgba(72, 75, 106, 0.12);
+    --line-strong: rgba(72, 75, 106, 0.2);
+    --shadow: 0 20px 44px rgba(0, 0, 0, 0.15);
 }
 
 * { box-sizing: border-box; }
@@ -29,13 +37,65 @@ html { scroll-behavior: smooth; }
 
 body {
     margin: 0;
-    font-family: "Instrument Sans", sans-serif;
+    font-family: var(--font-body);
     color: var(--text);
     line-height: 1.6;
     background:
-        radial-gradient(720px 380px at 85% -5%, color-mix(in oklab, var(--accent) 22%, transparent), transparent 70%),
+        radial-gradient(720px 380px at 85% -5%, color-mix(in oklab, var(--accent) 18%, transparent), transparent 70%),
         radial-gradient(680px 330px at 0% 8%, color-mix(in oklab, var(--surface-soft) 90%, transparent), transparent 76%),
         var(--bg);
+    position: relative;
+}
+
+body.theme-transition {
+    animation: themePulse 420ms ease;
+}
+
+body.theme-transition,
+body.theme-transition * {
+    transition:
+        color 420ms ease,
+        background-color 420ms ease,
+        border-color 420ms ease,
+        box-shadow 420ms ease,
+        text-shadow 420ms ease,
+        fill 420ms ease,
+        stroke 420ms ease;
+}
+
+@keyframes themePulse {
+    0% { opacity: 1; }
+    40% { opacity: 0.985; }
+    100% { opacity: 1; }
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.04) 0px,
+        rgba(255, 255, 255, 0.04) 1px,
+        rgba(0, 0, 0, 0.06) 1px,
+        rgba(0, 0, 0, 0.06) 2px
+    );
+    opacity: 0.45;
+    mix-blend-mode: overlay;
+    z-index: 9999;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.08), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05), transparent 50%);
+    opacity: 0.55;
+    mix-blend-mode: overlay;
+    z-index: 9999;
 }
 
 .bg-3d {
@@ -48,43 +108,328 @@ body {
 
 .bg-layer {
     position: absolute;
-    filter: blur(1px);
+    filter: drop-shadow(0 18px 34px rgba(0, 0, 0, 0.35));
     transform: translate3d(0, 0, 0);
     will-change: transform;
+    opacity: 0.22;
+    image-rendering: pixelated;
 }
 
 .bg-layer.layer-a {
-    width: min(42vw, 520px);
-    aspect-ratio: 1 / 1;
-    left: -8vw;
+    --px: 11px;
+    width: calc(12 * var(--px));
+    height: calc(9 * var(--px));
+    left: -2vw;
     top: 12vh;
-    border-radius: 42% 58% 62% 38% / 42% 37% 63% 58%;
-    background: color-mix(in oklab, var(--accent) 22%, transparent);
+    color: color-mix(in oklab, #00ea64 72%, white);
 }
 
 .bg-layer.layer-b {
-    width: min(34vw, 420px);
-    aspect-ratio: 1 / 1;
-    right: -8vw;
+    --px: 13px;
+    width: calc(10 * var(--px));
+    height: calc(8 * var(--px));
+    right: -2vw;
     top: 18vh;
-    border-radius: 62% 38% 52% 48% / 55% 44% 56% 45%;
-    background: color-mix(in oklab, var(--surface-soft) 88%, transparent);
+    color: color-mix(in oklab, #7c3aed 70%, white);
+    opacity: 0.18;
 }
 
 .bg-layer.layer-c {
-    width: min(52vw, 700px);
-    height: min(26vh, 240px);
-    left: 18vw;
-    bottom: -8vh;
-    border-radius: 999px;
-    background: color-mix(in oklab, var(--accent) 10%, transparent);
+    --px: 12px;
+    width: calc(12 * var(--px));
+    height: calc(11 * var(--px));
+    left: 16vw;
+    bottom: 2vh;
+    color: color-mix(in oklab, #ff3b6a 70%, white);
+    opacity: 0.16;
+}
+
+.bg-layer::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--px);
+    height: var(--px);
+    background: transparent;
+    border-radius: 2px;
+}
+
+.bg-layer::after {
+    content: "";
+    position: absolute;
+    width: var(--px);
+    height: var(--px);
+    background: transparent;
+    border-radius: 2px;
+    opacity: 0.92;
+}
+
+.bg-layer.layer-a::before {
+    box-shadow:
+        calc(5 * var(--px)) calc(0 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(0 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(7 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(7 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(8 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(8 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(9 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(1 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(7 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(8 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(9 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(10 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(7 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(9 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(6 * var(--px)) 0 0 currentColor,
+        calc(8 * var(--px)) calc(6 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(7 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(7 * var(--px)) 0 0 currentColor,
+        calc(8 * var(--px)) calc(7 * var(--px)) 0 0 currentColor,
+        calc(9 * var(--px)) calc(7 * var(--px)) 0 0 currentColor;
+}
+
+.bg-layer.layer-a::after {
+    left: calc(18 * var(--px));
+    top: calc(2 * var(--px));
+    opacity: 0.82;
+    box-shadow:
+        calc(3 * var(--px)) calc(0 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(1 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(0 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(1 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(1 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(6 * var(--px)) 0 0 currentColor;
+}
+
+.bg-layer.layer-b::before {
+    box-shadow:
+        calc(0 * var(--px)) calc(0 * var(--px)) 0 0 currentColor,
+        calc(1 * var(--px)) calc(0 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(0 * var(--px)) 0 0 currentColor,
+        calc(1 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(5 * var(--px)) 0 0 currentColor;
+}
+
+.bg-layer.layer-b::after {
+    left: calc(-10 * var(--px));
+    top: calc(14 * var(--px));
+    opacity: 0.86;
+    box-shadow:
+        calc(3 * var(--px)) calc(0 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(0 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(0 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(0 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(7 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(1 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(7 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(8 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(1 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(7 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(8 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(1 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(7 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(8 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(1 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(7 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(8 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(1 * var(--px)) calc(6 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(6 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(6 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(6 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(6 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(6 * var(--px)) 0 0 currentColor,
+        calc(7 * var(--px)) calc(6 * var(--px)) 0 0 currentColor,
+        calc(8 * var(--px)) calc(6 * var(--px)) 0 0 currentColor,
+        calc(1 * var(--px)) calc(7 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(7 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(7 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(7 * var(--px)) 0 0 currentColor,
+        calc(7 * var(--px)) calc(7 * var(--px)) 0 0 currentColor,
+        calc(8 * var(--px)) calc(7 * var(--px)) 0 0 currentColor;
+}
+
+.bg-layer.layer-c::before {
+    box-shadow:
+        calc(2 * var(--px)) calc(0 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(0 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(0 * var(--px)) 0 0 currentColor,
+        calc(7 * var(--px)) calc(0 * var(--px)) 0 0 currentColor,
+        calc(1 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(7 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(8 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(0 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(1 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(7 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(8 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(9 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(0 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(1 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(7 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(8 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(9 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(1 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(7 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(8 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(7 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(6 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(6 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(6 * var(--px)) 0 0 currentColor,
+        calc(6 * var(--px)) calc(6 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(7 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(7 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(8 * var(--px)) 0 0 currentColor;
+}
+
+.bg-layer.layer-c::after {
+    left: calc(15 * var(--px));
+    top: calc(-7 * var(--px));
+    opacity: 0.72;
+    box-shadow:
+        calc(3 * var(--px)) calc(0 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(1 * var(--px)) 0 0 currentColor,
+        calc(1 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(5 * var(--px)) calc(2 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(3 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(4 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(5 * var(--px)) 0 0 currentColor,
+        calc(2 * var(--px)) calc(6 * var(--px)) 0 0 currentColor,
+        calc(3 * var(--px)) calc(6 * var(--px)) 0 0 currentColor,
+        calc(4 * var(--px)) calc(6 * var(--px)) 0 0 currentColor;
+}
+
+body.light .bg-layer { opacity: 0.26; filter: drop-shadow(0 18px 34px rgba(0, 0, 0, 0.16)); }
+body.light .bg-layer.layer-a { color: color-mix(in oklab, #16a34a 70%, #111827); }
+body.light .bg-layer.layer-b { color: color-mix(in oklab, #6d28d9 68%, #111827); opacity: 0.24; }
+body.light .bg-layer.layer-c { color: color-mix(in oklab, #e11d48 62%, #111827); opacity: 0.22; }
+
+@media (max-width: 760px) {
+    .bg-layer.layer-a { --px: 9px; }
+    .bg-layer.layer-b { --px: 11px; }
+    .bg-layer.layer-c { --px: 10px; }
 }
 
 h1, h2, h3 {
     margin: 0 0 12px;
-    font-family: "Space Grotesk", sans-serif;
-    line-height: 1.12;
-    letter-spacing: -0.02em;
+    font-family: var(--font-retro);
+    font-weight: 400;
+    line-height: 1.32;
+    letter-spacing: 0.045em;
+    color: var(--title);
+    text-shadow:
+        0 1px 0 rgba(0, 0, 0, 0.25),
+        0 0 18px var(--title-glow);
+}
+
+h1 { font-size: 1.55rem; }
+h2 { font-size: 1.12rem; }
+h3 { font-size: 0.98rem; }
+
+.title-retro {
+    font-family: var(--font-retro);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 1.05rem;
+    line-height: 1.35;
 }
 
 a { color: inherit; }
@@ -121,11 +466,11 @@ a { color: inherit; }
 }
 
 .brand {
-    font-family: "Space Grotesk", sans-serif;
+    font-family: var(--font-sci);
     font-size: 1.02rem;
     font-weight: 700;
     text-decoration: none;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.03em;
 }
 
 .nav {
@@ -163,8 +508,12 @@ a { color: inherit; }
 }
 
 .theme-toggle {
-    padding: 8px 14px;
-    font-weight: 600;
+    padding: 7px 12px;
+    font-family: var(--font-retro);
+    font-weight: 400;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
 .menu-toggle {
@@ -212,14 +561,15 @@ a { color: inherit; }
     background: color-mix(in oklab, var(--accent) 11%, transparent);
     color: var(--accent-strong);
     font-weight: 700;
-    font-size: 0.78rem;
-    letter-spacing: 0.04em;
+    font-family: var(--font-retro);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
 }
 
 .hero-content h1 {
-    font-size: clamp(2.3rem, 5vw, 4rem);
-    max-width: 12ch;
+    font-size: clamp(1.75rem, 3.4vw, 2.55rem);
+    max-width: 18ch;
 }
 
 .subtext {
@@ -246,14 +596,19 @@ a { color: inherit; }
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 11px 18px;
+    padding: 9px 14px;
     border-radius: 999px;
     text-decoration: none;
-    font-weight: 700;
+    font-family: var(--font-retro);
+    font-weight: 400;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     border: 1px solid transparent;
-    transform: translateY(0);
-    transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+    transform: translateY(0) translateZ(0);
+    transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease, color .16s ease;
     box-shadow: 0 7px 0 color-mix(in oklab, var(--line-strong) 72%, transparent);
+    will-change: transform, box-shadow;
 }
 
 .btn:hover {
@@ -270,6 +625,15 @@ a { color: inherit; }
     background: var(--accent);
     color: #f8fffc;
     box-shadow: 0 8px 22px color-mix(in oklab, var(--accent) 30%, transparent);
+}
+
+body:not(.light) .btn-primary {
+    color: #101010;
+}
+
+body:not(.light) .admin-nav-btn.active,
+body:not(.light) .admin-nav-btn:hover {
+    color: #101010;
 }
 
 .btn-secondary {
@@ -374,6 +738,37 @@ a { color: inherit; }
     opacity: 1;
 }
 
+/* Theme-based hero photo: Dark shows pfp1 (front), Light shows pfp (back) */
+body .hero-photo-front,
+body .hero-photo-back {
+    display: block;
+    opacity: 0;
+    transition: opacity 420ms ease;
+    pointer-events: none;
+}
+
+body:not(.light) .hero-photo-front { opacity: 1; }
+body.light .hero-photo-back { opacity: 1; }
+
+body .hero-photo-back { transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+    body .hero-photo-front,
+    body .hero-photo-back {
+        transition: none;
+    }
+}
+
+body.light .hero-photo-card.flipped,
+body:not(.light) .hero-photo-card.flipped {
+    transform: none;
+}
+
+body.light .rotate-photo-btn,
+body:not(.light) .rotate-photo-btn {
+    display: none;
+}
+
 .split {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -394,6 +789,85 @@ a { color: inherit; }
 }
 
 .panel { padding: 24px; }
+
+#thanks .thanks-panel {
+    max-width: 980px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+    padding: 20px;
+}
+
+#thanks .thanks-left {
+    display: grid;
+    gap: 12px;
+    align-content: start;
+}
+
+#thanks .thanks-left .cta-row { margin-top: 0; }
+
+#thanks .thanks-right {
+    display: grid;
+    gap: 12px;
+    align-content: start;
+}
+
+#thanks .thanks-right .timeline { margin-top: 0; }
+
+#thanks .thanks-sticker {
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    background: color-mix(in oklab, var(--surface) 92%, transparent);
+}
+
+#thanks .thanks-sticker img {
+    width: auto;
+    max-width: 100%;
+    height: 248px;
+    object-fit: contain;
+    background: transparent;
+}
+
+@media (max-width: 860px) {
+    #thanks .thanks-panel {
+        grid-template-columns: 1fr;
+    }
+}
+
+#thanks .thanks-left .social-links {
+    justify-content: center;
+}
+
+#thanks .thanks-left .cta-row {
+    justify-content: center;
+}
+
+#thanks .thanks-left .social-icon {
+    animation: thanksBounce 1.9s cubic-bezier(0.32, 0, 0.2, 1) infinite;
+}
+
+#thanks .thanks-left .social-icon:nth-child(2) {
+    animation-delay: 0.12s;
+}
+
+#thanks .thanks-left .social-icon:nth-child(3) {
+    animation-delay: 0.22s;
+}
+
+@keyframes thanksBounce {
+    0%, 100% { transform: translateY(0); }
+    22% { transform: translateY(-7px); }
+    40% { transform: translateY(1px); }
+    58% { transform: translateY(-4px); }
+    76% { transform: translateY(0); }
+}
 
 .skill-bars { display: grid; gap: 14px; }
 .skill-item span { font-size: 0.93rem; font-weight: 600; }
@@ -423,34 +897,59 @@ a { color: inherit; }
 }
 
 .skill-tag {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
     background: color-mix(in oklab, var(--accent) 12%, transparent);
     color: var(--accent);
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.875rem;
+    padding: 8px 10px;
+    border-radius: 16px;
+    font-size: 0.82rem;
     font-weight: 500;
     border: 1px solid color-mix(in oklab, var(--accent) 24%, transparent);
+    text-align: center;
+    min-width: 76px;
 }
 
-.skill-tag.skill-icon {
-    width: 44px;
-    height: 44px;
-    padding: 0;
+.skill-tag i,
+.skill-tag svg,
+.skill-tag img,
+.skill-tag .skill-icon-fallback {
+    font-size: 1.15rem;
+    width: 1.15rem;
+    height: 1.15rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Force icons to match theme colors in both modes */
+.skill-tag i[class*="devicon-"],
+.skill-tag i[class*="fa-"] {
+    color: var(--accent) !important;
+    filter: none !important;
+}
+
+.skill-tag .skill-icon-fallback {
+    font-weight: 700;
+    background: color-mix(in oklab, var(--accent) 20%, transparent);
+    border-radius: 8px;
+    padding: 0.1rem 0.25rem;
+}
+
+.skill-tag .skill-label {
+    font-size: 0.7rem;
+    line-height: 1.2;
+    max-width: 84px;
+}
+
+.skill-tag.skill-icon {
+    width: auto;
+    height: auto;
+    padding: 8px 10px;
     border-radius: 16px;
-    font-size: 1.4rem;
-}
-
-.skill-tag.skill-icon svg {
-    width: 22px;
-    height: 22px;
-}
-
-.skill-tag.skill-icon span[aria-hidden="true"] {
-    display: block;
-    line-height: 1;
 }
 
 .bar {
@@ -467,6 +966,51 @@ a { color: inherit; }
     background: linear-gradient(90deg, var(--accent), color-mix(in oklab, var(--accent) 65%, white));
 }
 
+.academic-scores .bar {
+    height: 10px;
+    overflow: visible;
+    background:
+        repeating-linear-gradient(90deg, color-mix(in oklab, var(--line-strong) 50%, transparent) 0 6px, transparent 6px 12px),
+        color-mix(in oklab, var(--surface-soft) 72%, transparent);
+}
+
+.academic-scores .bar i {
+    position: relative;
+    border-radius: 999px;
+}
+
+.academic-scores .bar i::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 28px;
+    height: 28px;
+    transform: translate(55%, -78%);
+    background-image: url("runner-sprite.svg");
+    background-size: 56px 28px;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.28));
+    animation: runnerRun .45s steps(2) infinite, runnerBob .65s ease-in-out infinite;
+}
+
+@keyframes runnerRun {
+    from { background-position: 0 0; }
+    to { background-position: -56px 0; }
+}
+
+@keyframes runnerBob {
+    0%, 100% { transform: translate(55%, -78%); }
+    50% { transform: translate(55%, -84%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .academic-scores .bar i::after {
+        animation: none;
+    }
+}
+
 .section-head {
     display: flex;
     align-items: center;
@@ -481,9 +1025,13 @@ a { color: inherit; }
     border: 1px solid var(--line-strong);
     background: transparent;
     color: var(--muted);
-    padding: 8px 12px;
+    padding: 7px 10px;
     border-radius: 999px;
-    font-weight: 700;
+    font-family: var(--font-retro);
+    font-weight: 400;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     cursor: pointer;
 }
 
@@ -496,15 +1044,24 @@ a { color: inherit; }
 .slider-controls { display: inline-flex; gap: 8px; }
 
 .slider-btn {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 999px;
     border: 1px solid var(--line-strong);
     background: var(--surface);
     color: var(--text);
-    font-size: 1.3rem;
+    font-family: var(--font-retro);
+    font-size: 0.72rem;
     line-height: 1;
     cursor: pointer;
+}
+
+body .admin-nav-btn {
+    font-family: var(--font-retro);
+    font-weight: 400;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
 .slider-track {
@@ -599,10 +1156,11 @@ a { color: inherit; }
 
 .cert-tag {
     margin: 0 0 10px;
-    font-size: 0.78rem;
+    font-family: var(--font-retro);
+    font-size: 0.62rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
 }
 
 .cert-description {
@@ -645,6 +1203,8 @@ a { color: inherit; }
     height: 42px;
     min-width: 42px;
     border-radius: 12px;
+    position: relative;
+    overflow: hidden;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -652,7 +1212,31 @@ a { color: inherit; }
     font-family: "Space Grotesk", sans-serif;
     font-size: 0.82rem;
     color: #f4fffb;
-    background: var(--accent);
+    background: var(--platform-bg, var(--accent));
+}
+
+.platform-icon::after {
+    content: attr(data-fallback);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity .18s ease;
+}
+
+.platform-icon.has-logo::after {
+    opacity: 0;
+}
+
+.platform-logo {
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
 }
 
 .timeline {
@@ -832,6 +1416,55 @@ a { color: inherit; }
 
 .text-link:hover { text-decoration: underline; }
 
+.pixel-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-retro);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+    animation: pixelWiggle 2.6s ease-in-out infinite;
+}
+
+.pixel-link:hover,
+.pixel-link:focus-visible {
+    text-decoration-thickness: 3px;
+    animation: pixelShake 0.55s linear infinite;
+}
+
+.pixel-link-arrow {
+    display: inline-block;
+    transform: translateY(-1px);
+}
+
+.pixel-link:hover .pixel-link-arrow,
+.pixel-link:focus-visible .pixel-link-arrow {
+    animation: pixelBounce 0.7s ease-in-out infinite;
+}
+
+@keyframes pixelWiggle {
+    0%, 100% { transform: translateY(0); }
+    45% { transform: translateY(-1px); }
+    70% { transform: translateY(0); }
+}
+
+@keyframes pixelShake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-1px); }
+    50% { transform: translateX(1px); }
+    75% { transform: translateX(-1px); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes pixelBounce {
+    0%, 100% { transform: translateY(-1px); }
+    50% { transform: translateY(-4px); }
+}
+
 .social-links {
     margin-top: 14px;
     display: flex;
@@ -1008,5 +1641,542 @@ a { color: inherit; }
 
     .bg-3d {
         display: none;
+    }
+}
+
+/* Easter egg: Pac-man overlay */
+.eegg-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    background: #000000;
+    color: #ffffff;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 520ms ease, visibility 520ms ease;
+}
+
+.eegg-overlay.slow {
+    transition: opacity 3000ms ease, visibility 3000ms ease;
+}
+
+.eegg-overlay.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.eegg-glitch {
+    position: fixed;
+    inset: 0;
+    z-index: 5001;
+    pointer-events: none;
+    opacity: 1;
+    image-rendering: pixelated;
+}
+
+.eegg-glitch.fade {
+    opacity: 0;
+    transition: opacity 650ms ease;
+}
+
+.eegg-overlay.blackout::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #000000;
+    opacity: 1;
+    transition: opacity 1800ms ease;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.eegg-overlay.blackout-off::before {
+    opacity: 0;
+}
+
+.eegg-shell {
+    width: min(1180px, 100%);
+    display: grid;
+    gap: 14px;
+    justify-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.eegg-intro {
+    width: min(1088px, 100%);
+    display: flex;
+    justify-content: center;
+}
+
+.eegg-intro .eegg-card {
+    width: 100%;
+    min-height: 360px;
+}
+
+.eegg-intro-grid {
+    display: grid;
+    grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+    gap: 18px;
+    align-items: center;
+}
+
+.eegg-intro-spritewrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.eegg-intro-sprite {
+    width: min(340px, 100%);
+    max-height: 420px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.6));
+}
+
+.eegg-intro-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.eegg-card {
+    width: min(640px, 100%);
+    border: 1px solid color-mix(in oklab, #22d3ee 78%, white);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03)),
+        repeating-linear-gradient(0deg, rgba(34, 211, 238, 0.05) 0, rgba(34, 211, 238, 0.05) 1px, transparent 1px, transparent 4px);
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow:
+        0 22px 60px rgba(0, 0, 0, 0.65),
+        0 0 28px color-mix(in oklab, #22d3ee 45%, transparent);
+    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: center;
+}
+
+.eegg-card--intro {
+    opacity: 0;
+    transform: translateY(10px) scale(0.99);
+    transition: opacity 420ms ease, transform 420ms ease;
+}
+
+.eegg-overlay.intro-show .eegg-card--intro {
+    opacity: 1;
+    transform: none;
+}
+
+.eegg-overlay:not(.intro-show) .eegg-card--intro {
+    pointer-events: none;
+}
+
+.eegg-title {
+    margin: 0 0 8px;
+    color: #f8fafc;
+    text-shadow:
+        0 0 14px rgba(34, 211, 238, 0.55),
+        0 0 34px rgba(34, 211, 238, 0.22);
+}
+
+.eegg-field {
+    display: grid;
+    gap: 8px;
+    text-align: left;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px;
+}
+
+.eegg-label {
+    font-family: var(--font-retro);
+    font-size: 0.56rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 0 16px rgba(34, 211, 238, 0.16);
+}
+
+.eegg-field-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.eegg-input {
+    flex: 1 1 190px;
+    min-width: 190px;
+    height: 42px;
+    padding: 0 12px;
+    border-radius: 12px;
+    border: 1px solid color-mix(in oklab, #22d3ee 55%, rgba(255, 255, 255, 0.18));
+    background: rgba(0, 0, 0, 0.35);
+    color: rgba(255, 255, 255, 0.92);
+    font-family: var(--font-retro);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    outline: none;
+}
+
+.eegg-input:focus {
+    border-color: #22d3ee;
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.18), 0 0 18px rgba(34, 211, 238, 0.18);
+}
+
+.eegg-input--error {
+    border-color: #fb7185 !important;
+    box-shadow: 0 0 0 3px rgba(251, 113, 133, 0.18), 0 0 18px rgba(251, 113, 133, 0.18) !important;
+}
+
+.eegg-name-error {
+    flex: 1 1 100%;
+    font-family: var(--font-retro);
+    font-size: 0.52rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(251, 113, 133, 0.92);
+    text-shadow: 0 0 16px rgba(251, 113, 133, 0.16);
+}
+
+.eegg-mini {
+    font-family: var(--font-retro);
+    font-size: 0.52rem;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.72);
+    text-transform: uppercase;
+    text-shadow: 0 0 16px rgba(253, 224, 71, 0.08);
+}
+
+.eegg-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+.eegg-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.88);
+    font-family: var(--font-retro);
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-shadow: 0 0 18px rgba(34, 211, 238, 0.16);
+}
+
+.eegg-body {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    justify-content: space-evenly;
+}
+
+.eegg-sub {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.78);
+    text-shadow: 0 0 22px rgba(56, 189, 248, 0.12);
+}
+
+.eegg-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.eegg-panel {
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px;
+    text-align: left;
+}
+
+.eegg-panel-title {
+    font-family: var(--font-retro);
+    font-size: 0.56rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.92);
+    margin: 0 0 8px;
+    text-shadow: 0 0 16px rgba(34, 211, 238, 0.18);
+}
+
+.eegg-panel-row {
+    font-size: 0.86rem;
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.5;
+}
+
+.eegg-kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(0, 0, 0, 0.35);
+    color: rgba(255, 255, 255, 0.92);
+    font-family: var(--font-retro);
+    font-size: 0.52rem;
+    letter-spacing: 0.08em;
+    margin-right: 4px;
+}
+
+.eegg-tip {
+    font-family: var(--font-retro);
+    font-size: 0.58rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.86);
+    text-shadow:
+        0 0 14px rgba(253, 224, 71, 0.18),
+        0 0 24px rgba(34, 211, 238, 0.12);
+}
+
+@keyframes eeggBlink {
+    0%, 48% { opacity: 1; transform: translateY(0); }
+    50%, 100% { opacity: 0.25; transform: translateY(-1px); }
+}
+
+.eegg-blink {
+    color: #fef08a;
+    text-shadow: 0 0 18px rgba(253, 224, 71, 0.38);
+    animation: eeggBlink 1s steps(2, end) infinite;
+}
+
+.eegg-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: auto;
+}
+
+.eegg-leader {
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px;
+    text-align: left;
+}
+
+.eegg-leader-list,
+.eegg-board-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+}
+
+.eegg-leader-list {
+    max-height: 216px; /* ~5 rows */
+    overflow: auto;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(34, 211, 238, 0.5) rgba(255, 255, 255, 0.06);
+}
+
+.eegg-leader-empty {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}
+
+.eegg-leader-item,
+.eegg-board-item {
+    display: grid;
+    grid-template-columns: 52px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.eegg-board {
+    border-radius: 14px;
+    border: 1px solid color-mix(in oklab, #fef08a 52%, rgba(255, 255, 255, 0.16));
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px;
+    text-align: left;
+    box-shadow: 0 0 26px rgba(253, 224, 71, 0.08);
+}
+
+.eegg-board-item.is-you {
+    border-color: color-mix(in oklab, #22d3ee 62%, rgba(255, 255, 255, 0.16));
+    box-shadow: 0 0 18px rgba(34, 211, 238, 0.16);
+}
+
+.eegg-rank {
+    font-family: var(--font-retro);
+    font-size: 0.56rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.78);
+}
+
+.eegg-name {
+    font-family: var(--font-retro);
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.9);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.eegg-points {
+    font-family: var(--font-retro);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    color: #fef08a;
+    text-shadow: 0 0 14px rgba(253, 224, 71, 0.18);
+}
+
+.eegg-btn {
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-family: var(--font-retro);
+    font-weight: 400;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease, color .16s ease;
+}
+
+.eegg-btn:disabled,
+.eegg-btn:disabled:hover {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    border-color: rgba(255, 255, 255, 0.14);
+}
+
+.eegg-btn.primary {
+    background: #fef08a;
+    color: #0b1020;
+    border-color: #fef08a;
+    box-shadow: 0 0 18px rgba(253, 224, 71, 0.35);
+}
+
+.eegg-btn:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in oklab, #22d3ee 60%, rgba(255, 255, 255, 0.18));
+    box-shadow: 0 0 22px rgba(34, 211, 238, 0.22);
+}
+
+.eegg-btn.primary:hover {
+    box-shadow: 0 0 26px rgba(253, 224, 71, 0.5);
+}
+
+.eegg-btn:active {
+    transform: translateY(1px);
+}
+
+.eegg-gamewrap {
+    width: min(720px, 100%);
+    border-radius: 18px;
+    border: 1px solid color-mix(in oklab, #fef08a 55%, rgba(255, 255, 255, 0.16));
+    background: rgba(255, 255, 255, 0.03);
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(253, 224, 71, 0.12);
+}
+
+.eegg-hud {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.9);
+    font-family: var(--font-retro);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-shadow: 0 0 16px rgba(253, 224, 71, 0.12);
+}
+
+.eegg-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #000000;
+    image-rendering: pixelated;
+}
+
+.eegg-dpad {
+    display: none;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.eegg-dpad button {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.95);
+    font-family: var(--font-retro);
+    font-size: 0.7rem;
+    cursor: pointer;
+}
+
+.eegg-dpad .col {
+    display: grid;
+    gap: 10px;
+}
+
+@media (max-width: 760px) {
+    .eegg-dpad { display: flex; }
+    .eegg-intro-grid {
+        grid-template-columns: 1fr;
+    }
+    .eegg-intro-sprite {
+        width: min(280px, 100%);
+        max-height: 320px;
+    }
+    .eegg-panels {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .eegg-overlay {
+        transition: none;
+    }
+
+    .eegg-btn {
+        transition: none;
     }
 }

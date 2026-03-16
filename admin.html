@@ -6,7 +6,7 @@
     <title>Portfolio Admin Panel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Orbitron:wght@500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
         .admin-container {
@@ -29,7 +29,7 @@
         }
 
         .admin-nav-btn {
-            padding: 10px 20px;
+            padding: 8px 14px;
             background: var(--surface);
             border: 1px solid var(--line);
             border-radius: 8px;
@@ -186,6 +186,64 @@
         .item-actions {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .btn-mini {
+            padding: 6px 10px;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+
+        .admin-toolbar {
+            margin-top: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .admin-toolbar .toolbar-left,
+        .admin-toolbar .toolbar-right {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .admin-search {
+            width: min(460px, 100%);
+            padding: 10px 12px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .admin-select {
+            padding: 10px 12px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .admin-meta {
+            margin-top: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .admin-meta strong {
+            color: var(--text);
         }
 
         .modal {
@@ -330,6 +388,13 @@
         <div class="admin-header">
             <h1>Portfolio Admin Panel</h1>
             <p>Manage your portfolio content</p>
+            <div class="admin-meta" aria-label="Admin status">
+                <span><strong>Last saved:</strong> <span id="lastSaved">—</span></span>
+                <span><strong>Projects:</strong> <span id="countProjects">0</span></span>
+                <span><strong>Skills:</strong> <span id="countSkills">0</span></span>
+                <span><strong>Certificates:</strong> <span id="countCertificates">0</span></span>
+                <button class="btn btn-secondary btn-mini" id="openPreviewBtn" type="button" title="Open your portfolio in a new tab">Open Preview</button>
+            </div>
         </div>
 
         <nav class="admin-nav">
@@ -349,6 +414,23 @@
         <section class="admin-section active" id="projects-section">
             <h2>Manage Projects</h2>
             <button class="btn btn-primary" id="addProjectBtn">Add New Project</button>
+            <div class="admin-toolbar" aria-label="Project tools">
+                <div class="toolbar-left">
+                    <input class="admin-search" id="projectsSearch" type="search" placeholder="Search projects by title, description, category, type..." autocomplete="off">
+                </div>
+                <div class="toolbar-right">
+                    <label for="projectsSort" class="sr-only">Sort projects</label>
+                    <select class="admin-select" id="projectsSort">
+                        <option value="manual">Sort: Manual</option>
+                        <option value="title">Sort: Title (A–Z)</option>
+                        <option value="category">Sort: Category</option>
+                        <option value="type">Sort: Type</option>
+                    </select>
+                    <button class="btn btn-secondary btn-mini" id="projectsResetViewBtn" type="button">Reset</button>
+                    <button class="btn btn-secondary btn-mini" id="projectsExportSectionBtn" type="button">Export</button>
+                    <button class="btn btn-danger btn-mini" id="projectsClearSectionBtn" type="button">Clear</button>
+                </div>
+            </div>
 
             <div class="item-list" id="projectsList">
                 <!-- Projects will be loaded here -->
@@ -359,6 +441,21 @@
         <section class="admin-section" id="skills-section">
             <h2>Manage Skills</h2>
             <button class="btn btn-primary" id="addSkillBtn">Add New Skill Category</button>
+            <div class="admin-toolbar" aria-label="Skill tools">
+                <div class="toolbar-left">
+                    <input class="admin-search" id="skillsSearch" type="search" placeholder="Search skill categories or tags..." autocomplete="off">
+                </div>
+                <div class="toolbar-right">
+                    <label for="skillsSort" class="sr-only">Sort skills</label>
+                    <select class="admin-select" id="skillsSort">
+                        <option value="manual">Sort: Manual</option>
+                        <option value="category">Sort: Category (A–Z)</option>
+                    </select>
+                    <button class="btn btn-secondary btn-mini" id="skillsResetViewBtn" type="button">Reset</button>
+                    <button class="btn btn-secondary btn-mini" id="skillsExportSectionBtn" type="button">Export</button>
+                    <button class="btn btn-danger btn-mini" id="skillsClearSectionBtn" type="button">Clear</button>
+                </div>
+            </div>
 
             <div class="item-list" id="skillsList">
                 <!-- Skills will be loaded here -->
@@ -369,6 +466,22 @@
         <section class="admin-section" id="certificates-section">
             <h2>Manage Certificates</h2>
             <button class="btn btn-primary" id="addCertificateBtn">Add New Certificate</button>
+            <div class="admin-toolbar" aria-label="Certificate tools">
+                <div class="toolbar-left">
+                    <input class="admin-search" id="certificatesSearch" type="search" placeholder="Search certificates by title, description, category..." autocomplete="off">
+                </div>
+                <div class="toolbar-right">
+                    <label for="certificatesSort" class="sr-only">Sort certificates</label>
+                    <select class="admin-select" id="certificatesSort">
+                        <option value="manual">Sort: Manual</option>
+                        <option value="title">Sort: Title (A–Z)</option>
+                        <option value="category">Sort: Category</option>
+                    </select>
+                    <button class="btn btn-secondary btn-mini" id="certificatesResetViewBtn" type="button">Reset</button>
+                    <button class="btn btn-secondary btn-mini" id="certificatesExportSectionBtn" type="button">Export</button>
+                    <button class="btn btn-danger btn-mini" id="certificatesClearSectionBtn" type="button">Clear</button>
+                </div>
+            </div>
 
             <div class="item-list" id="certificatesList">
                 <!-- Certificates will be loaded here -->
@@ -625,9 +738,34 @@
     <script>
         // Admin Panel JavaScript
         document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            const withThemeTransition = (fn) => {
+                if (prefersReducedMotion) return fn();
+                document.body.classList.add("theme-transition");
+                requestAnimationFrame(() => {
+                    fn();
+                    window.setTimeout(() => document.body.classList.remove("theme-transition"), 420);
+                });
+            };
+
+            if (themeToggle) {
+                const storedTheme = localStorage.getItem("portfolio-theme");
+                if (storedTheme === "light") document.body.classList.add("light");
+                themeToggle.textContent = document.body.classList.contains("light") ? "Light" : "Dark";
+                themeToggle.addEventListener("click", () => {
+                    withThemeTransition(() => {
+                        document.body.classList.toggle("light");
+                        localStorage.setItem("portfolio-theme", document.body.classList.contains("light") ? "light" : "dark");
+                        themeToggle.textContent = document.body.classList.contains("light") ? "Light" : "Dark";
+                    });
+                });
+            }
+
             // Navigation
             const navButtons = document.querySelectorAll('.admin-nav-btn');
             const sections = document.querySelectorAll('.admin-section');
+
 
             navButtons.forEach(button => {
                 button.addEventListener('click', () => {
@@ -749,12 +887,161 @@
 
             // Load initial data
             ensureInitialData();
+            wireAdminTools();
             loadSectionData('projects');
             loadAboutData();
             loadContactData();
             loadSiteData();
             renderDataPreview();
+            updateAdminMeta();
         });
+
+        function wireAdminTools() {
+            const openPreviewBtn = document.getElementById('openPreviewBtn');
+            openPreviewBtn?.addEventListener('click', () => {
+                window.open('index.html', '_blank', 'noopener,noreferrer');
+            });
+
+            wireSectionControls('projects');
+            wireSectionControls('skills');
+            wireSectionControls('certificates');
+        }
+
+        function wireSectionControls(section) {
+            const search = document.getElementById(`${section}Search`);
+            const sort = document.getElementById(`${section}Sort`);
+            const reset = document.getElementById(`${section}ResetViewBtn`);
+            const exportBtn = document.getElementById(`${section}ExportSectionBtn`);
+            const clearBtn = document.getElementById(`${section}ClearSectionBtn`);
+            const view = getSectionView(section);
+
+            if (search) search.value = view.query || '';
+            if (sort) sort.value = view.sort || 'manual';
+
+            if (search) {
+                search.addEventListener('input', () => {
+                    setSectionView(section, { query: search.value });
+                    loadSectionData(section);
+                });
+            }
+
+            if (sort) {
+                sort.addEventListener('change', () => {
+                    setSectionView(section, { sort: sort.value });
+                    loadSectionData(section);
+                });
+            }
+
+            if (reset) {
+                reset.addEventListener('click', () => {
+                    if (search) search.value = '';
+                    if (sort) sort.value = 'manual';
+                    setSectionView(section, { query: '', sort: 'manual' });
+                    loadSectionData(section);
+                });
+            }
+
+            if (exportBtn) {
+                exportBtn.addEventListener('click', () => exportSection(section));
+            }
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => clearSection(section));
+            }
+        }
+
+        function exportSection(section) {
+            const data = getData(section);
+            const dataStr = JSON.stringify({ ['portfolio_' + section]: data }, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `portfolio_${section}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showMessage(`${section} exported successfully!`, 'success');
+        }
+
+        function clearSection(section) {
+            const ok = confirm(`Clear all items in "${section}"? This cannot be undone.`);
+            if (!ok) return;
+
+            if (section === 'projects' || section === 'skills' || section === 'certificates') {
+                saveData(section, []);
+                loadSectionData(section);
+                showMessage(`${section} cleared successfully!`, 'success');
+                renderDataPreview();
+                return;
+            }
+
+            showMessage('Clear is only available for list sections.', 'error');
+        }
+
+        function getSectionView(section) {
+            try {
+                return JSON.parse(sessionStorage.getItem(`admin_view_${section}`)) || { query: '', sort: 'manual' };
+            } catch {
+                return { query: '', sort: 'manual' };
+            }
+        }
+
+        function setSectionView(section, patch) {
+            const current = getSectionView(section);
+            const next = { ...current, ...patch };
+            sessionStorage.setItem(`admin_view_${section}`, JSON.stringify(next));
+        }
+
+        function normalizeText(value) {
+            return String(value || '').toLowerCase().trim();
+        }
+
+        function filterAndSort(section, items = []) {
+            const view = getSectionView(section);
+            const query = normalizeText(view.query);
+            const sort = view.sort || 'manual';
+
+            const filtered = query
+                ? items.filter((item) => {
+                    if (section === 'projects') {
+                        return normalizeText(`${item.title} ${item.description} ${item.category} ${item.type} ${item.url}`).includes(query);
+                    }
+                    if (section === 'skills') {
+                        const tags = Array.isArray(item.tags)
+                            ? item.tags.join(' ')
+                            : (item.tags ? String(item.tags) : '');
+                        return normalizeText(`${item.category} ${tags}`).includes(query);
+                    }
+                    if (section === 'certificates') {
+                        return normalizeText(`${item.title} ${item.description} ${item.category} ${item.file}`).includes(query);
+                    }
+                    return true;
+                })
+                : items.slice();
+
+            if (sort === 'manual') return filtered;
+
+            const collator = new Intl.Collator(undefined, { sensitivity: 'base', numeric: true });
+            const getSortKey = (item) => {
+                if (section === 'projects') {
+                    if (sort === 'title') return item.title;
+                    if (sort === 'category') return item.category;
+                    if (sort === 'type') return item.type;
+                }
+                if (section === 'skills') {
+                    if (sort === 'category') return item.category;
+                }
+                if (section === 'certificates') {
+                    if (sort === 'title') return item.title;
+                    if (sort === 'category') return item.category;
+                }
+                return '';
+            };
+
+            return filtered.sort((a, b) => collator.compare(getSortKey(a), getSortKey(b)));
+        }
 
         function openModal(type, itemId = null) {
             const modal = document.getElementById('itemModal');
@@ -867,13 +1154,22 @@
             const container = document.getElementById(section + 'List');
             if (!container) return;
 
-            const data = getData(section) || [];
+            const allData = getData(section) || [];
+            const data = filterAndSort(section, allData);
+            const view = getSectionView(section);
+            const canReorder = (view.sort === 'manual') && !normalizeText(view.query);
             container.innerHTML = '';
 
+            if (data.length === 0) {
+                container.innerHTML = `<div class="item-card"><div class="item-info"><h4>No results</h4><p>Try clearing search or changing sort.</p></div></div>`;
+                return;
+            }
+
             if (section === 'projects') {
-                data.forEach(item => {
+                data.forEach((item, index) => {
                     const card = document.createElement('div');
                     card.className = 'item-card';
+                    const hasUrl = Boolean(item.url);
                     card.innerHTML = `
                         <div class="item-info">
                             <h4>${item.title}</h4>
@@ -881,14 +1177,20 @@
                             <small>Category: ${item.category} | Type: ${item.type}</small>
                         </div>
                         <div class="item-actions">
-                            <button class="btn btn-secondary" onclick="openModal('project', '${item.id}')">Edit</button>
-                            <button class="btn btn-danger" onclick="deleteItem('project', '${item.id}')">Delete</button>
+                            ${canReorder ? `
+                                <button class="btn btn-secondary btn-mini" onclick="moveItem('project', '${item.id}', -1)" ${index === 0 ? 'disabled' : ''} title="Move up">↑</button>
+                                <button class="btn btn-secondary btn-mini" onclick="moveItem('project', '${item.id}', 1)" ${index === data.length - 1 ? 'disabled' : ''} title="Move down">↓</button>
+                            ` : ''}
+                            <button class="btn btn-secondary btn-mini" onclick="duplicateItem('project', '${item.id}')" title="Duplicate">Duplicate</button>
+                            ${hasUrl ? `<button class="btn btn-secondary btn-mini" onclick='safeOpen(${JSON.stringify(String(item.url || ''))})' title="Open link">Open</button>` : ''}
+                            <button class="btn btn-secondary btn-mini" onclick="openModal('project', '${item.id}')">Edit</button>
+                            <button class="btn btn-danger btn-mini" onclick="deleteItem('project', '${item.id}')">Delete</button>
                         </div>
                     `;
                     container.appendChild(card);
                 });
             } else if (section === 'skills') {
-                data.forEach(item => {
+                data.forEach((item, index) => {
                     const card = document.createElement('div');
                     card.className = 'item-card';
                     const tags = Array.isArray(item.tags)
@@ -902,16 +1204,22 @@
                             </div>
                         </div>
                         <div class="item-actions">
-                            <button class="btn btn-secondary" onclick="openModal('skill', '${item.id}')">Edit</button>
-                            <button class="btn btn-danger" onclick="deleteItem('skill', '${item.id}')">Delete</button>
+                            ${canReorder ? `
+                                <button class="btn btn-secondary btn-mini" onclick="moveItem('skill', '${item.id}', -1)" ${index === 0 ? 'disabled' : ''} title="Move up">↑</button>
+                                <button class="btn btn-secondary btn-mini" onclick="moveItem('skill', '${item.id}', 1)" ${index === data.length - 1 ? 'disabled' : ''} title="Move down">↓</button>
+                            ` : ''}
+                            <button class="btn btn-secondary btn-mini" onclick="duplicateItem('skill', '${item.id}')" title="Duplicate">Duplicate</button>
+                            <button class="btn btn-secondary btn-mini" onclick="openModal('skill', '${item.id}')">Edit</button>
+                            <button class="btn btn-danger btn-mini" onclick="deleteItem('skill', '${item.id}')">Delete</button>
                         </div>
                     `;
                     container.appendChild(card);
                 });
             } else if (section === 'certificates') {
-                data.forEach(item => {
+                data.forEach((item, index) => {
                     const card = document.createElement('div');
                     card.className = 'item-card';
+                    const hasFile = Boolean(item.file);
                     card.innerHTML = `
                         <div class="item-info">
                             <h4>${item.title}</h4>
@@ -919,8 +1227,14 @@
                             <small>Category: ${item.category}</small>
                         </div>
                         <div class="item-actions">
-                            <button class="btn btn-secondary" onclick="openModal('certificate', '${item.id}')">Edit</button>
-                            <button class="btn btn-danger" onclick="deleteItem('certificate', '${item.id}')">Delete</button>
+                            ${canReorder ? `
+                                <button class="btn btn-secondary btn-mini" onclick="moveItem('certificate', '${item.id}', -1)" ${index === 0 ? 'disabled' : ''} title="Move up">↑</button>
+                                <button class="btn btn-secondary btn-mini" onclick="moveItem('certificate', '${item.id}', 1)" ${index === data.length - 1 ? 'disabled' : ''} title="Move down">↓</button>
+                            ` : ''}
+                            <button class="btn btn-secondary btn-mini" onclick="duplicateItem('certificate', '${item.id}')" title="Duplicate">Duplicate</button>
+                            ${hasFile ? `<button class="btn btn-secondary btn-mini" onclick='safeOpen(${JSON.stringify(String(item.file || ''))})' title="Open file">Open</button>` : ''}
+                            <button class="btn btn-secondary btn-mini" onclick="openModal('certificate', '${item.id}')">Edit</button>
+                            <button class="btn btn-danger btn-mini" onclick="deleteItem('certificate', '${item.id}')">Delete</button>
                         </div>
                     `;
                     container.appendChild(card);
@@ -978,6 +1292,75 @@
 
         function saveData(key, data) {
             localStorage.setItem('portfolio_' + key, JSON.stringify(data));
+            localStorage.setItem('portfolio__meta', JSON.stringify({ updatedAt: Date.now() }));
+            updateAdminMeta();
+        }
+
+        function updateAdminMeta() {
+            const metaEl = document.getElementById('lastSaved');
+            const countProjectsEl = document.getElementById('countProjects');
+            const countSkillsEl = document.getElementById('countSkills');
+            const countCertificatesEl = document.getElementById('countCertificates');
+
+            if (countProjectsEl) countProjectsEl.textContent = String((getData('projects') || []).length);
+            if (countSkillsEl) countSkillsEl.textContent = String((getData('skills') || []).length);
+            if (countCertificatesEl) countCertificatesEl.textContent = String((getData('certificates') || []).length);
+
+            if (!metaEl) return;
+            try {
+                const meta = JSON.parse(localStorage.getItem('portfolio__meta') || '{}');
+                metaEl.textContent = meta.updatedAt ? new Date(meta.updatedAt).toLocaleString() : '—';
+            } catch {
+                metaEl.textContent = '—';
+            }
+        }
+
+        function safeOpen(urlOrPath) {
+            if (!urlOrPath) return;
+            try {
+                const url = new URL(urlOrPath, window.location.href);
+                window.open(url.toString(), '_blank', 'noopener,noreferrer');
+            } catch {
+                showMessage('Invalid link/path.', 'error');
+            }
+        }
+
+        function duplicateItem(type, itemId) {
+            const items = getData(type + 's') || [];
+            const index = items.findIndex(item => String(item.id) === String(itemId));
+            if (index === -1) return;
+
+            const original = items[index];
+            const clone = JSON.parse(JSON.stringify(original));
+            clone.id = String(Date.now()) + '_' + Math.random().toString(16).slice(2);
+
+            if (type === 'project' || type === 'certificate') {
+                clone.title = `${clone.title} (Copy)`;
+            }
+            if (type === 'skill') {
+                clone.category = `${clone.category} (Copy)`;
+            }
+
+            items.splice(index + 1, 0, clone);
+            saveData(type + 's', items);
+            loadSectionData(type + 's');
+            showMessage('Item duplicated successfully!', 'success');
+        }
+
+        function moveItem(type, itemId, direction) {
+            const items = getData(type + 's') || [];
+            const index = items.findIndex(item => String(item.id) === String(itemId));
+            if (index === -1) return;
+            const nextIndex = index + (direction < 0 ? -1 : 1);
+            if (nextIndex < 0 || nextIndex >= items.length) return;
+
+            const updated = items.slice();
+            const temp = updated[index];
+            updated[index] = updated[nextIndex];
+            updated[nextIndex] = temp;
+
+            saveData(type + 's', updated);
+            loadSectionData(type + 's');
         }
 
         function showMessage(message, type) {

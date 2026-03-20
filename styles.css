@@ -710,6 +710,12 @@ body:not(.light) .admin-nav-btn:hover {
     color: var(--text);
 }
 
+.btn[aria-disabled="true"] {
+    opacity: 0.58;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 .quick-stats {
     margin: 28px 0 0;
     padding: 0;
@@ -1390,6 +1396,11 @@ body .admin-nav-btn {
 .cert-preview--pdf {
     position: relative;
     cursor: pointer;
+}
+
+.cert-preview--missing .cert-preview-fallback {
+    display: flex;
+    min-height: 210px;
 }
 
 .cert-preview--pdf:focus-visible {

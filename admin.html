@@ -234,6 +234,18 @@
             border-color: #dc3545;
         }
 
+        .deploy-note {
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(251, 191, 36, .28);
+            background: rgba(251, 191, 36, .08);
+            color: #f7d67c;
+        }
+
+        .deploy-note strong {
+            color: #fff1bf;
+        }
+
         @media (max-width: 900px) {
             .admin-grid {
                 grid-template-columns: 1fr;
@@ -291,6 +303,7 @@
         <div class="admin-head">
             <h1>Portfolio Admin</h1>
             <p>Add, edit, or delete portfolio content here and it will update on the portfolio in this browser.</p>
+            <p class="deploy-note"><strong>Deploy note:</strong> changes here are saved only in this browser. To make them live, the actual files must also exist in the project you deploy.</p>
             <div class="admin-meta">
                 <span><strong>Last saved:</strong> <span id="lastSaved">-</span></span>
                 <span><strong>Projects:</strong> <span id="countProjects">0</span></span>

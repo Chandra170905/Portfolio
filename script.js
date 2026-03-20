@@ -51,6 +51,11 @@ const isPortfolioPage = Boolean(
     || document.getElementById("certificateGrid")
     || document.getElementById("aboutContentBlock")
 );
+const previewSearchParams = new URLSearchParams(window.location.search);
+const isLocalPreviewEnvironment = window.location.protocol === "file:"
+    || ["localhost", "127.0.0.1"].includes(window.location.hostname);
+const shouldUseBrowserPortfolioData = isLocalPreviewEnvironment
+    || previewSearchParams.get("preview") === "local";
 const CERTIFICATE_CATEGORY_LABELS = {
     programming: "Programming",
     webdev: "Web Development",
@@ -412,13 +417,20 @@ const initCertificateCards = () => {
 
 const renderPortfolioContent = async () => {
     if (!isPortfolioPage) return;
-    ensurePortfolioData();
-    renderAboutData();
-    renderContactData();
-    renderSkillsData();
-    renderProjectsData();
-    await renderCertificatesData();
-    applySiteData();
+
+    if (shouldUseBrowserPortfolioData) {
+        ensurePortfolioData();
+        renderAboutData();
+        renderContactData();
+        renderSkillsData();
+        renderProjectsData();
+        await renderCertificatesData();
+        applySiteData();
+    } else {
+        hydrateProjectPreviewFrames();
+        renderQuickStats();
+    }
+
     initPlatformLogos();
     initProjectCards();
     initCertificateCards();
@@ -1637,10 +1649,42 @@ const setThemeLabel = () => {
     themeToggle.dataset.theme = isLight ? "light" : "dark";
 };
 
+const hydrateProjectPreviewFrames = () => {
+    const frames = document.querySelectorAll(".project-preview iframe[data-preview-src]");
+    if (frames.length === 0) return;
+
+    frames.forEach((frame) => {
+        const src = frame.getAttribute("data-preview-src");
+        if (!src || frame.getAttribute("src")) return;
+        frame.setAttribute("src", src);
+    });
+};
+
+const buildCertificateFallbackMarkup = (title, text, action) => `
+    <div class="cert-preview-fallback" role="img" aria-label="${escapeHtml(title)} preview unavailable">
+        <span class="cert-preview-fallback__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M7 2.75h7.2L19 7.55V20a1.25 1.25 0 0 1-1.25 1.25h-10.5A1.25 1.25 0 0 1 6 20V4A1.25 1.25 0 0 1 7.25 2.75Z"></path>
+                <path d="M14 2.75V8h5"></path>
+                <path d="M8.5 14.25h7M8.5 17.25h7M8.5 11.25h3.5"></path>
+            </svg>
+        </span>
+        <span class="cert-preview-fallback__text">${escapeHtml(text)}</span>
+        <span class="cert-preview-fallback__action">${escapeHtml(action)}</span>
+    </div>
+`;
+
+const markCertificateLinkMissing = (link) => {
+    if (!link || link.dataset.missingAsset === "true") return;
+    link.dataset.missingAsset = "true";
+    link.removeAttribute("href");
+    link.setAttribute("aria-disabled", "true");
+    link.tabIndex = -1;
+    link.textContent = "Certificate File Missing";
+};
+
 const setupCertificatePreviewFallbacks = () => {
     const previewFrames = document.querySelectorAll(".cert-preview iframe");
-    if (previewFrames.length === 0) return;
-
     previewFrames.forEach((frame) => {
         const preview = frame.closest(".cert-preview");
         const card = frame.closest(".cert-card");
@@ -1682,6 +1726,46 @@ const setupCertificatePreviewFallbacks = () => {
             <span class="cert-preview-fallback__action">Tap preview to open PDF</span>
         `;
         preview.appendChild(fallback);
+    });
+
+    document.querySelectorAll(".cert-preview img").forEach((img) => {
+        const preview = img.closest(".cert-preview");
+        const card = img.closest(".cert-card");
+        const openLink = card?.querySelector(".btn");
+        const title = card?.querySelector("h3")?.textContent?.trim() || img.alt || "Certificate";
+
+        const showMissingAssetFallback = () => {
+            if (!preview || preview.querySelector(".cert-preview-fallback")) return;
+            preview.classList.add("cert-preview--missing");
+            preview.innerHTML = buildCertificateFallbackMarkup(
+                title,
+                "Preview unavailable on this deployment.",
+                "Add the certificate image file to the project to restore it."
+            );
+            markCertificateLinkMissing(openLink);
+        };
+
+        if (img.complete && img.naturalWidth === 0) {
+            showMissingAssetFallback();
+            return;
+        }
+
+        img.addEventListener("error", showMissingAssetFallback, { once: true });
+    });
+
+    document.querySelectorAll(".cert-card .cert-preview").forEach((preview) => {
+        if (preview.querySelector("img, iframe, .cert-preview-fallback")) return;
+
+        const card = preview.closest(".cert-card");
+        const title = card?.querySelector("h3")?.textContent?.trim() || "Certificate";
+        preview.classList.add("cert-preview--missing");
+        preview.innerHTML = buildCertificateFallbackMarkup(
+            title,
+            "No certificate preview bundled.",
+            shouldUseBrowserPortfolioData
+                ? "Choose a certificate image in the local admin preview."
+                : "Add the certificate image file to the deployed project."
+        );
     });
 };
 
@@ -2051,7 +2135,7 @@ if (certificateFilterGroup) {
 }
 
 window.addEventListener("storage", (event) => {
-    if (!isPortfolioPage || !event.key || !event.key.startsWith("portfolio_")) return;
+    if (!shouldUseBrowserPortfolioData || !isPortfolioPage || !event.key || !event.key.startsWith("portfolio_")) return;
     renderPortfolioContent();
     setupProjectTilt();
 });

@@ -74,7 +74,20 @@
                 <a href="#contact">Contact</a>
                 <!-- <a href="about.html">More About</a> -->
             </nav>
-            <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">Dark</button>
+            <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light mode" title="Switch to light mode">
+                <span class="theme-icon theme-icon-sun" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                        <circle cx="12" cy="12" r="4.5"></circle>
+                        <path d="M12 1.75v2.5M12 19.75v2.5M4.75 4.75l1.77 1.77M17.48 17.48l1.77 1.77M1.75 12h2.5M19.75 12h2.5M4.75 19.25l1.77-1.77M17.48 6.52l1.77-1.77"></path>
+                    </svg>
+                </span>
+                <span class="theme-icon theme-icon-moon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M20.2 14.1A8.6 8.6 0 0 1 9.9 3.8a9.2 9.2 0 1 0 10.3 10.3Z"></path>
+                    </svg>
+                </span>
+                <span class="sr-only">Toggle theme</span>
+            </button>
         </div>
     </header>
 
@@ -109,12 +122,12 @@
 
         <section class="section" id="about">
             <div class="container split reveal">
-                <div>
+                <div id="aboutContentBlock">
                     <h2>About Me</h2>
                     <p>Currently pursuing a B.Tech in Computer Science and Engineering at Lovely Professional University (LPU), where I continue to grow my skills in software development and technology.</p>
                     <p>I completed a 6-month Diploma in Full Stack Development where I gained practical experience building modern web applications.</p>
                     <p>Before that, I completed my schooling at Kendriya Vidyalaya No. 3, JRC, where my interest in computers and technology first began.</p>
-                    <a class="text-link pixel-link" href="about.html">Read detailed profile <span class="pixel-link-arrow" aria-hidden="true">→</span></a>
+                    <a class="text-link pixel-link" href="about.html">Read detailed profile <span class="pixel-link-arrow" aria-hidden="true">â†’</span></a>
                 </div>
                 <div class="panel">
                     <h3>Academic Scores</h3>
@@ -139,7 +152,7 @@
                     <button class="chip" data-filter="tools" type="button">Tools & Technologies</button>
                     <button class="chip" data-filter="other" type="button">Other Technologies</button>
                 </div>
-                <div class="skills-grid">
+                <div class="skills-grid" id="skillsGrid">
                     <div class="skill-category" data-category="programming">
                         <h3>Programming Languages</h3>
                         <div class="skill-tags">
@@ -320,23 +333,20 @@
         <section class="section" id="projects">
             <div class="container reveal">
                 <div class="section-head">
-                    <h2>Featured Projects</h2>
-                    <div class="filters" id="projectFilters">
-                        <button class="chip active" data-filter="all" type="button">All</button>
-                        <button class="chip" data-filter="business" type="button">Business</button>
-                        <button class="chip" data-filter="web" type="button">Web Apps</button>
-                        <button class="chip" data-filter="landing" type="button">Landing</button>
+                    <div class="section-heading-copy">
+                        <p class="section-kicker">Project Showcase</p>
+                        <h2>Featured Projects</h2>
+                        <p class="section-subtext section-subtext-tight">Live work with a stronger focus on responsive UI, polished interactions, and practical product thinking.</p>
                     </div>
                     <div class="slider-controls" aria-label="Project slider controls">
-                        <button class="slider-btn" data-target="projectGrid" data-dir="prev" type="button" aria-label="Previous projects">‹</button>
-                        <button class="slider-btn" data-target="projectGrid" data-dir="next" type="button" aria-label="Next projects">›</button>
+                        <button class="slider-btn" data-target="projectGrid" data-dir="prev" type="button" aria-label="Previous projects">&#8249;</button>
+                        <button class="slider-btn" data-target="projectGrid" data-dir="next" type="button" aria-label="Next projects">&#8250;</button>
                     </div>
                 </div>
                 <div class="slider-track project-slider" id="projectGrid">
-                    <article class="project-card" data-category="business">
+                    <article class="project-card" data-status="Live" data-highlights="Responsive UI|Community-first journey|Location-aware concept" data-stack="HTML|CSS|JavaScript">
                         <h3>Friday - Your Local Buddy</h3>
                         <p>Community-focused web platform for local support and discovery.</p>
-                        <span>Web App</span>
                         <div class="project-preview">
                             <iframe src="https://chandra170905.github.io/Friday-your-Local-buddy/" title="Friday - Your Local Buddy Preview" loading="lazy"></iframe>
                         </div>
@@ -344,10 +354,9 @@
                             <a class="btn btn-secondary" href="https://chandra170905.github.io/Friday-your-Local-buddy/" target="_blank" rel="noopener noreferrer">Open Live Project</a>
                         </div>
                     </article>
-                    <article class="project-card" data-category="web">
+                    <article class="project-card" data-status="Live" data-highlights="Conversion-focused sections|Trust-building layout|Business-ready flow" data-stack="HTML|CSS|JavaScript">
                         <h3>Swift Movers</h3>
                         <p>Service website for relocation and moving solutions.</p>
-                        <span>Business Website</span>
                         <div class="project-preview">
                             <iframe src="https://swift-movers.onrender.com" title="Swift Movers Preview" loading="lazy"></iframe>
                         </div>
@@ -355,10 +364,9 @@
                             <a class="btn btn-secondary" href="https://swift-movers.onrender.com" target="_blank" rel="noopener noreferrer">Open Live Project</a>
                         </div>
                     </article>
-                    <article class="project-card" data-category="web">
+                    <article class="project-card" data-status="Live" data-highlights="Interactive learning|System concepts made visual|Focused interface states" data-stack="HTML|CSS|JavaScript">
                         <h3>Memory Management Visualizer</h3>
                         <p>An educational web application that simulates operating system memory management</p>
-                        <span>Operating System Simulation Tool.</span>
                         <div class="project-preview">
                             <iframe src="https://memory-management-visualizer.vercel.app/?tab=sim" title="Memory Management Visualizer Preview" loading="lazy"></iframe>
                         </div>
@@ -366,10 +374,9 @@
                             <a class="btn btn-secondary" href="https://memory-management-visualizer.vercel.app/?tab=sim" target="_blank" rel="noopener noreferrer">Open Live Project</a>
                         </div>
                     </article>
-                    <article class="project-card" data-category="landing">
+                    <article class="project-card" data-status="Live" data-highlights="Brand-driven styling|Product-first storytelling|Retail-oriented visuals" data-stack="HTML|CSS|JavaScript">
                         <h3>Hexa Clothing</h3>
                         <p>Modern clothing storefront with focused product presentation.</p>
-                        <span>Ecommerce / Landing</span>
                         <div class="project-preview">
                             <iframe src="https://hexaclothing.onrender.com" title="Hexa Clothing Preview" loading="lazy"></iframe>
                         </div>
@@ -380,172 +387,149 @@
                 </div>
             </div>
         </section>
-
         <section class="section" id="certificates">
             <div class="container reveal">
-                <h2>Certificates</h2>
-                <p class="section-subtext">Organized by category from your full certificate collection.</p>
-                <div class="filters" id="certificateFilters">
-                    <button class="chip active" data-filter="all" type="button">All</button>
-                    <button class="chip" data-filter="programming" type="button">Programming</button>
-                    <button class="chip" data-filter="webdev" type="button">Web Development</button>
-                    <button class="chip" data-filter="ai" type="button">AI & Generative AI</button>
-                    <button class="chip" data-filter="cloud" type="button">Cloud & Systems</button>
-                    <button class="chip" data-filter="networking" type="button">Networking</button>
-                    <button class="chip" data-filter="events" type="button">Events & Other</button>
-                    <button class="chip" data-filter="achievement" type="button">Achievement</button>
-                </div>
-                <div class="slider-controls" aria-label="Certificate slider controls">
-                    <button class="slider-btn" data-target="certificateGrid" data-dir="prev" type="button" aria-label="Previous certificates">‹</button>
-                    <button class="slider-btn" data-target="certificateGrid" data-dir="next" type="button" aria-label="Next certificates">›</button>
+                <div class="section-head">
+                    <div class="section-heading-copy">
+                        <p class="section-kicker">Learning Timeline</p>
+                        <h2>Certificates</h2>
+                        <p class="section-subtext section-subtext-tight">A categorized snapshot of my certifications across programming, web, AI, systems, networking, security, and SoftSkills.</p>
+                    </div>
+                    <div class="filters" id="certificateFilters">
+                        <button class="chip active" data-filter="all" type="button">All</button>
+                        <button class="chip" data-filter="programming" type="button">Programming</button>
+                        <button class="chip" data-filter="webdev" type="button">Web Development</button>
+                        <button class="chip" data-filter="ai" type="button">AI &amp; Generative AI</button>
+                        <button class="chip" data-filter="cloud" type="button">Cloud &amp; Systems</button>
+                        <button class="chip" data-filter="networking" type="button">Networking</button>
+                        <button class="chip" data-filter="security" type="button">Security &amp; Events</button>
+                        <button class="chip" data-filter="leadership" type="button">SoftSkills</button>
+                    </div>
+                    <div class="slider-controls" aria-label="Certificate slider controls">
+                        <button class="slider-btn" data-target="certificateGrid" data-dir="prev" type="button" aria-label="Previous certificates">&#8249;</button>
+                        <button class="slider-btn" data-target="certificateGrid" data-dir="next" type="button" aria-label="Next certificates">&#8250;</button>
+                    </div>
                 </div>
                 <div class="slider-track cert-slider" id="certificateGrid">
                     <article class="cert-card" data-category="programming">
-                        <p class="cert-tag">Programming Foundations</p>
-                        <h3>C Certificate</h3>
-                        <p class="cert-description">Fundamental programming concepts and syntax in C language, covering variables, loops, functions, and basic data structures.</p>
-                        <div class="cert-preview"><iframe src="certificates/C%20certificate.pdf#toolbar=0" title="C Certificate Preview" loading="lazy"></iframe></div>
-                        <a class="btn btn-secondary" href="certificates/C%20certificate.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <h3>C Programming</h3>
+                        <p class="cert-description">Core C programming concepts including syntax, control flow, functions, and foundational problem solving.</p>
+                        <div class="cert-preview"><img src="certificates/C.png" alt="C Programming Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/C.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="programming">
-                        <p class="cert-tag">Programming Foundations</p>
-                        <h3>C++ Certificate</h3>
-                        <p class="cert-description">Object-oriented programming with C++, including classes, inheritance, polymorphism, and advanced language features.</p>
-                        <div class="cert-preview"><iframe src="certificates/C%2B%2B%20certificate.pdf#toolbar=0" title="C++ Certificate Preview" loading="lazy"></iframe></div>
-                        <a class="btn btn-secondary" href="certificates/C%2B%2B%20certificate.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <h3>C++ Programming</h3>
+                        <p class="cert-description">Object-oriented development with C++, covering classes, inheritance, reusable design, and efficient logic building.</p>
+                        <div class="cert-preview"><img src="certificates/C%2B%2B.png" alt="C++ Programming Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/C%2B%2B.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="programming">
-                        <p class="cert-tag">Programming Foundations</p>
-                        <h3>Java Certificate</h3>
-                        <p class="cert-description">Java programming fundamentals including OOP concepts, exception handling, collections, and core Java APIs.</p>
-                        <div class="cert-preview"><iframe src="certificates/java%20certificate.pdf#toolbar=0" title="Java Certificate Preview" loading="lazy"></iframe></div>
-                        <a class="btn btn-secondary" href="certificates/java%20certificate.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <h3>Java Programming</h3>
+                        <p class="cert-description">General Java development training focused on syntax, OOP thinking, and practical application building.</p>
+                        <div class="cert-preview"><img src="certificates/JAVA.png" alt="Java Programming Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/JAVA.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="programming">
-                        <p class="cert-tag">Programming Foundations</p>
-                        <h3>DSA Certificate</h3>
-                        <p class="cert-description">Data Structures and Algorithms covering arrays, linked lists, trees, graphs, sorting, and searching algorithms.</p>
-                        <div class="cert-preview"><iframe src="certificates/DSA%20certificate.pdf#toolbar=0" title="DSA Certificate Preview" loading="lazy"></iframe></div>
-                        <a class="btn btn-secondary" href="certificates/DSA%20certificate.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <h3>Data Structures and Algorithms</h3>
+                        <p class="cert-description">Problem-solving with arrays, linked lists, trees, graphs, sorting, and algorithmic thinking.</p>
+                        <div class="cert-preview"><img src="certificates/DSA.png" alt="Data Structures and Algorithms Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/DSA.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    </article>
+                    <article class="cert-card" data-category="programming">
+                        <h3>Java Fundamentals</h3>
+                        <p class="cert-description">Java basics focused on syntax, data types, control structures, and beginner-friendly coding practice.</p>
+                        <div class="cert-preview"><img src="certificates/JAVA%20FUNDAMENTALS.png" alt="Java Fundamentals Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/JAVA%20FUNDAMENTALS.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="webdev">
-                        <p class="cert-tag">Web Development</p>
-                        <h3>freeCodeCamp</h3>
-                        <p class="cert-description">Responsive Web Design certification covering HTML, CSS, and basic web development principles.</p>
-                        <div class="cert-preview"><iframe src="certificates/freecode%20camp.pdf#toolbar=0" title="freeCodeCamp Certificate Preview" loading="lazy"></iframe></div>
-                        <a class="btn btn-secondary" href="certificates/freecode%20camp.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <h3>Responsive Web Designing</h3>
+                        <p class="cert-description">Responsive design skills for building adaptable layouts with HTML, CSS, and mobile-first thinking.</p>
+                        <div class="cert-preview"><img src="certificates/RESPONSIVE%20WEB%20DESIGNING.png" alt="Responsive Web Designing Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/RESPONSIVE%20WEB%20DESIGNING.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="webdev">
-                        <p class="cert-tag">Web Development</p>
-                        <h3>Web Developer Certificate</h3>
-                        <p class="cert-description">Comprehensive web development training covering frontend and backend technologies, frameworks, and best practices.</p>
-                        <div class="cert-preview"><img src="certificates/webdevloper.jpg" alt="Web Developer Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/webdevloper.jpg" target="_blank" rel="noopener noreferrer">Open Certificate</a>
-                    </article>
-                    <article class="cert-card" data-category="webdev">
-                        <p class="cert-tag">Web Development</p>
-                        <h3>Skillstone Certificate</h3>
-                        <p class="cert-description">Professional web development certification focusing on modern frameworks, tools, and industry-standard practices.</p>
-                        <div class="cert-preview"><img src="certificates/Skillstone.png" alt="Skillstone Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/Skillstone.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <h3>Web Development with Python and Django</h3>
+                        <p class="cert-description">Full-stack web development using Python, Django, templating, and practical web application workflows.</p>
+                        <div class="cert-preview"><img src="certificates/WEB%20DEVELOPMENT%20PYTHON%20%26%20DJANGO.jpg" alt="Web Development with Python and Django Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/WEB%20DEVELOPMENT%20PYTHON%20%26%20DJANGO.jpg" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="ai">
-                        <p class="cert-tag">AI and Generative AI</p>
-                        <h3>Build Generative AI Apps</h3>
-                        <p class="cert-description">Hands-on training in developing applications using generative AI technologies and machine learning models.</p>
-                        <div class="cert-preview"><iframe src="certificates/Build%20Generative%20AI%20Apps.pdf#toolbar=0" title="Build Generative AI Apps Preview" loading="lazy"></iframe></div>
-                        <a class="btn btn-secondary" href="certificates/Build%20Generative%20AI%20Apps.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <h3>AI Essentials</h3>
+                        <p class="cert-description">Foundational AI knowledge covering core concepts, use cases, and real-world applications of intelligent systems.</p>
+                        <div class="cert-preview"><img src="certificates/AI%20ESSENTIALS.png" alt="AI Essentials Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/AI%20ESSENTIALS.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="ai">
-                        <p class="cert-tag">AI and Generative AI</p>
-                        <h3>Master Generative AI</h3>
-                        <p class="cert-description">Advanced concepts in generative AI, including model training, fine-tuning, and deployment strategies.</p>
-                        <div class="cert-preview"><iframe src="certificates/Master%20Generative%20AI.pdf#toolbar=0" title="Master Generative AI Preview" loading="lazy"></iframe></div>
-                        <a class="btn btn-secondary" href="certificates/Master%20Generative%20AI.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <h3>Generative AI</h3>
+                        <p class="cert-description">Applied generative AI concepts with emphasis on modern tools, prompts, and creative automation workflows.</p>
+                        <div class="cert-preview"><img src="certificates/GENERATIVE%20AI.png" alt="Generative AI Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/GENERATIVE%20AI.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="ai">
-                        <p class="cert-tag">AI and Generative AI</p>
-                        <h3>Udemy ChatGPT AI</h3>
-                        <p class="cert-description">Comprehensive training on ChatGPT and other AI language models, including prompt engineering and practical applications.</p>
-                        <div class="cert-preview"><iframe src="certificates/Udemy%20chatgpt%20AI.pdf#toolbar=0" title="Udemy ChatGPT AI Preview" loading="lazy"></iframe></div>
-                        <a class="btn btn-secondary" href="certificates/Udemy%20chatgpt%20AI.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <h3>Master Generative AI and Tools</h3>
+                        <p class="cert-description">Advanced generative AI exposure spanning tools, workflows, and practical productivity-focused implementations.</p>
+                        <div class="cert-preview"><img src="certificates/MASTER%20GENERATIVE%20AI%20%26%20TOOL.png" alt="Master Generative AI and Tools Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/MASTER%20GENERATIVE%20AI%20%26%20TOOL.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="cloud">
-                        <p class="cert-tag">Cloud and Systems</p>
                         <h3>Cloud Computing</h3>
-                        <p class="cert-description">Cloud computing fundamentals including AWS, Azure, GCP services, deployment strategies, and cloud architecture.</p>
-                        <div class="cert-preview"><iframe src="certificates/Cloud%20Computing.pdf#toolbar=0" title="Cloud Computing Certificate Preview" loading="lazy"></iframe></div>
-                        <a class="btn btn-secondary" href="certificates/Cloud%20Computing.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Cloud platform basics including deployment models, service layers, and scalable application hosting concepts.</p>
+                        <div class="cert-preview"><img src="certificates/CLOUD%20COMPUTING.png" alt="Cloud Computing Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/CLOUD%20COMPUTING.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="cloud">
-                        <p class="cert-tag">Cloud and Systems</p>
-                        <h3>Hardware and OS</h3>
-                        <p class="cert-description">Computer hardware components, operating systems concepts, system administration, and hardware-software interaction.</p>
-                        <div class="cert-preview"><iframe src="certificates/HardwareOS.pdf#toolbar=0" title="Hardware and OS Certificate Preview" loading="lazy"></iframe></div>
-                        <a class="btn btn-secondary" href="certificates/HardwareOS.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <h3>Hardware and Operating Systems</h3>
+                        <p class="cert-description">Computer system fundamentals covering hardware components, OS behavior, and system-level understanding.</p>
+                        <div class="cert-preview"><img src="certificates/HARDWARE%20%26%20OS.png" alt="Hardware and Operating Systems Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/HARDWARE%20%26%20OS.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="cloud">
-                        <p class="cert-tag">Cloud and Systems</p>
-                        <h3>Bits and Bytes</h3>
-                        <p class="cert-description">Digital systems fundamentals covering binary operations, data representation, and low-level computing concepts.</p>
-                        <div class="cert-preview"><iframe src="certificates/Bits%20and%20bytes.pdf#toolbar=0" title="Bits and Bytes Certificate Preview" loading="lazy"></iframe></div>
-                        <a class="btn btn-secondary" href="certificates/Bits%20and%20bytes.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <h3>Bits and Bytes of Networking</h3>
+                        <p class="cert-description">Introductory networking concepts focused on digital communication, binary representation, and infrastructure basics.</p>
+                        <div class="cert-preview"><img src="certificates/BITS%20%26%20BYTES%20NETWORKING%20.png" alt="Bits and Bytes of Networking Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/BITS%20%26%20BYTES%20NETWORKING%20.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="networking">
-                        <p class="cert-tag">Networking</p>
-                        <h3>Networking</h3>
-                        <p class="cert-description">Computer networking fundamentals including OSI model, TCP/IP protocols, network topologies, and communication systems.</p>
-                        <div class="cert-preview"><iframe src="certificates/Networking.pdf#toolbar=0" title="Networking Certificate Preview" loading="lazy"></iframe></div>
-                        <a class="btn btn-secondary" href="certificates/Networking.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <h3>Network Communication</h3>
+                        <p class="cert-description">Communication models, layered networking ideas, and essential concepts for reliable data exchange.</p>
+                        <div class="cert-preview"><img src="certificates/NETWORK%20COMMUNICATION.png" alt="Network Communication Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/NETWORK%20COMMUNICATION.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="networking">
-                        <p class="cert-tag">Networking</p>
-                        <h3>Packet Switching</h3>
-                        <p class="cert-description">Packet switching technologies, routing algorithms, network congestion control, and data transmission methods.</p>
-                        <div class="cert-preview"><iframe src="certificates/Packet%20switching.pdf#toolbar=0" title="Packet Switching Certificate Preview" loading="lazy"></iframe></div>
-                        <a class="btn btn-secondary" href="certificates/Packet%20switching.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <h3>Packet Switching Networks and Algorithms</h3>
+                        <p class="cert-description">Packet delivery methods, routing logic, and algorithmic ideas behind efficient network traffic movement.</p>
+                        <div class="cert-preview"><img src="certificates/PACKET%20SWITCHING%20NETWORKS%20%26%20ALGORITHM.png" alt="Packet Switching Networks and Algorithms Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/PACKET%20SWITCHING%20NETWORKS%20%26%20ALGORITHM.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="networking">
-                        <p class="cert-tag">Networking</p>
-                        <h3>Peer to Peer</h3>
-                        <p class="cert-description">Peer-to-peer networking concepts, distributed systems, file sharing protocols, and decentralized network architectures.</p>
-                        <div class="cert-preview"><iframe src="certificates/peer%20to%20peer.pdf#toolbar=0" title="Peer to Peer Certificate Preview" loading="lazy"></iframe></div>
-                        <a class="btn btn-secondary" href="certificates/peer%20to%20peer.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <h3>Peer to Peer Protocol and LAN</h3>
+                        <p class="cert-description">Distributed communication concepts, peer networks, and local area networking fundamentals.</p>
+                        <div class="cert-preview"><img src="certificates/PEER%20TO%20PEER%20PROTOCOL%20%26%20LOCAL%20AREA%20NETWORK.png" alt="Peer to Peer Protocol and LAN Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/PEER%20TO%20PEER%20PROTOCOL%20%26%20LOCAL%20AREA%20NETWORK.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="networking">
-                        <p class="cert-tag">Networking</p>
-                        <h3>TCP</h3>
-                        <p class="cert-description">Transmission Control Protocol fundamentals, connection establishment, reliable data transfer, and network communication.</p>
-                        <div class="cert-preview"><iframe src="certificates/TCP.pdf#toolbar=0" title="TCP Certificate Preview" loading="lazy"></iframe></div>
-                        <a class="btn btn-secondary" href="certificates/TCP.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <h3>TCP/IP</h3>
+                        <p class="cert-description">Core TCP/IP concepts including protocols, packet flow, addressing, and dependable network communication.</p>
+                        <div class="cert-preview"><img src="certificates/TCPA%20%26%20IP.png" alt="TCP IP Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/TCPA%20%26%20IP.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
-                    <article class="cert-card" data-category="events">
-                        <p class="cert-tag">Events and Other</p>
-                        <h3>Devfest</h3>
-                        <p class="cert-description">Participation in Google Developer Groups DevFest event, showcasing community engagement and tech event involvement.</p>
-                        <div class="cert-preview"><iframe src="certificates/Devfest.pdf#toolbar=0" title="Devfest Certificate Preview" loading="lazy"></iframe></div>
-                        <a class="btn btn-secondary" href="certificates/Devfest.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    <article class="cert-card" data-category="security">
+                        <h3>RCS CTF</h3>
+                        <p class="cert-description">Capture-the-flag participation highlighting curiosity in cybersecurity, puzzles, and hands-on security learning.</p>
+                        <div class="cert-preview"><img src="certificates/RCSCTF.png" alt="RCS CTF Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/RCSCTF.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
-                    <article class="cert-card" data-category="events">
-                        <p class="cert-tag">Events and Other</p>
-                        <h3>EncryptEdge</h3>
-                        <p class="cert-description">Participation in EncryptEdge cybersecurity event, demonstrating knowledge of security concepts and ethical hacking practices.</p>
-                        <div class="cert-preview"><iframe src="certificates/EncryptEdge.pdf#toolbar=0" title="EncryptEdge Certificate Preview" loading="lazy"></iframe></div>
-                        <a class="btn btn-secondary" href="certificates/EncryptEdge.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    <article class="cert-card" data-category="security">
+                        <h3>DevCreate Hackathon</h3>
+                        <p class="cert-description">Hackathon participation demonstrating teamwork, rapid prototyping, and building under time constraints.</p>
+                        <div class="cert-preview"><img src="certificates/DEVCREATE%20HACKATHON.png" alt="DevCreate Hackathon Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/DEVCREATE%20HACKATHON.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
-                    <article class="cert-card" data-category="events">
-                        <p class="cert-tag">Events and Other</p>
-                        <h3>Non Technical</h3>
-                        <p class="cert-description">Non-technical skills development covering communication, leadership, and professional development competencies.</p>
-                        <div class="cert-preview"><iframe src="certificates/nontechinacl.pdf#toolbar=0" title="Non Technical Certificate Preview" loading="lazy"></iframe></div>
-                        <a class="btn btn-secondary" href="certificates/nontechinacl.pdf" target="_blank" rel="noopener noreferrer">Open Certificate</a>
-                    </article>
-                    <article class="cert-card" data-category="achievement">
-                        <p class="cert-tag">Achievement</p>
-                        <h3>Achievement Certificate 1</h3>
-                        <p class="cert-description">Recognition for outstanding performance and dedication in academic or professional achievements.</p>
-                        <div class="cert-preview"><img src="certificates/6c26aa5b-6aa8-4edf-9b59-d5ff6c54e735.png" alt="Achievement Certificate 1 Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/6c26aa5b-6aa8-4edf-9b59-d5ff6c54e735.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                    <article class="cert-card" data-category="leadership">
+                        <h3>Become a Leader</h3>
+                        <p class="cert-description">Leadership-focused learning around communication, responsibility, initiative, and collaborative growth.</p>
+                        <div class="cert-preview"><img src="certificates/BECOME%20A%20LEADER.png" alt="Become a Leader Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/BECOME%20A%20LEADER.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                 </div>
             </div>
@@ -637,13 +621,13 @@
         <section class="section" id="contact">
             <div class="container reveal contact-wrap">
                 <div>
-                    <h2>Let us build something solid.</h2>
-                    <p>Available for internships, freelance work, and junior frontend roles.</p>
-                    <p>Email: <a class="text-link" href="mailto:chandra170905@gmail.com">chandra170905@gmail.com</a></p>
-                    <p>GitHub: <a class="text-link" href="https://github.com/Chandra170905" target="_blank" rel="noopener noreferrer">github.com/Chandra170905</a></p>
-                    <p>LinkedIn: <a class="text-link" href="https://www.linkedin.com/in/chandra-prakash-2960553a0/" target="_blank" rel="noopener noreferrer">linkedin.com/in/chandra-prakash-2960553a0</a></p>
+                    <h2 id="contactHeading">Let us build something solid.</h2>
+                    <p id="contactIntro">Available for internships, freelance work, and junior frontend roles.</p>
+                    <p id="contactEmailRow">Email: <a class="text-link" id="contactEmailLink" href="mailto:chandra170905@gmail.com">chandra170905@gmail.com</a></p>
+                    <p id="contactGithubRow">GitHub: <a class="text-link" id="contactGithubLink" href="https://github.com/Chandra170905" target="_blank" rel="noopener noreferrer">github.com/Chandra170905</a></p>
+                    <p id="contactLinkedinRow">LinkedIn: <a class="text-link" id="contactLinkedinLink" href="https://www.linkedin.com/in/chandra-prakash-2960553a0/" target="_blank" rel="noopener noreferrer">linkedin.com/in/chandra-prakash-2960553a0</a></p>
                     <div class="contact-direct">
-                        <a class="btn btn-primary" href="mailto:chandra170905@gmail.com?subject=Portfolio%20Inquiry">Contact Me by Email</a>
+                        <a class="btn btn-primary" id="contactEmailCta" href="mailto:chandra170905@gmail.com?subject=Portfolio%20Inquiry">Contact Me by Email</a>
                         <button class="btn btn-secondary" id="copyEmailBtn" type="button" data-email="chandra170905@gmail.com">Copy Email</button>
                         <p class="copy-status" id="copyStatus" aria-live="polite"></p>
                     </div>
@@ -661,7 +645,9 @@
                     </div>
                     <div class="contact-gate" aria-hidden="true">
                         <button class="sit-trigger" id="sitTrigger" type="button" tabindex="-1">
-                            <img src="sit.png" alt="" loading="lazy" decoding="async">
+                            <img class="sit-image sit-image-dark" src="sit.png" alt="" loading="lazy" decoding="async">
+                            <img class="sit-image sit-image-light" src="sit2.png" alt="" loading="lazy" decoding="async">
+                            <span class="sit-particle-layer" id="sitParticleLayer"></span>
                         </button>
                     </div>
                 </div>
@@ -688,7 +674,7 @@
     <div class="modal" id="hireModal" role="dialog" aria-modal="true" aria-labelledby="hireModalTitle" aria-hidden="true">
         <div class="modal-backdrop" data-modal-close></div>
         <div class="modal-panel" role="document">
-            <button class="modal-close" type="button" aria-label="Close hire form" data-modal-close>×</button>
+            <button class="modal-close" type="button" aria-label="Close hire form" data-modal-close>Ã—</button>
             <h2 id="hireModalTitle">Hire Me</h2>
             <p class="modal-subtext">Share a few details and I will reply quickly.</p>
             <form class="modal-form" id="hireForm" action="https://formsubmit.co/chandra170905@gmail.com" method="post">

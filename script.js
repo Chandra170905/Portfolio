@@ -8,12 +8,8 @@ const year = document.getElementById("year");
 const typingText = document.getElementById("typingText");
 const revealItems = document.querySelectorAll(".reveal");
 const timelineGroups = document.querySelectorAll(".timeline");
-const filterGroup = document.getElementById("projectFilters");
-const cards = document.querySelectorAll(".project-card");
 const skillFilterGroup = document.getElementById("skillFilters");
-const skillCategories = document.querySelectorAll(".skill-category");
 const certificateFilterGroup = document.getElementById("certificateFilters");
-const certificateCards = document.querySelectorAll(".cert-card");
 const sliderButtons = document.querySelectorAll(".slider-btn");
 const scrollProgress = document.getElementById("scrollProgress");
 const bgLayers = document.querySelectorAll(".bg-layer");
@@ -40,6 +36,30 @@ const hireCurrency = document.getElementById("hireCurrency");
 const hireToast = document.getElementById("hireToast");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const THEME_TRANSITION_MS = 420;
+const CERTIFICATE_DB_NAME = "portfolio_media_v1";
+const CERTIFICATE_STORE_NAME = "certificateImages";
+const DEFAULT_SOCIAL_LINKS = {
+    github: "https://github.com/Chandra170905",
+    linkedin: "https://www.linkedin.com/in/chandra-prakash-2960553a0/"
+};
+const getProjectCards = () => document.querySelectorAll(".project-card");
+const getSkillCategories = () => document.querySelectorAll(".skill-category");
+const getCertificateCards = () => document.querySelectorAll(".cert-card");
+const isPortfolioPage = Boolean(
+    document.getElementById("projectGrid")
+    || document.getElementById("skillsGrid")
+    || document.getElementById("certificateGrid")
+    || document.getElementById("aboutContentBlock")
+);
+const CERTIFICATE_CATEGORY_LABELS = {
+    programming: "Programming",
+    webdev: "Web Development",
+    ai: "AI & Generative AI",
+    cloud: "Cloud & Systems",
+    networking: "Networking",
+    security: "Security & Events",
+    leadership: "Leadership"
+};
 
 const withThemeTransition = (fn) => {
     if (prefersReducedMotion) {
@@ -78,7 +98,332 @@ const initPlatformLogos = () => {
     });
 };
 
-initPlatformLogos();
+const splitDataList = (value) => (
+    value
+        ? value.split("|").map((item) => item.trim()).filter(Boolean)
+        : []
+);
+
+const parseStored = (key, fallback = null) => {
+    try {
+        return JSON.parse(localStorage.getItem(`portfolio_${key}`)) ?? fallback;
+    } catch {
+        return fallback;
+    }
+};
+
+const saveStored = (key, value) => {
+    localStorage.setItem(`portfolio_${key}`, JSON.stringify(value));
+    localStorage.setItem("portfolio__meta", JSON.stringify({ updatedAt: Date.now() }));
+};
+
+const escapeHtml = (value) => String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+const splitCommaList = (value) => String(value || "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+const slugify = (value, fallback = "item") => {
+    const slug = String(value || "")
+        .toLowerCase()
+        .replace(/&/g, " and ")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    return slug || fallback;
+};
+
+const normalizeCertificateCategory = (value) => slugify(value, "general");
+
+let certificateDbPromise = null;
+const openCertificateDb = () => {
+    if (certificateDbPromise) return certificateDbPromise;
+    certificateDbPromise = new Promise((resolve, reject) => {
+        const request = indexedDB.open(CERTIFICATE_DB_NAME, 1);
+        request.onupgradeneeded = () => {
+            const db = request.result;
+            if (!db.objectStoreNames.contains(CERTIFICATE_STORE_NAME)) {
+                db.createObjectStore(CERTIFICATE_STORE_NAME);
+            }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error || new Error("Failed to open certificate database."));
+    });
+    return certificateDbPromise;
+};
+
+const getCertificateImage = async (id) => {
+    if (!id) return null;
+    const db = await openCertificateDb();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(CERTIFICATE_STORE_NAME, "readonly");
+        const request = tx.objectStore(CERTIFICATE_STORE_NAME).get(id);
+        request.onsuccess = () => resolve(request.result || null);
+        request.onerror = () => reject(request.error || new Error("Failed to load certificate image."));
+    });
+};
+
+const resolveCertificateAsset = async (item) => {
+    if (item?.imageId) {
+        try {
+            const blob = await getCertificateImage(item.imageId);
+            if (blob) {
+                const objectUrl = URL.createObjectURL(blob);
+                return { src: objectUrl, href: objectUrl, revoke: true };
+            }
+        } catch {}
+    }
+    const file = String(item?.file || "").trim();
+    return { src: file, href: file, revoke: false };
+};
+
+const defaultProjects = () => Array.from(document.querySelectorAll("#projectGrid .project-card")).map((card, index) => ({
+    id: String(index + 1),
+    title: card.querySelector("h3")?.textContent?.trim() || `Project ${index + 1}`,
+    description: card.querySelector("p")?.textContent?.trim() || "",
+    url: card.querySelector("a[href]")?.getAttribute("href") || "",
+    status: card.dataset.status || "Live",
+    highlights: splitDataList(card.dataset.highlights),
+    stack: splitDataList(card.dataset.stack)
+}));
+
+const defaultSkills = () => Array.from(document.querySelectorAll("#skillsGrid .skill-category")).map((item, index) => ({
+    id: String(index + 1),
+    key: item.dataset.category || slugify(item.querySelector("h3")?.textContent || `skill-${index + 1}`),
+    category: item.querySelector("h3")?.textContent?.trim() || `Skill Category ${index + 1}`,
+    tags: Array.from(item.querySelectorAll(".skill-label")).map((tag) => tag.textContent.trim()).filter(Boolean)
+}));
+
+const defaultCertificates = () => Array.from(document.querySelectorAll("#certificateGrid .cert-card")).map((card, index) => ({
+    id: String(index + 1),
+    title: card.querySelector("h3")?.textContent?.trim() || `Certificate ${index + 1}`,
+    category: normalizeCertificateCategory(card.dataset.category || "general"),
+    description: card.querySelector(".cert-description")?.textContent?.trim() || "",
+    file: card.querySelector("a[href]")?.getAttribute("href") || ""
+}));
+
+const defaultAbout = () => {
+    const block = document.getElementById("aboutContentBlock");
+    const paragraphs = block ? Array.from(block.querySelectorAll("p")) : [];
+    return {
+        title: block?.querySelector("h2")?.textContent?.trim() || "About Me",
+        content: paragraphs[0]?.textContent?.trim() || "",
+        subtitle: paragraphs.slice(1).map((item) => item.textContent.trim()).filter(Boolean).join("\n\n")
+    };
+};
+
+const defaultContact = () => ({
+    email: document.getElementById("contactEmailLink")?.textContent?.trim() || "chandra170905@gmail.com",
+    phone: "",
+    address: "",
+    links: {
+        github: document.getElementById("contactGithubLink")?.href || DEFAULT_SOCIAL_LINKS.github,
+        linkedin: document.getElementById("contactLinkedinLink")?.href || DEFAULT_SOCIAL_LINKS.linkedin
+    }
+});
+
+const defaultSite = () => ({
+    brand: document.getElementById("brandName")?.textContent?.trim() || "Chandra Prakash",
+    hero: {
+        headline: document.getElementById("heroHeadline")?.textContent?.trim() || "Building clean, responsive, user-first web experiences.",
+        intro: document.getElementById("heroIntro")?.textContent?.trim() || "I am Chandra, a",
+        outro: document.getElementById("heroOutro")?.textContent?.trim() || "focused on modern UI, performance, and accessibility.",
+        roles: typingRoles.slice()
+    },
+    stats: Array.from(document.querySelectorAll("#quickStats li")).map((item) => ({
+        value: item.querySelector("strong")?.textContent?.trim() || "",
+        label: item.querySelector("span")?.textContent?.trim() || ""
+    })).filter((item) => item.value || item.label)
+});
+
+const ensurePortfolioData = () => {
+    if (parseStored("projects") === null) saveStored("projects", defaultProjects());
+    if (parseStored("skills") === null) saveStored("skills", defaultSkills());
+    if (parseStored("certificates") === null) saveStored("certificates", defaultCertificates());
+    if (parseStored("about") === null) saveStored("about", defaultAbout());
+    if (parseStored("contact") === null) saveStored("contact", defaultContact());
+    if (parseStored("site") === null) saveStored("site", defaultSite());
+};
+
+const renderAboutData = () => {
+    const data = parseStored("about");
+    const block = document.getElementById("aboutContentBlock");
+    if (!data || !block) return;
+    const link = block.querySelector(".pixel-link")?.outerHTML || "";
+    const paragraphs = [data.content, data.subtitle]
+        .flatMap((item) => String(item || "").split(/\n{2,}/))
+        .map((item) => item.trim())
+        .filter(Boolean);
+    block.innerHTML = `<h2>${escapeHtml(data.title || "About Me")}</h2>${paragraphs.map((item) => `<p>${escapeHtml(item)}</p>`).join("")}${link}`;
+};
+
+const renderContactData = () => {
+    const data = parseStored("contact");
+    if (!data) return;
+    const email = String(data.email || "").trim();
+    const github = String(data.links?.github || DEFAULT_SOCIAL_LINKS.github).trim();
+    const linkedin = String(data.links?.linkedin || DEFAULT_SOCIAL_LINKS.linkedin).trim();
+    const emailLink = document.getElementById("contactEmailLink");
+    const githubLink = document.getElementById("contactGithubLink");
+    const linkedinLink = document.getElementById("contactLinkedinLink");
+    const emailCta = document.getElementById("contactEmailCta");
+    if (emailLink && email) { emailLink.textContent = email; emailLink.href = `mailto:${email}`; }
+    if (githubLink && github) { githubLink.textContent = github.replace(/^https?:\/\//, ""); githubLink.href = github; }
+    if (linkedinLink && linkedin) { linkedinLink.textContent = linkedin.replace(/^https?:\/\//, ""); linkedinLink.href = linkedin; }
+    if (emailCta && email) emailCta.href = `mailto:${email}?subject=Portfolio%20Inquiry`;
+    if (copyEmailBtn && email) copyEmailBtn.setAttribute("data-email", email);
+    const socialLinks = document.querySelectorAll(".social-links .social-icon");
+    if (socialLinks[0] && github) socialLinks[0].href = github;
+    if (socialLinks[1] && linkedin) socialLinks[1].href = linkedin;
+};
+
+const renderSkillsData = () => {
+    const grid = document.getElementById("skillsGrid");
+    const data = parseStored("skills");
+    if (!grid || !Array.isArray(data)) return;
+    grid.innerHTML = data.map((item, index) => {
+        const key = item.key || slugify(item.category, `skill-${index + 1}`);
+        const tags = Array.isArray(item.tags) ? item.tags : splitCommaList(item.tags);
+        return `<div class="skill-category" data-category="${escapeHtml(key)}"><h3>${escapeHtml(item.category || `Skill Category ${index + 1}`)}</h3><div class="skill-tags">${tags.map((tag) => `<span class="skill-tag"><span class="skill-icon-fallback" aria-hidden="true">${escapeHtml(tag.charAt(0).toUpperCase() || "S")}</span><span class="skill-label">${escapeHtml(tag)}</span></span>`).join("")}</div></div>`;
+    }).join("");
+    if (skillFilterGroup) {
+        skillFilterGroup.innerHTML = ['<button class="chip active" data-filter="all" type="button">All</button>']
+            .concat(data.map((item, index) => `<button class="chip" data-filter="${escapeHtml(item.key || slugify(item.category, `skill-${index + 1}`))}" type="button">${escapeHtml(item.category || `Skill Category ${index + 1}`)}</button>`))
+            .join("");
+    }
+};
+
+const renderCertificateFilters = (items) => {
+    if (!certificateFilterGroup) return;
+
+    const categories = Array.from(new Set(
+        items
+            .map((item) => normalizeCertificateCategory(item.category))
+            .filter(Boolean)
+    ));
+
+    certificateFilterGroup.innerHTML = ['<button class="chip active" data-filter="all" type="button">All</button>']
+        .concat(categories.map((category) => {
+            const label = CERTIFICATE_CATEGORY_LABELS[category] || category.replace(/[-_]+/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+            return `<button class="chip" data-filter="${escapeHtml(category)}" type="button">${escapeHtml(label)}</button>`;
+        }))
+        .join("");
+};
+
+const renderProjectsData = () => {
+    const grid = document.getElementById("projectGrid");
+    const data = parseStored("projects");
+    if (!grid || !Array.isArray(data)) return;
+    if (data.length === 0) {
+        grid.innerHTML = '<article class="project-card"><h3>No projects yet</h3><p>Add a project from the admin page and it will appear here.</p></article>';
+        return;
+    }
+
+    grid.innerHTML = data.map((item, index) => {
+        const highlights = Array.isArray(item.highlights) ? item.highlights : splitCommaList(item.highlights);
+        const stack = Array.isArray(item.stack) ? item.stack : splitCommaList(item.stack);
+        const url = String(item.url || "").trim();
+        return `<article class="project-card" data-status="${escapeHtml(item.status || "Live")}" data-highlights="${escapeHtml(highlights.join("|"))}" data-stack="${escapeHtml(stack.join("|"))}"><h3>${escapeHtml(item.title || `Project ${index + 1}`)}</h3><p>${escapeHtml(item.description || "")}</p>${url ? `<div class="project-preview"><iframe src="${escapeHtml(url)}" title="${escapeHtml(item.title || `Project ${index + 1}`)} Preview" loading="lazy"></iframe></div>` : ""}<div class="project-actions">${url ? `<a class="btn btn-secondary" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Open Live Project</a>` : ""}</div></article>`;
+    }).join("");
+};
+
+const renderCertificatesData = async () => {
+    const grid = document.getElementById("certificateGrid");
+    const data = parseStored("certificates");
+    if (!grid || !Array.isArray(data)) return;
+    renderCertificateFilters(data);
+    if (data.length === 0) {
+        grid.innerHTML = '<article class="cert-card" data-category="general"><h3>No certificates yet</h3><p class="cert-description">Add a certificate from the admin page and it will appear here.</p></article>';
+        return;
+    }
+
+    const assets = await Promise.all(data.map((item) => resolveCertificateAsset(item)));
+    grid.innerHTML = data.map((item, index) => {
+        const asset = assets[index];
+        const file = String(asset?.src || "").trim();
+        const href = String(asset?.href || file).trim();
+        const title = item.title || `Certificate ${index + 1}`;
+        const category = normalizeCertificateCategory(item.category);
+        return `<article class="cert-card" data-category="${escapeHtml(category)}"><h3>${escapeHtml(title)}</h3><p class="cert-description">${escapeHtml(item.description || "")}</p><div class="cert-preview">${file ? `<img src="${escapeHtml(file)}" alt="${escapeHtml(title)} Preview" loading="lazy">` : ""}</div>${href ? `<a class="btn btn-secondary" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">Open Certificate</a>` : ""}</article>`;
+    }).join("");
+};
+
+const initProjectCards = () => {
+    const cards = getProjectCards();
+    if (cards.length === 0) return;
+
+    cards.forEach((card) => {
+        card.querySelector(".project-card-head")?.remove();
+        card.querySelector(".project-highlights")?.remove();
+        card.querySelector(".project-stack")?.remove();
+
+        const title = card.querySelector("h3");
+        if (!title) return;
+
+        const status = card.dataset.status || "Live";
+        const highlights = splitDataList(card.dataset.highlights);
+        const stack = splitDataList(card.dataset.stack);
+
+        const header = document.createElement("div");
+        header.className = "project-card-head";
+        header.innerHTML = `<span class="project-status">${status}</span>`;
+
+        card.insertBefore(header, title);
+
+        if (highlights.length > 0) {
+            const highlightWrap = document.createElement("div");
+            highlightWrap.className = "project-highlights";
+            highlightWrap.innerHTML = highlights
+                .map((item) => `<span class="project-highlight">${item}</span>`)
+                .join("");
+            const preview = card.querySelector(".project-preview");
+            if (preview) {
+                card.insertBefore(highlightWrap, preview);
+            }
+        }
+
+        if (stack.length > 0) {
+            const stackWrap = document.createElement("div");
+            stackWrap.className = "project-stack";
+            stackWrap.innerHTML = stack
+                .map((item) => `<span class="project-stack-item">${item}</span>`)
+                .join("");
+            const actions = card.querySelector(".project-actions");
+            if (actions) {
+                card.insertBefore(stackWrap, actions);
+            }
+        }
+    });
+};
+
+const initCertificateCards = () => {
+    const certificateCards = getCertificateCards();
+    if (certificateCards.length === 0) return;
+
+    certificateCards.forEach((card) => {
+        card.querySelector(".cert-card-head")?.remove();
+    });
+};
+
+const renderPortfolioContent = async () => {
+    if (!isPortfolioPage) return;
+    ensurePortfolioData();
+    renderAboutData();
+    renderContactData();
+    renderSkillsData();
+    renderProjectsData();
+    await renderCertificatesData();
+    applySiteData();
+    initPlatformLogos();
+    initProjectCards();
+    initCertificateCards();
+    setupCertificatePreviewFallbacks();
+};
 
 const initPacmanEgg = () => {
     const pacmanEgg = document.getElementById("pacmanEgg");
@@ -1286,7 +1631,58 @@ navLinks.forEach((link) => {
 
 const setThemeLabel = () => {
     if (!themeToggle) return;
-    themeToggle.textContent = document.body.classList.contains("light") ? "Light" : "Dark";
+    const isLight = document.body.classList.contains("light");
+    themeToggle.setAttribute("aria-label", isLight ? "Switch to dark mode" : "Switch to light mode");
+    themeToggle.setAttribute("title", isLight ? "Switch to dark mode" : "Switch to light mode");
+    themeToggle.dataset.theme = isLight ? "light" : "dark";
+};
+
+const setupCertificatePreviewFallbacks = () => {
+    const previewFrames = document.querySelectorAll(".cert-preview iframe");
+    if (previewFrames.length === 0) return;
+
+    previewFrames.forEach((frame) => {
+        const preview = frame.closest(".cert-preview");
+        const card = frame.closest(".cert-card");
+        const openLink = card?.querySelector('a[href]');
+
+        if (!preview || !openLink || preview.querySelector(".cert-preview-fallback")) return;
+
+        preview.classList.add("cert-preview--pdf");
+        preview.tabIndex = 0;
+        preview.setAttribute("role", "link");
+        preview.setAttribute("aria-label", `Open ${frame.title || "certificate"} PDF`);
+
+        preview.addEventListener("click", (event) => {
+            if (event.target.closest("a")) return;
+            window.open(openLink.href, "_blank", "noopener");
+        });
+
+        preview.addEventListener("keydown", (event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            event.preventDefault();
+            window.open(openLink.href, "_blank", "noopener");
+        });
+
+        const fallback = document.createElement("a");
+        fallback.className = "cert-preview-fallback";
+        fallback.href = openLink.href;
+        fallback.target = "_blank";
+        fallback.rel = "noopener noreferrer";
+        fallback.setAttribute("aria-label", `Open ${frame.title || "certificate"} in a new tab`);
+        fallback.innerHTML = `
+            <span class="cert-preview-fallback__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                    <path d="M7 2.75h7.2L19 7.55V20a1.25 1.25 0 0 1-1.25 1.25h-10.5A1.25 1.25 0 0 1 6 20V4A1.25 1.25 0 0 1 7.25 2.75Z"></path>
+                    <path d="M14 2.75V8h5"></path>
+                    <path d="M8.5 14.25h7M8.5 17.25h7M8.5 11.25h3.5"></path>
+                </svg>
+            </span>
+            <span class="cert-preview-fallback__text">Preview not available on some phones</span>
+            <span class="cert-preview-fallback__action">Tap preview to open PDF</span>
+        `;
+        preview.appendChild(fallback);
+    });
 };
 
 const updateScrollProgress = () => {
@@ -1391,6 +1787,7 @@ const setupHeroTilt = () => {
 };
 
 const setupProjectTilt = () => {
+    const cards = getProjectCards();
     if (cards.length === 0 || prefersReducedMotion) return;
 
     cards.forEach((card) => {
@@ -1438,7 +1835,7 @@ const validateNameField = (input, fieldId) => {
     return true;
 };
 
-if (themeToggle) {
+if (themeToggle && !document.body.dataset.adminPage) {
     const storedTheme = localStorage.getItem("portfolio-theme");
     if (storedTheme === "light") {
         document.body.classList.add("light");
@@ -1453,9 +1850,11 @@ if (themeToggle) {
     });
 }
 
+if (isPortfolioPage) {
+    renderPortfolioContent();
+}
 setupHeroTilt();
 setupProjectTilt();
-applySiteData();
 
 if (rotatePhotoBtn) {
     rotatePhotoBtn.addEventListener('click', () => {
@@ -1468,6 +1867,66 @@ if (year) {
 }
 
 const sitTrigger = document.getElementById("sitTrigger");
+const sitParticleLayer = document.getElementById("sitParticleLayer");
+
+const initSitParticles = () => {
+    if (!sitTrigger || !sitParticleLayer || prefersReducedMotion) return;
+
+    const spawnParticle = () => {
+        const layerRect = sitParticleLayer.getBoundingClientRect();
+        if (layerRect.width === 0 || layerRect.height === 0) return;
+
+        const particle = document.createElement("span");
+        particle.className = "sit-particle";
+
+        const edgeRoll = Math.random();
+        let startX = layerRect.width * (0.18 + Math.random() * 0.64);
+        let startY = layerRect.height * (0.66 + Math.random() * 0.22);
+
+        if (edgeRoll < 0.38) {
+            startX = layerRect.width * (0.06 + Math.random() * 0.16);
+            startY = layerRect.height * (0.34 + Math.random() * 0.48);
+        } else if (edgeRoll < 0.76) {
+            startX = layerRect.width * (0.78 + Math.random() * 0.16);
+            startY = layerRect.height * (0.34 + Math.random() * 0.48);
+        }
+
+        const size = 4 + Math.random() * 6;
+        const travelY = 42 + Math.random() * 54;
+        const driftX = -12 + Math.random() * 24;
+        const opacity = 0.42 + Math.random() * 0.24;
+        const duration = 2200 + Math.random() * 1500;
+        const core = Math.random() > 0.5 ? "rgba(255, 94, 220, 0.92)" : "rgba(179, 96, 255, 0.92)";
+        const glow = Math.random() > 0.5 ? "rgba(255, 146, 244, 0.96)" : "rgba(205, 126, 255, 0.94)";
+
+        particle.style.setProperty("--start-x", `${startX.toFixed(2)}px`);
+        particle.style.setProperty("--start-y", `${startY.toFixed(2)}px`);
+        particle.style.setProperty("--particle-size", `${size.toFixed(2)}px`);
+        particle.style.setProperty("--travel-y", `${travelY.toFixed(2)}px`);
+        particle.style.setProperty("--drift-x", `${driftX.toFixed(2)}px`);
+        particle.style.setProperty("--particle-opacity", opacity.toFixed(2));
+        particle.style.setProperty("--particle-duration", `${duration.toFixed(0)}ms`);
+        particle.style.setProperty("--particle-core", core);
+        particle.style.setProperty("--particle-glow", glow);
+
+        sitParticleLayer.appendChild(particle);
+        window.setTimeout(() => particle.remove(), duration + 80);
+    };
+
+    for (let i = 0; i < 10; i += 1) {
+        window.setTimeout(spawnParticle, i * 170);
+    }
+
+    window.setInterval(() => {
+        const burst = 1 + Math.floor(Math.random() * 2);
+        for (let i = 0; i < burst; i += 1) {
+            window.setTimeout(spawnParticle, i * (90 + Math.random() * 120));
+        }
+    }, 320);
+};
+
+initSitParticles();
+
 if (sitTrigger) {
     let clicks = 0;
     let resetTimer = 0;
@@ -1555,25 +2014,6 @@ if (timelineGroups.length > 0) {
     timelineGroups.forEach((timeline) => timelineObserver.observe(timeline));
 }
 
-if (filterGroup) {
-    filterGroup.addEventListener("click", (event) => {
-        const target = event.target.closest(".chip");
-        if (!target) return;
-
-        filterGroup.querySelectorAll(".chip").forEach((chip) => chip.classList.remove("active"));
-        target.classList.add("active");
-
-        const selected = target.getAttribute("data-filter");
-        cards.forEach((card) => {
-            const match = selected === "all" || card.getAttribute("data-category") === selected;
-            card.style.display = match ? "block" : "none";
-        });
-
-        const projectTrack = document.getElementById("projectGrid");
-        projectTrack?.scrollTo({ left: 0, behavior: "smooth" });
-    });
-}
-
 if (skillFilterGroup) {
     skillFilterGroup.addEventListener("click", (event) => {
         const target = event.target.closest(".chip");
@@ -1583,7 +2023,7 @@ if (skillFilterGroup) {
         target.classList.add("active");
 
         const selected = target.getAttribute("data-filter");
-        skillCategories.forEach((category) => {
+        getSkillCategories().forEach((category) => {
             const match = selected === "all" || category.getAttribute("data-category") === selected;
             category.style.display = match ? "block" : "none";
         });
@@ -1599,7 +2039,7 @@ if (certificateFilterGroup) {
         target.classList.add("active");
 
         const selected = target.getAttribute("data-filter");
-        certificateCards.forEach((card) => {
+        getCertificateCards().forEach((card) => {
             const match = selected === "all" || card.getAttribute("data-category") === selected;
             card.style.display = match ? "block" : "none";
         });
@@ -1609,6 +2049,12 @@ if (certificateFilterGroup) {
         certificateTrack?.scrollTo({ left: 0, behavior: "smooth" });
     });
 }
+
+window.addEventListener("storage", (event) => {
+    if (!isPortfolioPage || !event.key || !event.key.startsWith("portfolio_")) return;
+    renderPortfolioContent();
+    setupProjectTilt();
+});
 
 if (sliderButtons.length > 0) {
     sliderButtons.forEach((button) => {

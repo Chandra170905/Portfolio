@@ -27,7 +27,7 @@
 
         .admin-shell {
             display: grid;
-            grid-template-columns: minmax(208px, 228px) minmax(0, 1fr);
+            grid-template-columns: minmax(272px, 320px) minmax(0, 1fr);
             gap: 18px;
             align-items: start;
         }
@@ -64,7 +64,7 @@
         }
 
         .admin-head p {
-            font-size: .78rem;
+            font-size: .82rem;
             line-height: 1.4;
         }
 
@@ -107,17 +107,21 @@
             cursor: pointer;
             background: var(--surface);
             color: var(--text);
-            font-size: .8rem;
+            font-size: .66rem;
+            line-height: 1.2;
             text-align: center;
+            white-space: normal;
+            overflow-wrap: anywhere;
             transition: background .2s ease, border-color .2s ease;
         }
 
         .admin-nav-btn::before {
-            display: inline-block;
-            width: 1.65rem;
+            display: block;
+            width: auto;
+            margin-bottom: 4px;
             color: var(--muted);
             font-family: var(--font-retro);
-            font-size: .56rem;
+            font-size: .5rem;
             letter-spacing: .06em;
             content: attr(data-short);
         }
@@ -302,6 +306,11 @@
             background: color-mix(in oklab, var(--surface-soft) 84%, transparent);
         }
 
+        .admin-stat--wide,
+        .admin-action-wide {
+            grid-column: 1 / -1;
+        }
+
         .admin-stat strong {
             font-size: .72rem;
             text-transform: uppercase;
@@ -310,12 +319,16 @@
 
         .admin-stat span {
             color: var(--text);
-            font-size: .92rem;
+            font-size: .84rem;
             font-weight: 700;
+            overflow-wrap: anywhere;
         }
 
         #openPreviewBtn {
             justify-content: center;
+            font-size: .62rem;
+            line-height: 1.2;
+            white-space: nowrap;
         }
 
         .btn:disabled {
@@ -435,11 +448,6 @@
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
-            .admin-nav-btn::before {
-                width: auto;
-                margin-right: 6px;
-            }
-
             .form-row {
                 grid-template-columns: 1fr;
             }
@@ -500,11 +508,11 @@
                     <h1>Portfolio Admin</h1>
                     <p>Add, edit, or delete portfolio content here and publish it through the live backend.</p>
                     <div class="admin-meta">
-                        <span class="admin-stat"><strong>Last Saved</strong><span id="lastSaved">-</span></span>
+                        <span class="admin-stat admin-stat--wide"><strong>Last Saved</strong><span id="lastSaved">-</span></span>
                         <span class="admin-stat"><strong>Projects</strong><span id="countProjects">0</span></span>
                         <span class="admin-stat"><strong>Skills</strong><span id="countSkills">0</span></span>
                         <span class="admin-stat"><strong>Certificates</strong><span id="countCertificates">0</span></span>
-                        <button class="btn btn-secondary btn-mini" id="openPreviewBtn" type="button">Open Portfolio</button>
+                        <button class="btn btn-secondary btn-mini admin-action-wide" id="openPreviewBtn" type="button">Open Portfolio</button>
                     </div>
                 </div>
 

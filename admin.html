@@ -92,6 +92,7 @@
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 18px;
+            align-items: stretch;
         }
 
         .card {
@@ -99,6 +100,16 @@
             border: 1px solid var(--line);
             border-radius: 16px;
             padding: 18px;
+        }
+
+        .card-list-panel {
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+        }
+
+        .card-list-panel h2 {
+            margin: 0 0 12px;
         }
 
         .form-group {
@@ -141,7 +152,8 @@
 
         #projectsList,
         #certificatesList {
-            max-height: 520px;
+            flex: 1 1 auto;
+            min-height: 0;
             overflow-y: auto;
             padding-right: 6px;
         }
@@ -419,7 +431,7 @@
                                 id="projectCancelEditBtn" type="button" hidden>Cancel</button></div>
                     </form>
                 </div>
-                <div class="card">
+                <div class="card card-list-panel">
                     <h2>Current Projects</h2>
                     <div class="item-list" id="projectsList"></div>
                 </div>
@@ -469,7 +481,7 @@
                                 id="certificateCancelEditBtn" type="button" hidden>Cancel</button></div>
                     </form>
                 </div>
-                <div class="card">
+                <div class="card card-list-panel">
                     <h2>Current Certificates</h2>
                     <div class="item-list" id="certificatesList"></div>
                 </div>

@@ -24,36 +24,410 @@
             min-height: 100vh;
             display: grid;
             place-items: center;
-            padding: 24px;
+            padding: 32px 24px;
         }
 
+        .login-shell {
+            width: min(1080px, 100%);
+            display: grid;
+            grid-template-columns: minmax(0, 1.08fr) minmax(340px, 420px);
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        .login-story,
         .login-card {
-            width: min(420px, 92vw);
-            padding: 20px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .login-card h1 {
-            margin: 6px 0 6px;
+        .login-story {
+            display: grid;
+            gap: 20px;
+            align-content: start;
+            min-height: 100%;
+            isolation: isolate;
         }
 
-        .login-card .section-subtext {
-            margin: 0 0 14px;
+        .login-story::before,
+        .login-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .login-card .modal-form {
+        .login-story::before {
+            background:
+                radial-gradient(circle at 15% 18%, color-mix(in oklab, #22d3ee 16%, transparent), transparent 34%),
+                radial-gradient(circle at 88% 22%, color-mix(in oklab, #22c55e 12%, transparent), transparent 28%),
+                linear-gradient(140deg, color-mix(in oklab, var(--surface) 94%, transparent), color-mix(in oklab, var(--surface-soft) 92%, transparent));
+            opacity: 0.9;
+        }
+
+        .login-card::before {
+            background:
+                radial-gradient(circle at 88% 10%, color-mix(in oklab, var(--accent) 16%, transparent), transparent 34%),
+                linear-gradient(180deg, color-mix(in oklab, var(--surface) 96%, transparent), color-mix(in oklab, var(--surface-soft) 92%, transparent));
+            opacity: 0.92;
+        }
+
+        .login-story>*,
+        .login-card>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-story-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .login-story-pill,
+        .login-status-pill,
+        .login-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 38px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: color-mix(in oklab, var(--surface) 90%, transparent);
+            font-family: var(--font-retro);
+            font-size: 0.56rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent-strong);
+            line-height: 1.4;
+        }
+
+        .login-story-pill::before,
+        .login-status-pill::before,
+        .login-badge::before {
+            content: "";
+            width: 9px;
+            height: 9px;
+            border-radius: 999px;
+            background: color-mix(in oklab, var(--accent) 80%, white);
+            box-shadow: 0 0 16px color-mix(in oklab, var(--accent) 50%, transparent);
+            flex: 0 0 auto;
+        }
+
+        .login-badge.is-error::before,
+        .login-status-pill.is-error::before {
+            background: #f87171;
+            box-shadow: 0 0 16px rgba(248, 113, 113, 0.45);
+        }
+
+        .login-badge.is-ready::before,
+        .login-status-pill.is-ready::before {
+            background: #4ade80;
+            box-shadow: 0 0 16px rgba(74, 222, 128, 0.42);
+        }
+
+        .login-badge.is-busy::before,
+        .login-status-pill.is-busy::before {
+            background: #fbbf24;
+            box-shadow: 0 0 16px rgba(251, 191, 36, 0.42);
+        }
+
+        .login-story-copy h1 {
+            margin: 8px 0 10px;
+            max-width: 14ch;
+            font-size: clamp(1.8rem, 3vw, 2.7rem);
+            line-height: 1.25;
+        }
+
+        .login-story-copy .section-subtext {
+            margin: 0;
+            max-width: 58ch;
+        }
+
+        .login-story-grid,
+        .login-story-stats {
+            display: grid;
+            gap: 14px;
+        }
+
+        .login-story-stats {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .login-stat,
+        .login-story-card,
+        .login-support-card {
+            border-radius: 18px;
+            border: 1px solid var(--line);
+            background: color-mix(in oklab, var(--surface) 90%, transparent);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+        }
+
+        .login-stat {
+            padding: 14px;
+            display: grid;
+            gap: 6px;
+        }
+
+        .login-stat-label {
+            font-family: var(--font-retro);
+            font-size: 0.54rem;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .login-stat strong {
+            font-family: var(--font-display);
+            font-size: 1.28rem;
+            line-height: 1;
+        }
+
+        .login-stat span:last-child {
+            font-size: 0.88rem;
+            color: var(--muted);
+        }
+
+        .login-story-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .login-story-card {
+            padding: 16px;
+            display: grid;
             gap: 8px;
         }
 
+        .login-story-card h2 {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .login-story-card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.94rem;
+        }
+
+        .login-story-footer {
+            display: grid;
+            gap: 12px;
+        }
+
+        .login-chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .login-chip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: color-mix(in oklab, var(--surface-soft) 72%, transparent);
+            color: var(--text);
+            font-size: 0.82rem;
+            text-decoration: none;
+        }
+
+        .login-card {
+            width: 100%;
+            align-self: center;
+            padding: 22px;
+            display: grid;
+            gap: 16px;
+        }
+
+        .login-card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .login-card h2 {
+            margin: 8px 0 6px;
+            font-size: 1.34rem;
+        }
+
+        .login-card .section-subtext {
+            margin: 0;
+        }
+
+        .login-card .modal-form {
+            gap: 12px;
+        }
+
+        .login-field {
+            display: grid;
+            gap: 8px;
+        }
+
+        .login-field label {
+            font-weight: 700;
+        }
+
+        .input-shell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 52px;
+            padding: 0 14px;
+            border: 1px solid var(--line-strong);
+            border-radius: 14px;
+            background: color-mix(in oklab, var(--surface) 94%, transparent);
+            transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+        }
+
+        .input-shell:focus-within {
+            border-color: color-mix(in oklab, var(--accent) 42%, white);
+            box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 10%, transparent);
+            transform: translateY(-1px);
+        }
+
+        .input-shell input {
+            border: none;
+            background: transparent;
+            padding: 0;
+            box-shadow: none;
+        }
+
+        .input-shell input:focus {
+            outline: none;
+        }
+
+        .input-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            color: var(--muted);
+            flex: 0 0 auto;
+        }
+
+        .input-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .password-toggle {
+            border: 1px solid var(--line);
+            background: color-mix(in oklab, var(--surface-soft) 82%, transparent);
+            color: var(--text);
+            border-radius: 999px;
+            padding: 7px 10px;
+            cursor: pointer;
+            font-family: var(--font-retro);
+            font-size: 0.5rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            flex: 0 0 auto;
+            transition: transform .16s ease, border-color .16s ease, background .16s ease;
+        }
+
+        .password-toggle:hover,
+        .password-toggle:focus-visible {
+            transform: translateY(-1px);
+            border-color: color-mix(in oklab, var(--accent) 48%, white);
+            outline: none;
+        }
+
+        .login-inline-status {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .login-status-pill[hidden] {
+            display: none;
+        }
+
+        .login-submit {
+            width: 100%;
+            min-height: 48px;
+        }
+
+        .login-submit[disabled] {
+            opacity: 0.72;
+            cursor: wait;
+        }
+
         .login-card .form-hint {
-            margin-top: 2px;
+            margin-top: 0;
+            padding: 10px 12px;
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            background: color-mix(in oklab, var(--surface) 90%, transparent);
+        }
+
+        .login-card .form-hint.is-error {
+            color: #ff9b9b;
+            border-color: rgba(248, 113, 113, 0.36);
+            background: rgba(127, 29, 29, 0.12);
+        }
+
+        .login-card .form-hint.is-busy {
+            color: #fde68a;
+            border-color: rgba(251, 191, 36, 0.34);
+            background: rgba(120, 53, 15, 0.12);
+        }
+
+        .login-card .form-hint.is-success {
+            color: #bbf7d0;
+            border-color: rgba(74, 222, 128, 0.34);
+            background: rgba(20, 83, 45, 0.12);
+        }
+
+        .login-support {
+            display: grid;
+            gap: 10px;
+        }
+
+        .login-support-card {
+            padding: 14px 16px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .login-support-card h3 {
+            margin: 0;
+            font-size: 0.88rem;
+        }
+
+        .login-support-card p,
+        .login-support-card ul {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .login-support-card ul {
+            padding-left: 18px;
+        }
+
+        .login-support-card li+li {
+            margin-top: 6px;
         }
 
         .back-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 14px;
             border: 1px solid var(--line);
             background: color-mix(in oklab, var(--surface) 88%, transparent);
@@ -70,6 +444,38 @@
             box-shadow: 0 0 22px rgba(34, 211, 238, 0.18);
             outline: none;
         }
+
+        @media (max-width: 920px) {
+            .login-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .login-story-copy h1 {
+                max-width: 16ch;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .login-wrap {
+                padding: 18px;
+            }
+
+            .login-story-stats,
+            .login-story-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .login-card-top,
+            .login-story-head {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .login-badge {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 
@@ -83,31 +489,143 @@
     <main>
         <section class="section" id="admin-login">
             <div class="container login-wrap">
-                <div class="panel login-card" role="region" aria-label="Admin login">
-                    <a class="back-btn" href="index.html" aria-label="Back to home">←</a>
-                    <p class="eyebrow">Restricted</p>
-                    <h1>Admin Login</h1>
-                    <p class="section-subtext">Sign in with your Supabase admin email and password.</p>
+                <div class="login-shell">
+                    <aside class="panel login-story" aria-label="Login page overview">
+                        <div class="login-story-head">
+                            <a class="back-btn" href="index.html" aria-label="Back to home">&larr;</a>
+                            <span class="login-story-pill">Live backend access</span>
+                        </div>
 
-                    <form class="modal-form" id="adminLoginForm" autocomplete="on" novalidate>
-                        <label for="adminEmail">Email</label>
-                        <input id="adminEmail" name="email" type="email" required placeholder="you@example.com"
-                            autocomplete="username" maxlength="120">
-                        <p class="field-hint" data-hint-for="adminEmail"
-                            data-default="Use the email address you created in Supabase Auth."></p>
+                        <div class="login-story-copy">
+                            <p class="eyebrow">Restricted</p>
+                            <h1>Control the portfolio your visitors actually see.</h1>
+                            <p class="section-subtext">Sign in to manage projects, certificates, skills, and homepage
+                                content through the live Supabase backend.</p>
+                        </div>
 
-                        <label for="adminPassword">Password</label>
-                        <input id="adminPassword" name="password" type="password" required placeholder="Enter password"
-                            autocomplete="current-password" maxlength="80">
-                        <p class="field-hint" data-hint-for="adminPassword" data-default="Enter your admin password.">
-                        </p>
+                        <div class="login-story-stats" aria-hidden="true">
+                            <div class="login-stat">
+                                <span class="login-stat-label">Access</span>
+                                <strong>Live</strong>
+                                <span>Publishes to the deployed site</span>
+                            </div>
+                            <div class="login-stat">
+                                <span class="login-stat-label">Sections</span>
+                                <strong>4+</strong>
+                                <span>Projects, skills, certificates, site</span>
+                            </div>
+                            <div class="login-stat">
+                                <span class="login-stat-label">Auth</span>
+                                <strong>RLS</strong>
+                                <span>Protected by Supabase access rules</span>
+                            </div>
+                        </div>
 
-                        <button class="btn btn-primary" type="submit">Login</button>
-                        <p class="form-hint" id="loginHint">Tip: this uses your live backend account, not a local-only
-                            password.</p>
-                        <div class="toast" id="loginToast" role="status" aria-live="polite">Login successful.
-                            Redirecting…</div>
-                    </form>
+                        <div class="login-story-grid">
+                            <article class="login-story-card">
+                                <h2>Publish faster</h2>
+                                <p>Push project order, certificate updates, and homepage changes without editing the
+                                    static HTML each time.</p>
+                            </article>
+                            <article class="login-story-card">
+                                <h2>Backend-aware</h2>
+                                <p>The login checks both Supabase Auth and your <code>portfolio_admins</code> access
+                                    list before allowing entry.</p>
+                            </article>
+                            <article class="login-story-card">
+                                <h2>Safer workflow</h2>
+                                <p>Your live content stays in one backend source instead of depending on one browser's
+                                    local data.</p>
+                            </article>
+                            <article class="login-story-card">
+                                <h2>Ready to edit</h2>
+                                <p>Once you sign in, you go straight to the admin panel so changes can be saved
+                                    immediately.</p>
+                            </article>
+                        </div>
+
+                        <div class="login-story-footer">
+                            <div class="login-inline-status">
+                                <span class="login-status-pill is-ready" id="loginAmbientStatus">Secure login flow
+                                    ready</span>
+                            </div>
+                            <div class="login-chip-row">
+                                <a class="login-chip" href="index.html">Open portfolio</a>
+                                <a class="login-chip" href="admin.html">Admin panel</a>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <div class="panel login-card" role="region" aria-label="Admin login">
+                        <div class="login-card-top">
+                            <div>
+                                <p class="eyebrow">Admin Access</p>
+                                <h2>Sign in to dashboard</h2>
+                                <p class="section-subtext">Use the same email that exists in Supabase Auth and in your
+                                    <code>portfolio_admins</code> table.</p>
+                            </div>
+                            <span class="login-badge is-busy" id="backendStatusBadge">Checking backend</span>
+                        </div>
+
+                        <form class="modal-form" id="adminLoginForm" autocomplete="on" novalidate>
+                            <div class="login-field">
+                                <label for="adminEmail">Email</label>
+                                <div class="input-shell">
+                                    <span class="input-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" focusable="false">
+                                            <path d="M3 6.75h18v10.5H3z"></path>
+                                            <path d="m4.5 8.25 7.5 6 7.5-6"></path>
+                                        </svg>
+                                    </span>
+                                    <input id="adminEmail" name="email" type="email" required
+                                        placeholder="you@example.com" autocomplete="username" maxlength="120">
+                                </div>
+                                <p class="field-hint" data-hint-for="adminEmail"
+                                    data-default="Use the email address you created in Supabase Auth."></p>
+                            </div>
+
+                            <div class="login-field">
+                                <label for="adminPassword">Password</label>
+                                <div class="input-shell">
+                                    <span class="input-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" focusable="false">
+                                            <rect x="5" y="10" width="14" height="10" rx="2"></rect>
+                                            <path d="M8 10V7.75A4 4 0 0 1 12 4a4 4 0 0 1 4 3.75V10"></path>
+                                            <path d="M12 14.5v2.5"></path>
+                                        </svg>
+                                    </span>
+                                    <input id="adminPassword" name="password" type="password" required
+                                        placeholder="Enter password" autocomplete="current-password" maxlength="80">
+                                    <button class="password-toggle" id="passwordToggle" type="button"
+                                        aria-controls="adminPassword" aria-pressed="false">Show</button>
+                                </div>
+                                <p class="field-hint" data-hint-for="adminPassword"
+                                    data-default="Enter your admin password."></p>
+                            </div>
+
+                            <div class="login-inline-status">
+                                <span class="login-status-pill is-error" id="capsLockHint" hidden>Caps Lock is on</span>
+                            </div>
+
+                            <button class="btn btn-primary login-submit" id="loginSubmitBtn" type="submit">Sign in to
+                                dashboard</button>
+                            <p class="form-hint" id="loginHint">Tip: this uses your live backend account, not a
+                                local-only password.</p>
+                            <div class="toast" id="loginToast" role="status" aria-live="polite">Login successful.
+                                Redirecting...</div>
+                        </form>
+
+                        <div class="login-support">
+                            <article class="login-support-card">
+                                <h3>Before you sign in</h3>
+                                <ul>
+                                    <li>The account must exist in Supabase Authentication.</li>
+                                    <li>The same email must also be present in <code>portfolio_admins</code>.</li>
+                                    <li>Successful login redirects to the live admin panel.</li>
+                                </ul>
+                            </article>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

@@ -149,6 +149,15 @@ const slugify = (value, fallback = "item") => {
     return slug || fallback;
 };
 
+const getDefaultProjectImage = (project = {}) => {
+    const fingerprint = `${project.title || ""} ${project.url || ""}`.toLowerCase();
+    if (fingerprint.includes("friday")) return "project-preview-friday.svg";
+    if (fingerprint.includes("swift")) return "project-preview-swift-movers.svg";
+    if (fingerprint.includes("memory")) return "project-preview-memory.svg";
+    if (fingerprint.includes("hexa")) return "project-preview-hexa.svg";
+    return "";
+};
+
 const normalizeCertificateCategory = (value) => slugify(value, "general");
 
 let certificateDbPromise = null;
@@ -199,6 +208,10 @@ const defaultProjects = () => Array.from(document.querySelectorAll("#projectGrid
     description: card.querySelector("p")?.textContent?.trim() || "",
     url: card.querySelector("a[href]")?.getAttribute("href") || "",
     status: card.dataset.status || "Live",
+    image: card.dataset.image || card.querySelector(".project-preview img")?.getAttribute("src") || getDefaultProjectImage({
+        title: card.querySelector("h3")?.textContent?.trim(),
+        url: card.querySelector("a[href]")?.getAttribute("href")
+    }),
     highlights: splitDataList(card.dataset.highlights),
     stack: splitDataList(card.dataset.stack)
 }));
@@ -331,14 +344,27 @@ const renderProjectsData = (data = parseStored("projects")) => {
         return;
     }
 
+    const getProjectSiteLabel = (url, fallback) => {
+        const raw = String(url || "").trim();
+        if (!raw) return fallback;
+        try {
+            return new URL(raw).hostname.replace(/^www\./, "");
+        } catch {
+            return fallback;
+        }
+    };
+
     grid.innerHTML = data.map((item, index) => {
         const highlights = Array.isArray(item.highlights) ? item.highlights : splitCommaList(item.highlights);
         const stack = Array.isArray(item.stack) ? item.stack : splitCommaList(item.stack);
         const url = String(item.url || "").trim();
-        const previewMarkup = url
-            ? `<div class="project-preview project-preview-shell" data-preview-src="${escapeHtml(url)}" data-preview-title="${escapeHtml(item.title || `Project ${index + 1}`)} Preview"><div class="project-preview-placeholder"><span class="project-preview-kicker">Live Preview</span><strong>Fast mode keeps this unloaded by default.</strong><p>Open the preview only when you want to inspect the real site.</p><button class="btn btn-secondary project-preview-toggle" type="button">Load Preview</button></div></div>`
-            : "";
-        return `<article class="project-card" data-status="${escapeHtml(item.status || "Live")}" data-highlights="${escapeHtml(highlights.join("|"))}" data-stack="${escapeHtml(stack.join("|"))}"><h3>${escapeHtml(item.title || `Project ${index + 1}`)}</h3><p>${escapeHtml(item.description || "")}</p>${previewMarkup}<div class="project-actions">${url ? `<a class="btn btn-secondary" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Open Live Project</a>` : ""}</div></article>`;
+        const image = String(item.image || getDefaultProjectImage(item)).trim();
+        const previewTitle = item.title || `Project ${index + 1}`;
+        const previewLabel = getProjectSiteLabel(url, "Project Preview");
+        const previewMarkup = image
+            ? `<div class="project-preview project-preview-image"><img src="${escapeHtml(image)}" alt="${escapeHtml(previewTitle)} landing page preview" loading="lazy" decoding="async"><span class="project-preview-badge">Static Preview</span><span class="project-preview-site">${escapeHtml(previewLabel)}</span></div>`
+            : `<div class="project-preview project-preview-fallback"><div class="project-preview-placeholder"><span class="project-preview-kicker">Static Preview</span><strong>${escapeHtml(previewTitle)}</strong><p>${escapeHtml(previewLabel)}</p></div></div>`;
+        return `<article class="project-card" data-status="${escapeHtml(item.status || "Live")}" data-highlights="${escapeHtml(highlights.join("|"))}" data-stack="${escapeHtml(stack.join("|"))}" data-image="${escapeHtml(image)}"><h3>${escapeHtml(previewTitle)}</h3><p>${escapeHtml(item.description || "")}</p>${previewMarkup}<div class="project-actions">${url ? `<a class="btn btn-secondary" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Open Live Project</a>` : ""}</div></article>`;
     }).join("");
 };
 
@@ -462,7 +488,6 @@ const renderPortfolioContent = async () => {
 
     initPlatformLogos();
     initProjectCards();
-    setupProjectPreviewToggles();
     initCertificateCards();
     setupCertificatePreviewFallbacks();
     setupProjectTilt();

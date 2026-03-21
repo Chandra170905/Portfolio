@@ -6,6 +6,7 @@
                 title: "Friday - Your Local Buddy",
                 description: "Community-focused web platform for local support and discovery.",
                 url: "https://chandra170905.github.io/Friday-your-Local-buddy/",
+                image: "project-preview-friday.svg",
                 status: "Live",
                 highlights: ["Responsive UI", "Community-first journey", "Location-aware concept"],
                 stack: ["HTML", "CSS", "JavaScript"]
@@ -15,6 +16,7 @@
                 title: "Swift Movers",
                 description: "Service website for relocation and moving solutions.",
                 url: "https://swift-movers.onrender.com",
+                image: "project-preview-swift-movers.svg",
                 status: "Live",
                 highlights: ["Conversion-focused sections", "Trust-building layout", "Business-ready flow"],
                 stack: ["HTML", "CSS", "JavaScript"]
@@ -24,6 +26,7 @@
                 title: "Memory Management Visualizer",
                 description: "An educational web application that simulates operating system memory management",
                 url: "https://memory-management-visualizer.vercel.app/?tab=sim",
+                image: "project-preview-memory.svg",
                 status: "Live",
                 highlights: ["Interactive learning", "System concepts made visual", "Focused interface states"],
                 stack: ["HTML", "CSS", "JavaScript"]
@@ -33,6 +36,7 @@
                 title: "Hexa Clothing",
                 description: "Modern clothing storefront with focused product presentation.",
                 url: "https://hexaclothing.onrender.com",
+                image: "project-preview-hexa.svg",
                 status: "Live",
                 highlights: ["Brand-driven styling", "Product-first storytelling", "Retail-oriented visuals"],
                 stack: ["HTML", "CSS", "JavaScript"]
@@ -138,6 +142,14 @@
     const uid = () => `${Date.now()}_${Math.random().toString(16).slice(2, 8)}`;
     const safeName = (value) => String(value || "certificate").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "certificate";
     const normalizeCertificateCategory = (value) => safeName(value || "general");
+    const getDefaultProjectImage = (project = {}) => {
+        const fingerprint = `${project.title || ""} ${project.url || ""}`.toLowerCase();
+        if (fingerprint.includes("friday")) return "project-preview-friday.svg";
+        if (fingerprint.includes("swift")) return "project-preview-swift-movers.svg";
+        if (fingerprint.includes("memory")) return "project-preview-memory.svg";
+        if (fingerprint.includes("hexa")) return "project-preview-hexa.svg";
+        return "";
+    };
 
     const parseStaticPortfolioDocument = (doc) => ({
         projects: Array.from(doc.querySelectorAll("#projectGrid .project-card")).map((card, index) => ({
@@ -145,6 +157,7 @@
             title: card.querySelector("h3")?.textContent?.trim() || `Project ${index + 1}`,
             description: card.querySelector("p")?.textContent?.trim() || "",
             url: card.querySelector("a[href]")?.getAttribute("href") || "",
+            image: card.dataset.image || card.querySelector(".project-preview img")?.getAttribute("src") || "",
             status: card.dataset.status || "Live",
             highlights: splitDataList(card.dataset.highlights),
             stack: splitDataList(card.dataset.stack)
@@ -225,7 +238,12 @@
     const mergeContent = (remoteContent) => {
         const remote = remoteContent && typeof remoteContent === "object" ? remoteContent : {};
         return {
-            projects: Array.isArray(remote.projects) ? remote.projects : clone(DEFAULT_CONTENT.projects),
+            projects: Array.isArray(remote.projects)
+                ? remote.projects.map((item) => ({
+                    ...item,
+                    image: String(item?.image || getDefaultProjectImage(item)).trim()
+                }))
+                : clone(DEFAULT_CONTENT.projects),
             skills: Array.isArray(remote.skills) ? remote.skills : clone(DEFAULT_CONTENT.skills),
             certificates: Array.isArray(remote.certificates) ? remote.certificates : clone(DEFAULT_CONTENT.certificates),
             about: remote.about && typeof remote.about === "object" ? remote.about : clone(DEFAULT_CONTENT.about),
@@ -244,6 +262,7 @@
     const projectTitle = document.getElementById("projectTitle");
     const projectDescription = document.getElementById("projectDescription");
     const projectUrl = document.getElementById("projectUrl");
+    const projectImage = document.getElementById("projectImage");
     const projectStatus = document.getElementById("projectStatus");
     const projectStack = document.getElementById("projectStack");
     const projectHighlights = document.getElementById("projectHighlights");
@@ -384,7 +403,7 @@
                 <div class="item-info">
                     <h4>${esc(item.title)}</h4>
                     <p>${esc(item.description)}</p>
-                    <small>${esc(item.url)}</small>
+                    <small>${esc(item.image || item.url)}</small>
                 </div>
                 <div class="item-actions">
                     <button class="btn btn-secondary btn-mini" type="button" onclick="editItem('projects','${esc(item.id)}')">Edit</button>
@@ -459,6 +478,7 @@
             projectTitle.value = item.title || "";
             projectDescription.value = item.description || "";
             projectUrl.value = item.url || "";
+            projectImage.value = item.image || "";
             projectStatus.value = item.status || "Live";
             projectStack.value = (item.stack || []).join(", ");
             projectHighlights.value = (item.highlights || []).join(", ");
@@ -598,6 +618,7 @@
                 title: String(formData.get("title") || "").trim(),
                 description: String(formData.get("description") || "").trim(),
                 url: String(formData.get("url") || "").trim(),
+                image: String(formData.get("image") || "").trim(),
                 status: String(formData.get("status") || "").trim() || "Live",
                 stack: split(formData.get("stack")),
                 highlights: split(formData.get("highlights"))

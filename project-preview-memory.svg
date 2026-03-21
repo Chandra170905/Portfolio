@@ -1,0 +1,32 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" rx="36" fill="#050C14"/>
+  <rect x="40" y="40" width="1200" height="640" rx="30" fill="url(#bg)"/>
+  <rect x="82" y="82" width="1116" height="78" rx="22" fill="#0D1826" fill-opacity="0.9"/>
+  <rect x="112" y="108" width="242" height="28" rx="14" fill="#34D6C5"/>
+  <rect x="1002" y="108" width="164" height="28" rx="14" fill="#9EF9EE" fill-opacity="0.18"/>
+  <rect x="94" y="196" width="632" height="410" rx="30" fill="#08111C" fill-opacity="0.95"/>
+  <rect x="754" y="196" width="408" height="188" rx="30" fill="#F0FEFB"/>
+  <rect x="754" y="402" width="408" height="204" rx="30" fill="#0D1826"/>
+  <rect x="136" y="244" width="180" height="18" rx="9" fill="#34D6C5"/>
+  <rect x="136" y="280" width="312" height="22" rx="11" fill="#F7FFFD"/>
+  <rect x="136" y="318" width="244" height="16" rx="8" fill="#94A8BC"/>
+  <rect x="136" y="368" width="548" height="182" rx="24" fill="#0D1826"/>
+  <rect x="168" y="400" width="84" height="118" rx="16" fill="#1ED8C8"/>
+  <rect x="272" y="432" width="84" height="86" rx="16" fill="#1AA89F"/>
+  <rect x="376" y="384" width="84" height="134" rx="16" fill="#7EF4EA"/>
+  <rect x="480" y="448" width="84" height="70" rx="16" fill="#14938C"/>
+  <rect x="584" y="414" width="68" height="104" rx="16" fill="#C8FFFA"/>
+  <rect x="796" y="240" width="152" height="18" rx="9" fill="#0D1826" fill-opacity="0.18"/>
+  <rect x="796" y="276" width="252" height="22" rx="11" fill="#08111C"/>
+  <rect x="796" y="316" width="224" height="16" rx="8" fill="#486172"/>
+  <rect x="796" y="444" width="146" height="18" rx="9" fill="#CFFCF7"/>
+  <rect x="796" y="476" width="324" height="94" rx="20" fill="#08111C"/>
+  <path d="M822 523H1092" stroke="#2BE0CF" stroke-width="16" stroke-linecap="round" stroke-dasharray="10 18"/>
+  <text x="132" y="640" fill="#F0FFFD" font-family="Arial, Helvetica, sans-serif" font-size="50" font-weight="700">Memory Management Visualizer</text>
+  <defs>
+    <linearGradient id="bg" x1="92" y1="88" x2="1172" y2="648" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F2033"/>
+      <stop offset="1" stop-color="#07111B"/>
+    </linearGradient>
+  </defs>
+</svg>

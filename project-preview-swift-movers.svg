@@ -1,0 +1,33 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" rx="36" fill="#0D1220"/>
+  <rect x="44" y="44" width="1192" height="632" rx="30" fill="url(#bg)"/>
+  <rect x="86" y="88" width="1108" height="82" rx="24" fill="#151E32" fill-opacity="0.82"/>
+  <rect x="116" y="114" width="186" height="28" rx="14" fill="#FF8A3D"/>
+  <rect x="1010" y="114" width="154" height="28" rx="14" fill="#F9C59F" fill-opacity="0.2"/>
+  <rect x="94" y="204" width="430" height="394" rx="28" fill="#FFF7F1"/>
+  <rect x="552" y="204" width="614" height="182" rx="28" fill="#101A2C" fill-opacity="0.92"/>
+  <rect x="552" y="404" width="294" height="194" rx="28" fill="#FF8A3D"/>
+  <rect x="872" y="404" width="294" height="194" rx="28" fill="#1A2B46"/>
+  <rect x="138" y="250" width="150" height="18" rx="9" fill="#FF8A3D"/>
+  <rect x="138" y="284" width="272" height="22" rx="11" fill="#121826"/>
+  <rect x="138" y="324" width="214" height="16" rx="8" fill="#63748B"/>
+  <rect x="138" y="370" width="344" height="152" rx="24" fill="#FFE1CC"/>
+  <path d="M196 474H430" stroke="#1B273B" stroke-width="22" stroke-linecap="round"/>
+  <path d="M196 438H388" stroke="#FF8A3D" stroke-width="24" stroke-linecap="round"/>
+  <circle cx="240" cy="486" r="22" fill="#1B273B"/>
+  <circle cx="384" cy="486" r="22" fill="#1B273B"/>
+  <rect x="592" y="246" width="184" height="18" rx="9" fill="#F9C59F"/>
+  <rect x="592" y="282" width="338" height="22" rx="11" fill="#FFF7F1"/>
+  <rect x="592" y="324" width="254" height="16" rx="8" fill="#A7B3C4"/>
+  <rect x="594" y="438" width="210" height="20" rx="10" fill="#FFF2E9" fill-opacity="0.82"/>
+  <rect x="594" y="474" width="210" height="84" rx="20" fill="#FFF3EB" fill-opacity="0.9"/>
+  <rect x="914" y="438" width="210" height="20" rx="10" fill="#D6E3F8" fill-opacity="0.72"/>
+  <rect x="914" y="474" width="210" height="84" rx="20" fill="#101A2C"/>
+  <text x="132" y="640" fill="#FFF7F1" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="700">Swift Movers</text>
+  <defs>
+    <linearGradient id="bg" x1="96" y1="96" x2="1180" y2="638" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1B2A47"/>
+      <stop offset="1" stop-color="#0F1423"/>
+    </linearGradient>
+  </defs>
+</svg>

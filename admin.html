@@ -25,15 +25,47 @@
             padding: 24px 20px 60px;
         }
 
+        .admin-shell {
+            display: grid;
+            grid-template-columns: minmax(220px, 250px) minmax(0, 1fr);
+            gap: 18px;
+            align-items: start;
+        }
+
+        .admin-sidebar {
+            position: sticky;
+            top: 96px;
+            display: grid;
+            gap: 14px;
+        }
+
+        .admin-content {
+            min-width: 0;
+        }
+
         .admin-head {
             display: grid;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: color-mix(in oklab, var(--surface) 90%, transparent);
+            box-shadow: var(--shadow);
         }
 
         .admin-head h1,
         .admin-head p {
             margin: 0;
+        }
+
+        .admin-head h1 {
+            font-size: 1.2rem;
+            line-height: 1.2;
+        }
+
+        .admin-head p {
+            font-size: .86rem;
+            line-height: 1.45;
         }
 
         .admin-meta,
@@ -45,9 +77,10 @@
         }
 
         .admin-meta {
+            display: grid;
+            gap: 8px;
             color: var(--muted);
-            font-size: .92rem;
-            align-items: center;
+            font-size: .82rem;
         }
 
         .admin-meta strong {
@@ -55,17 +88,36 @@
         }
 
         .admin-nav {
-            margin-bottom: 20px;
+            display: grid;
+            gap: 8px;
+            padding: 12px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: color-mix(in oklab, var(--surface) 90%, transparent);
+            box-shadow: var(--shadow);
         }
 
         .admin-nav-btn {
-            padding: 8px 14px;
+            width: 100%;
+            padding: 10px 12px;
             border: 1px solid var(--line);
             border-radius: 10px;
             cursor: pointer;
             background: var(--surface);
             color: var(--text);
+            font-size: .8rem;
+            text-align: left;
             transition: background .2s ease, border-color .2s ease;
+        }
+
+        .admin-nav-btn::before {
+            display: inline-block;
+            width: 1.65rem;
+            color: var(--muted);
+            font-family: var(--font-retro);
+            font-size: .56rem;
+            letter-spacing: .06em;
+            content: attr(data-short);
         }
 
         .admin-nav-btn.active,
@@ -223,6 +275,36 @@
             font-size: 12px;
         }
 
+        .admin-meta > span,
+        .admin-meta > button {
+            width: 100%;
+        }
+
+        .admin-stat {
+            display: grid;
+            gap: 2px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: color-mix(in oklab, var(--surface-soft) 84%, transparent);
+        }
+
+        .admin-stat strong {
+            font-size: .72rem;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .admin-stat span {
+            color: var(--text);
+            font-size: .92rem;
+            font-weight: 700;
+        }
+
+        #openPreviewBtn {
+            justify-content: center;
+        }
+
         .btn:disabled {
             opacity: .45;
             cursor: not-allowed;
@@ -319,12 +401,45 @@
         }
 
         @media (max-width: 900px) {
+            .admin-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-sidebar {
+                position: static;
+            }
+
+            .admin-meta {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
             .admin-grid {
                 grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 760px) {
+            .admin-wrap {
+                padding: 18px 14px 44px;
+            }
+
+            .admin-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-nav {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .admin-nav-btn {
+                text-align: center;
+            }
+
+            .admin-nav-btn::before {
+                width: auto;
+                margin-right: 6px;
+            }
+
             .form-row {
                 grid-template-columns: 1fr;
             }
@@ -374,30 +489,34 @@
     <div class="admin-loading" aria-live="polite">Checking backend access…</div>
 
     <main class="admin-wrap">
-        <div class="admin-head">
-            <h1>Portfolio Admin</h1>
-            <p>Add, edit, or delete portfolio content here and publish it through the live backend.</p>
-            <p class="deploy-note"><strong>Backend note:</strong> once Supabase is configured, saves from this page
-                update the hosted portfolio content instead of staying in one browser.</p>
-            <div class="admin-meta">
-                <span><strong>Last saved:</strong> <span id="lastSaved">-</span></span>
-                <span><strong>Projects:</strong> <span id="countProjects">0</span></span>
-                <span><strong>Skills:</strong> <span id="countSkills">0</span></span>
-                <span><strong>Certificates:</strong> <span id="countCertificates">0</span></span>
-                <button class="btn btn-secondary btn-mini" id="openPreviewBtn" type="button">Open Portfolio</button>
-            </div>
-        </div>
+        <div class="admin-shell">
+            <aside class="admin-sidebar">
+                <div class="admin-head">
+                    <h1>Portfolio Admin</h1>
+                    <p>Add, edit, or delete portfolio content here and publish it through the live backend.</p>
+                    <p class="deploy-note"><strong>Backend note:</strong> once Supabase is configured, saves from this page
+                        update the hosted portfolio content instead of staying in one browser.</p>
+                    <div class="admin-meta">
+                        <span class="admin-stat"><strong>Last Saved</strong><span id="lastSaved">-</span></span>
+                        <span class="admin-stat"><strong>Projects</strong><span id="countProjects">0</span></span>
+                        <span class="admin-stat"><strong>Skills</strong><span id="countSkills">0</span></span>
+                        <span class="admin-stat"><strong>Certificates</strong><span id="countCertificates">0</span></span>
+                        <button class="btn btn-secondary btn-mini" id="openPreviewBtn" type="button">Open Portfolio</button>
+                    </div>
+                </div>
 
-        <nav class="admin-nav">
-            <button class="admin-nav-btn active" data-section="projects">Projects</button>
-            <button class="admin-nav-btn" data-section="skills">Skills</button>
-            <button class="admin-nav-btn" data-section="certificates">Certificates</button>
-            <button class="admin-nav-btn" data-section="site">Site</button>
-        </nav>
+                <nav class="admin-nav">
+                    <button class="admin-nav-btn active" data-section="projects" data-short="P1">Projects</button>
+                    <button class="admin-nav-btn" data-section="skills" data-short="S2">Skills</button>
+                    <button class="admin-nav-btn" data-section="certificates" data-short="C3">Certificates</button>
+                    <button class="admin-nav-btn" data-section="site" data-short="ST">Site</button>
+                </nav>
+            </aside>
 
-        <div id="messageContainer"></div>
+            <div class="admin-content">
+                <div id="messageContainer"></div>
 
-        <section class="admin-section active" id="projects-section">
+                <section class="admin-section active" id="projects-section">
             <div class="admin-grid">
                 <div class="card">
                     <h2 id="projectFormTitle">Add Project</h2>
@@ -429,9 +548,9 @@
                     <div class="item-list" id="projectsList"></div>
                 </div>
             </div>
-        </section>
+                </section>
 
-        <section class="admin-section" id="skills-section">
+                <section class="admin-section" id="skills-section">
             <div class="admin-grid">
                 <div class="card">
                     <h2 id="skillFormTitle">Add Skill Category</h2>
@@ -452,9 +571,9 @@
                     <div class="item-list" id="skillsList"></div>
                 </div>
             </div>
-        </section>
+                </section>
 
-        <section class="admin-section" id="certificates-section">
+                <section class="admin-section" id="certificates-section">
             <div class="admin-grid">
                 <div class="card">
                     <h2 id="certificateFormTitle">Add Certificate</h2>
@@ -479,9 +598,9 @@
                     <div class="item-list" id="certificatesList"></div>
                 </div>
             </div>
-        </section>
+                </section>
 
-        <section class="admin-section" id="site-section">
+                <section class="admin-section" id="site-section">
             <div class="card">
                 <h2>Site Content</h2>
                 <form id="siteForm">
@@ -517,7 +636,9 @@
                     </div><button class="btn btn-primary" type="submit">Save Site Content</button>
                 </form>
             </div>
-        </section>
+                </section>
+            </div>
+        </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

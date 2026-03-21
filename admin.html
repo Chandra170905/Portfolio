@@ -5,25 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio Admin</title>
+    <meta name="portfolio-supabase-url" content="">
+    <meta name="portfolio-supabase-anon-key" content="">
+    <meta name="portfolio-content-table" content="portfolio_content">
+    <meta name="portfolio-admin-table" content="portfolio_admins">
+    <meta name="portfolio-media-bucket" content="portfolio-media">
+    <meta name="portfolio-content-id" content="site">
+    <meta name="portfolio-supabase-url" content="https://zxqxlbfyusopnyekpuzk.supabase.co">
+    <meta name="portfolio-supabase-anon-key" content="sb_publishable_HA0QatFC6lfEAkaZyWFkaQ_ehBkqxXQ">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Orbitron:wght@500;600;700&family=Press+Start+2P&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <script>
-        (function () {
-            const AUTH_KEY = "portfolio_admin_auth_v1";
-            const raw = sessionStorage.getItem(AUTH_KEY);
-            const token = raw ? (() => { try { return JSON.parse(raw); } catch { return null; } })() : null;
-            const isAuthed = Boolean(token && token.ok === true && typeof token.exp === "number" && Date.now() < token.exp);
-            if (isAuthed) return;
-            sessionStorage.removeItem(AUTH_KEY);
-            const url = new URL("login.html", window.location.href);
-            url.searchParams.set("next", "admin.html");
-            window.location.replace(url.toString());
-        })();
-    </script>
     <style>
         .admin-wrap {
             max-width: 1180px;
@@ -246,6 +242,23 @@
             color: #fff1bf;
         }
 
+        .admin-loading {
+            min-height: 42vh;
+            display: none;
+            place-items: center;
+            color: var(--muted);
+            text-align: center;
+            padding: 24px;
+        }
+
+        body[data-admin-ready="false"] .admin-loading {
+            display: grid;
+        }
+
+        body[data-admin-ready="false"] .admin-wrap {
+            display: none;
+        }
+
         @media (max-width: 900px) {
             .admin-grid {
                 grid-template-columns: 1fr;
@@ -264,7 +277,7 @@
     </style>
 </head>
 
-<body data-admin-page="true">
+<body data-admin-page="true" data-admin-ready="false">
     <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
     <div class="bg-3d" aria-hidden="true"><span class="bg-layer layer-a"></span><span
             class="bg-layer layer-b"></span><span class="bg-layer layer-c"></span></div>
@@ -299,11 +312,14 @@
         </div>
     </header>
 
+    <div class="admin-loading" aria-live="polite">Checking backend access…</div>
+
     <main class="admin-wrap">
         <div class="admin-head">
             <h1>Portfolio Admin</h1>
-            <p>Add, edit, or delete portfolio content here and it will update on the portfolio in this browser.</p>
-            <p class="deploy-note"><strong>Deploy note:</strong> changes here are saved only in this browser. To make them live, the actual files must also exist in the project you deploy.</p>
+            <p>Add, edit, or delete portfolio content here and publish it through the live backend.</p>
+            <p class="deploy-note"><strong>Backend note:</strong> once Supabase is configured, saves from this page
+                update the hosted portfolio content instead of staying in one browser.</p>
             <div class="admin-meta">
                 <span><strong>Last saved:</strong> <span id="lastSaved">-</span></span>
                 <span><strong>Projects:</strong> <span id="countProjects">0</span></span>
@@ -443,48 +459,9 @@
         </section>
     </main>
 
-    <script>
-        const DEFAULT_DATA = { projects: [{ id: "1", title: "Friday - Your Local Buddy", description: "Community-focused web platform for local support and discovery.", url: "https://chandra170905.github.io/Friday-your-Local-buddy/", status: "Live", highlights: ["Responsive UI", "Community-first journey", "Location-aware concept"], stack: ["HTML", "CSS", "JavaScript"] }, { id: "2", title: "Swift Movers", description: "Service website for relocation and moving solutions.", url: "https://swift-movers.onrender.com", status: "Live", highlights: ["Conversion-focused sections", "Trust-building layout", "Business-ready flow"], stack: ["HTML", "CSS", "JavaScript"] }, { id: "3", title: "Memory Management Visualizer", description: "An educational web application that simulates operating system memory management", url: "https://memory-management-visualizer.vercel.app/?tab=sim", status: "Live", highlights: ["Interactive learning", "System concepts made visual", "Focused interface states"], stack: ["HTML", "CSS", "JavaScript"] }, { id: "4", title: "Hexa Clothing", description: "Modern clothing storefront with focused product presentation.", url: "https://hexaclothing.onrender.com", status: "Live", highlights: ["Brand-driven styling", "Product-first storytelling", "Retail-oriented visuals"], stack: ["HTML", "CSS", "JavaScript"] }], skills: [{ id: "1", key: "programming", category: "Programming Languages", tags: ["C", "C++", "Java", "Python", "JavaScript", "PHP", "SQL"] }, { id: "2", key: "webdev", category: "Web Development", tags: ["HTML5", "CSS3", "JavaScript", "React", "Node.js", "Bootstrap", "Tailwind", "Django", "Laravel", "jQuery"] }, { id: "3", key: "databases", category: "Databases", tags: ["MongoDB", "PostgreSQL"] }, { id: "4", key: "tools", category: "Tools & Technologies", tags: ["Git", "GitHub", "VS Code", "DSA", "XAMPP", "Cisco Packet Tracer"] }, { id: "5", key: "other", category: "Other Technologies", tags: ["Generative AI", "Cloud Computing", "Networking", "Hardware/OS", "Ubuntu", "UI/UX Design", "Photoshop", "Blender", "Unity"] }], certificates: [{ id: "1", title: "C Programming", category: "programming", description: "Core C programming concepts including syntax, control flow, functions, and foundational problem solving.", file: "certificates/C.png" }, { id: "2", title: "Responsive Web Designing", category: "webdev", description: "Responsive design skills for building adaptable layouts with HTML, CSS, and mobile-first thinking.", file: "certificates/RESPONSIVE%20WEB%20DESIGNING.png" }, { id: "3", title: "AI Essentials", category: "ai", description: "Foundational AI knowledge covering core concepts, use cases, and real-world applications of intelligent systems.", file: "certificates/AI%20ESSENTIALS.png" }], about: { title: "About Me", content: "Currently pursuing a B.Tech in Computer Science and Engineering at Lovely Professional University (LPU), where I continue to grow my skills in software development and technology.", subtitle: "I completed a 6-month Diploma in Full Stack Development where I gained practical experience building modern web applications.\n\nBefore that, I completed my schooling at Kendriya Vidyalaya No. 3, JRC, where my interest in computers and technology first began." }, contact: { email: "chandra170905@gmail.com", phone: "", address: "", links: { github: "https://github.com/Chandra170905", linkedin: "https://www.linkedin.com/in/chandra-prakash-2960553a0/" } }, site: { brand: "Chandra Prakash", hero: { headline: "Building clean, responsive, user-first web experiences.", intro: "I am Chandra, a", outro: "focused on modern UI, performance, and accessibility.", roles: ["Frontend Developer", "Full Stack Developer", "UI Builder", "Web Designer"] }, stats: [{ value: "15+", label: "UI Components" }, { value: "8+", label: "Projects Built" }, { value: "100%", label: "Responsive Design" }] } };
-        const CERTIFICATE_DB_NAME = "portfolio_media_v1";
-        const CERTIFICATE_STORE_NAME = "certificateImages";
-        const getData = k => { try { return JSON.parse(localStorage.getItem("portfolio_" + k)); } catch { return null; } };
-        const saveData = (k, v) => { localStorage.setItem("portfolio_" + k, JSON.stringify(v)); localStorage.setItem("portfolio__meta", JSON.stringify({ updatedAt: Date.now() })); updateMeta(); };
-        const ensureData = () => Object.entries(DEFAULT_DATA).forEach(([k, v]) => { if (getData(k) === null) saveData(k, v); });
-        const esc = v => String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
-        const uid = () => `${Date.now()}_${Math.random().toString(16).slice(2, 8)}`;
-        const split = v => String(v || "").split(",").map(x => x.trim()).filter(Boolean);
-        let certificateDbPromise = null;
-        const openCertificateDb = () => { if (certificateDbPromise) return certificateDbPromise; certificateDbPromise = new Promise((resolve, reject) => { const request = indexedDB.open(CERTIFICATE_DB_NAME, 1); request.onupgradeneeded = () => { const db = request.result; if (!db.objectStoreNames.contains(CERTIFICATE_STORE_NAME)) { db.createObjectStore(CERTIFICATE_STORE_NAME); } }; request.onsuccess = () => resolve(request.result); request.onerror = () => reject(request.error || new Error("Failed to open media database.")); }); return certificateDbPromise; };
-        const saveCertificateImage = async (id, file) => { const db = await openCertificateDb(); return new Promise((resolve, reject) => { const tx = db.transaction(CERTIFICATE_STORE_NAME, "readwrite"); tx.objectStore(CERTIFICATE_STORE_NAME).put(file, id); tx.oncomplete = () => resolve(id); tx.onerror = () => reject(tx.error || new Error("Failed to save certificate image.")); }); };
-        const deleteCertificateImage = async (id) => { if (!id) return; const db = await openCertificateDb(); return new Promise((resolve, reject) => { const tx = db.transaction(CERTIFICATE_STORE_NAME, "readwrite"); tx.objectStore(CERTIFICATE_STORE_NAME).delete(id); tx.oncomplete = () => resolve(); tx.onerror = () => reject(tx.error || new Error("Failed to delete certificate image.")); }); };
-        const dataUrlToBlob = dataUrl => fetch(dataUrl).then(r => r.blob());
-        const safeName = value => String(value || "certificate").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "certificate";
-        const normalizeCertificateCategory = value => safeName(value || "general");
-        const migrateCertificateStorage = async () => { const items = getData("certificates") || []; let changed = false; for (const item of items) { if (!item) continue; const normalizedCategory = normalizeCertificateCategory(item.category); if (item.category !== normalizedCategory) { item.category = normalizedCategory; changed = true; } if (typeof item.file === "string" && item.file.startsWith("data:")) { const imageId = item.imageId || `cert_${item.id || uid()}`; const blob = await dataUrlToBlob(item.file); await saveCertificateImage(imageId, blob); item.imageId = imageId; item.fileName = item.fileName || `${safeName(item.title)}.${blob.type.split("/")[1] || "png"}`; item.file = ""; changed = true; } } if (changed) saveData("certificates", items); };
-        const setThemeLabel = () => { const t = document.getElementById("themeToggle"); if (!t) return; const l = document.body.classList.contains("light"); t.setAttribute("aria-label", l ? "Switch to dark mode" : "Switch to light mode"); t.setAttribute("title", l ? "Switch to dark mode" : "Switch to light mode"); t.dataset.theme = l ? "light" : "dark"; };
-        const msg = (m, t) => { const c = document.getElementById("messageContainer"); c.innerHTML = `<div class="${t}-message">${esc(m)}</div>`; setTimeout(() => c.innerHTML = "", 2600); };
-        const updateMeta = () => { document.getElementById("countProjects").textContent = String((getData("projects") || []).length); document.getElementById("countSkills").textContent = String((getData("skills") || []).length); document.getElementById("countCertificates").textContent = String((getData("certificates") || []).length); let m = {}; try { m = JSON.parse(localStorage.getItem("portfolio__meta") || "{}"); } catch { } document.getElementById("lastSaved").textContent = m.updatedAt ? new Date(m.updatedAt).toLocaleString() : "-"; };
-        const renderList = (id, items, view) => { document.getElementById(id).innerHTML = items.map(view).join("") || `<div class="item-card"><div class="item-info"><h4>No items yet</h4><p>Add one and it will show on the portfolio.</p></div></div>`; };
-        const setFormMode = (type, editing) => { const cfg = { projects: { title: "projectFormTitle", submit: "projectSubmitBtn", cancel: "projectCancelEditBtn", add: "Add Project", edit: "Save Project" }, skills: { title: "skillFormTitle", submit: "skillSubmitBtn", cancel: "skillCancelEditBtn", add: "Add Skill Category", edit: "Save Skill Category" }, certificates: { title: "certificateFormTitle", submit: "certificateSubmitBtn", cancel: "certificateCancelEditBtn", add: "Add Certificate", edit: "Save Certificate" } }[type]; if (!cfg) return; document.getElementById(cfg.title).textContent = editing ? cfg.edit : cfg.add; document.getElementById(cfg.submit).textContent = editing ? cfg.edit : cfg.add; document.getElementById(cfg.cancel).hidden = !editing; };
-        const resetProjectForm = () => { projectAddForm.reset(); projectEditId.value = ""; projectStatus.value = "Live"; setFormMode("projects", false); };
-        const resetSkillForm = () => { skillAddForm.reset(); skillEditId.value = ""; setFormMode("skills", false); };
-        const updateCertificateImageHint = (text) => { certificateImageHint.textContent = text || "No image selected"; };
-        const readFileAsDataUrl = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result || "")); reader.onerror = () => reject(new Error("Failed to read image.")); reader.readAsDataURL(file); });
-        const resetCertificateForm = () => { certificateAddForm.reset(); certificateEditId.value = ""; certificateFileData.value = ""; certificateImage.required = true; updateCertificateImageHint("No image selected"); setFormMode("certificates", false); };
-        const deleteItem = async (type, id) => { const items = getData(type) || []; const target = items.find(item => String(item.id) === String(id)); if (type === "certificates" && target?.imageId) { try { await deleteCertificateImage(target.imageId); } catch { } } saveData(type, items.filter(item => String(item.id) !== String(id))); renderAll(); msg("Item removed from portfolio.", "success"); };
-        const editItem = (type, id) => { const items = getData(type) || []; const item = items.find(entry => String(entry.id) === String(id)); if (!item) return; if (type === "projects") { projectEditId.value = item.id || ""; projectTitle.value = item.title || ""; projectDescription.value = item.description || ""; projectUrl.value = item.url || ""; projectStatus.value = item.status || "Live"; projectStack.value = (item.stack || []).join(", "); projectHighlights.value = (item.highlights || []).join(", "); setFormMode("projects", true); document.querySelector('[data-section="projects"]')?.click(); projectTitle.focus(); } if (type === "skills") { skillEditId.value = item.id || ""; skillKey.value = item.key || ""; skillCategory.value = item.category || ""; skillTags.value = (item.tags || []).join(", "); setFormMode("skills", true); document.querySelector('[data-section="skills"]')?.click(); skillCategory.focus(); } if (type === "certificates") { certificateEditId.value = item.id || ""; certificateTitle.value = item.title || ""; certificateCategory.value = item.category || ""; certificateDescription.value = item.description || ""; certificateFileData.value = item.file || ""; certificateImage.value = ""; certificateImage.required = false; updateCertificateImageHint(item.imageId || item.file ? "Current image kept unless you choose a new one" : "No image selected"); setFormMode("certificates", true); document.querySelector('[data-section="certificates"]')?.click(); certificateTitle.focus(); } };
-        window.deleteItem = deleteItem;
-        window.editItem = editItem;
-        const loadForms = () => { const s = getData("site") || DEFAULT_DATA.site; siteBrand.value = s.brand || ""; siteHeroHeadline.value = s.hero?.headline || ""; siteHeroIntro.value = s.hero?.intro || ""; siteHeroOutro.value = s.hero?.outro || ""; siteHeroRoles.value = (s.hero?.roles || []).join(", "); const st = s.stats || []; statValue1.value = st[0]?.value || ""; statLabel1.value = st[0]?.label || ""; statValue2.value = st[1]?.value || ""; statLabel2.value = st[1]?.label || ""; statValue3.value = st[2]?.value || ""; statLabel3.value = st[2]?.label || ""; };
-        const renderAll = () => { renderList("projectsList", getData("projects") || [], item => `<article class="item-card"><div class="item-info"><h4>${esc(item.title)}</h4><p>${esc(item.description)}</p><small>${esc(item.url)}</small></div><div class="item-actions"><button class="btn btn-secondary btn-mini" type="button" onclick="editItem('projects','${esc(item.id)}')">Edit</button><button class="btn btn-danger btn-mini" type="button" onclick="deleteItem('projects','${esc(item.id)}')">Delete</button></div></article>`); renderList("skillsList", getData("skills") || [], item => `<article class="item-card"><div class="item-info"><h4>${esc(item.category)}</h4><p>${esc((item.tags || []).join(", "))}</p></div><div class="item-actions"><button class="btn btn-secondary btn-mini" type="button" onclick="editItem('skills','${esc(item.id)}')">Edit</button><button class="btn btn-danger btn-mini" type="button" onclick="deleteItem('skills','${esc(item.id)}')">Delete</button></div></article>`); renderList("certificatesList", getData("certificates") || [], item => `<article class="item-card"><div class="item-info"><h4>${esc(item.title)}</h4><p>${esc(item.description)}</p><small>${esc(normalizeCertificateCategory(item.category))} | ${item.imageId ? "Stored in browser" : "Image attached"}</small></div><div class="item-actions"><button class="btn btn-secondary btn-mini" type="button" onclick="editItem('certificates','${esc(item.id)}')">Edit</button><button class="btn btn-danger btn-mini" type="button" onclick="deleteItem('certificates','${esc(item.id)}')">Delete</button></div></article>`); loadForms(); updateMeta(); };
-        document.addEventListener("DOMContentLoaded", async () => {
-            const t = document.getElementById("themeToggle"), prm = window.matchMedia("(prefers-reduced-motion: reduce)").matches; const trans = fn => { if (prm) return fn(); document.body.classList.add("theme-transition"); requestAnimationFrame(() => { fn(); setTimeout(() => document.body.classList.remove("theme-transition"), 420); }); }; if (t) { if (localStorage.getItem("portfolio-theme") === "light") document.body.classList.add("light"); setThemeLabel(); t.addEventListener("click", () => trans(() => { document.body.classList.toggle("light"); localStorage.setItem("portfolio-theme", document.body.classList.contains("light") ? "light" : "dark"); setThemeLabel(); })); } document.querySelectorAll(".admin-nav-btn").forEach(btn => btn.addEventListener("click", () => { const section = btn.dataset.section; document.querySelectorAll(".admin-nav-btn").forEach(node => node.classList.remove("active")); btn.classList.add("active"); document.querySelectorAll(".admin-section").forEach(sec => sec.classList.toggle("active", sec.id === `${section}-section`)); })); document.getElementById("logoutAdminBtn")?.addEventListener("click", e => { e.preventDefault(); sessionStorage.removeItem("portfolio_admin_auth_v1"); const url = new URL("login.html", window.location.href); url.searchParams.set("next", "admin.html"); window.location.replace(url.toString()); }); document.getElementById("openPreviewBtn")?.addEventListener("click", () => window.open("index.html", "_blank", "noopener,noreferrer")); certificateImage.addEventListener("change", () => { const file = certificateImage.files?.[0]; if (file) { certificateImage.required = false; updateCertificateImageHint(file.name); } else { updateCertificateImageHint(certificateFileData.value ? "Current image kept unless you choose a new one" : "No image selected"); } }); projectCancelEditBtn.addEventListener("click", resetProjectForm); skillCancelEditBtn.addEventListener("click", resetSkillForm); certificateCancelEditBtn.addEventListener("click", resetCertificateForm); ensureData(); await migrateCertificateStorage(); renderAll(); resetProjectForm(); resetSkillForm(); resetCertificateForm();
-            projectAddForm.addEventListener("submit", e => { e.preventDefault(); const data = new FormData(projectAddForm), items = getData("projects") || [], editId = String(data.get("editId") || "").trim(), next = { id: editId || uid(), title: String(data.get("title") || "").trim(), description: String(data.get("description") || "").trim(), url: String(data.get("url") || "").trim(), status: String(data.get("status") || "").trim() || "Live", stack: split(data.get("stack")), highlights: split(data.get("highlights")) }; saveData("projects", editId ? items.map(item => String(item.id) === editId ? next : item) : items.concat(next)); resetProjectForm(); renderAll(); msg(editId ? "Project updated." : "Project added to portfolio.", "success"); });
-            skillAddForm.addEventListener("submit", e => { e.preventDefault(); const data = new FormData(skillAddForm), items = getData("skills") || [], editId = String(data.get("editId") || "").trim(), next = { id: editId || uid(), key: String(data.get("key") || "").trim(), category: String(data.get("category") || "").trim(), tags: split(data.get("tags")) }; saveData("skills", editId ? items.map(item => String(item.id) === editId ? next : item) : items.concat(next)); resetSkillForm(); renderAll(); msg(editId ? "Skill category updated." : "Skill category added to portfolio.", "success"); });
-            certificateAddForm.addEventListener("submit", async e => { e.preventDefault(); const data = new FormData(certificateAddForm), items = getData("certificates") || [], editId = String(data.get("editId") || "").trim(), existing = items.find(item => String(item.id) === editId); let fileData = String(data.get("fileData") || "").trim(); let imageId = existing?.imageId || ""; let fileName = existing?.fileName || ""; const imageFile = certificateImage.files?.[0]; if (imageFile) { try { imageId = imageId || `cert_${editId || uid()}`; await saveCertificateImage(imageId, imageFile); fileName = imageFile.name || `${safeName(data.get("title"))}.png`; fileData = ""; } catch { msg("Could not save the selected image.", "error"); return; } } if (!fileData && !imageId) { msg("Please choose a certificate image.", "error"); return; } const next = { id: editId || uid(), title: String(data.get("title") || "").trim(), category: normalizeCertificateCategory(data.get("category")), description: String(data.get("description") || "").trim(), file: fileData, imageId: imageId || undefined, fileName: fileName || undefined }; saveData("certificates", editId ? items.map(item => String(item.id) === editId ? next : item) : items.concat(next)); resetCertificateForm(); renderAll(); msg(editId ? "Certificate updated." : "Certificate added to portfolio.", "success"); });
-            siteForm.addEventListener("submit", e => { e.preventDefault(); saveData("site", { brand: siteBrand.value.trim(), hero: { headline: siteHeroHeadline.value.trim(), intro: siteHeroIntro.value.trim(), outro: siteHeroOutro.value.trim(), roles: split(siteHeroRoles.value) }, stats: [{ value: statValue1.value.trim(), label: statLabel1.value.trim() }, { value: statValue2.value.trim(), label: statLabel2.value.trim() }, { value: statValue3.value.trim(), label: statLabel3.value.trim() }] }); msg("Site content updated.", "success"); });
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="backend.js"></script>
+    <script src="admin-app.js"></script>
     <script src="script.js"></script>
 </body>
 

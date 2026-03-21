@@ -35,6 +35,11 @@ const hireRange = document.getElementById("hireRange");
 const hireCurrency = document.getElementById("hireCurrency");
 const hireToast = document.getElementById("hireToast");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const prefersCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+const prefersNarrowViewport = window.matchMedia("(max-width: 760px)").matches;
+const networkInfo = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+const prefersSaveData = Boolean(networkInfo?.saveData);
+const shouldLimitMotionWork = prefersReducedMotion || prefersCoarsePointer || prefersNarrowViewport || prefersSaveData;
 const THEME_TRANSITION_MS = 420;
 const CERTIFICATE_DB_NAME = "portfolio_media_v1";
 const CERTIFICATE_STORE_NAME = "certificateImages";
@@ -56,6 +61,7 @@ const isLocalPreviewEnvironment = window.location.protocol === "file:"
     || ["localhost", "127.0.0.1"].includes(window.location.hostname);
 const shouldUseBrowserPortfolioData = isLocalPreviewEnvironment
     || previewSearchParams.get("preview") === "local";
+const getBackend = () => window.PortfolioBackend || null;
 const CERTIFICATE_CATEGORY_LABELS = {
     programming: "Programming",
     webdev: "Web Development",
@@ -255,8 +261,7 @@ const ensurePortfolioData = () => {
     if (parseStored("site") === null) saveStored("site", defaultSite());
 };
 
-const renderAboutData = () => {
-    const data = parseStored("about");
+const renderAboutData = (data = parseStored("about")) => {
     const block = document.getElementById("aboutContentBlock");
     if (!data || !block) return;
     const link = block.querySelector(".pixel-link")?.outerHTML || "";
@@ -267,8 +272,7 @@ const renderAboutData = () => {
     block.innerHTML = `<h2>${escapeHtml(data.title || "About Me")}</h2>${paragraphs.map((item) => `<p>${escapeHtml(item)}</p>`).join("")}${link}`;
 };
 
-const renderContactData = () => {
-    const data = parseStored("contact");
+const renderContactData = (data = parseStored("contact")) => {
     if (!data) return;
     const email = String(data.email || "").trim();
     const github = String(data.links?.github || DEFAULT_SOCIAL_LINKS.github).trim();
@@ -287,9 +291,8 @@ const renderContactData = () => {
     if (socialLinks[1] && linkedin) socialLinks[1].href = linkedin;
 };
 
-const renderSkillsData = () => {
+const renderSkillsData = (data = parseStored("skills")) => {
     const grid = document.getElementById("skillsGrid");
-    const data = parseStored("skills");
     if (!grid || !Array.isArray(data)) return;
     grid.innerHTML = data.map((item, index) => {
         const key = item.key || slugify(item.category, `skill-${index + 1}`);
@@ -320,9 +323,8 @@ const renderCertificateFilters = (items) => {
         .join("");
 };
 
-const renderProjectsData = () => {
+const renderProjectsData = (data = parseStored("projects")) => {
     const grid = document.getElementById("projectGrid");
-    const data = parseStored("projects");
     if (!grid || !Array.isArray(data)) return;
     if (data.length === 0) {
         grid.innerHTML = '<article class="project-card"><h3>No projects yet</h3><p>Add a project from the admin page and it will appear here.</p></article>';
@@ -333,13 +335,15 @@ const renderProjectsData = () => {
         const highlights = Array.isArray(item.highlights) ? item.highlights : splitCommaList(item.highlights);
         const stack = Array.isArray(item.stack) ? item.stack : splitCommaList(item.stack);
         const url = String(item.url || "").trim();
-        return `<article class="project-card" data-status="${escapeHtml(item.status || "Live")}" data-highlights="${escapeHtml(highlights.join("|"))}" data-stack="${escapeHtml(stack.join("|"))}"><h3>${escapeHtml(item.title || `Project ${index + 1}`)}</h3><p>${escapeHtml(item.description || "")}</p>${url ? `<div class="project-preview"><iframe src="${escapeHtml(url)}" title="${escapeHtml(item.title || `Project ${index + 1}`)} Preview" loading="lazy"></iframe></div>` : ""}<div class="project-actions">${url ? `<a class="btn btn-secondary" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Open Live Project</a>` : ""}</div></article>`;
+        const previewMarkup = url
+            ? `<div class="project-preview project-preview-shell" data-preview-src="${escapeHtml(url)}" data-preview-title="${escapeHtml(item.title || `Project ${index + 1}`)} Preview"><div class="project-preview-placeholder"><span class="project-preview-kicker">Live Preview</span><strong>Fast mode keeps this unloaded by default.</strong><p>Open the preview only when you want to inspect the real site.</p><button class="btn btn-secondary project-preview-toggle" type="button">Load Preview</button></div></div>`
+            : "";
+        return `<article class="project-card" data-status="${escapeHtml(item.status || "Live")}" data-highlights="${escapeHtml(highlights.join("|"))}" data-stack="${escapeHtml(stack.join("|"))}"><h3>${escapeHtml(item.title || `Project ${index + 1}`)}</h3><p>${escapeHtml(item.description || "")}</p>${previewMarkup}<div class="project-actions">${url ? `<a class="btn btn-secondary" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Open Live Project</a>` : ""}</div></article>`;
     }).join("");
 };
 
-const renderCertificatesData = async () => {
+const renderCertificatesData = async (data = parseStored("certificates")) => {
     const grid = document.getElementById("certificateGrid");
-    const data = parseStored("certificates");
     if (!grid || !Array.isArray(data)) return;
     renderCertificateFilters(data);
     if (data.length === 0) {
@@ -415,6 +419,19 @@ const initCertificateCards = () => {
     });
 };
 
+const renderPortfolioBundle = async (bundle = {}) => {
+    if (bundle.about) renderAboutData(bundle.about);
+    if (bundle.contact) renderContactData(bundle.contact);
+    if (Array.isArray(bundle.skills)) renderSkillsData(bundle.skills);
+    if (Array.isArray(bundle.projects)) renderProjectsData(bundle.projects);
+    if (Array.isArray(bundle.certificates)) await renderCertificatesData(bundle.certificates);
+    if (bundle.site) {
+        applySiteData(bundle.site);
+    } else {
+        renderQuickStats();
+    }
+};
+
 const renderPortfolioContent = async () => {
     if (!isPortfolioPage) return;
 
@@ -426,15 +443,29 @@ const renderPortfolioContent = async () => {
         renderProjectsData();
         await renderCertificatesData();
         applySiteData();
+    } else if (getBackend()?.isConfigured?.()) {
+        try {
+            const { data, error } = await getBackend().fetchContent();
+            if (error) throw error;
+            if (data) {
+                await renderPortfolioBundle(data);
+            } else {
+                renderQuickStats();
+            }
+        } catch (error) {
+            renderQuickStats();
+            console.warn("Portfolio backend fetch failed.", error);
+        }
     } else {
-        hydrateProjectPreviewFrames();
         renderQuickStats();
     }
 
     initPlatformLogos();
     initProjectCards();
+    setupProjectPreviewToggles();
     initCertificateCards();
     setupCertificatePreviewFallbacks();
+    setupProjectTilt();
 };
 
 const initPacmanEgg = () => {
@@ -453,7 +484,7 @@ const initPacmanEgg = () => {
         pacmanEgg.style.transform = `translate(${x}px, ${y}px)`;
     };
 
-    if (prefersReducedMotion) {
+    if (shouldLimitMotionWork) {
         move();
         return;
     }
@@ -701,9 +732,9 @@ const initEasterEgg = () => {
         ctx.restore();
     };
 
-    sfxStart.preload = 'auto';
-    sfxEnd.preload = 'auto';
-    sfxGlitch.preload = 'auto';
+    sfxStart.preload = 'none';
+    sfxEnd.preload = 'none';
+    sfxGlitch.preload = 'none';
     sfxStart.volume = 0.75;
     sfxEnd.volume = 0.8;
     sfxGlitch.volume = 0.8;
@@ -1649,14 +1680,27 @@ const setThemeLabel = () => {
     themeToggle.dataset.theme = isLight ? "light" : "dark";
 };
 
-const hydrateProjectPreviewFrames = () => {
-    const frames = document.querySelectorAll(".project-preview iframe[data-preview-src]");
-    if (frames.length === 0) return;
+const loadProjectPreview = (shell) => {
+    if (!shell || shell.dataset.previewLoaded === "true") return;
+    const src = shell.getAttribute("data-preview-src");
+    const title = shell.getAttribute("data-preview-title") || "Project preview";
+    if (!src) return;
 
-    frames.forEach((frame) => {
-        const src = frame.getAttribute("data-preview-src");
-        if (!src || frame.getAttribute("src")) return;
-        frame.setAttribute("src", src);
+    shell.dataset.previewLoaded = "true";
+    shell.classList.add("is-loaded");
+    shell.innerHTML = `<iframe src="${escapeHtml(src)}" title="${escapeHtml(title)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+};
+
+const setupProjectPreviewToggles = () => {
+    const previewShells = document.querySelectorAll(".project-preview-shell");
+    if (previewShells.length === 0) return;
+
+    previewShells.forEach((shell) => {
+        if (shell.dataset.previewBound === "true") return;
+        shell.dataset.previewBound = "true";
+        shell.querySelector(".project-preview-toggle")?.addEventListener("click", () => {
+            loadProjectPreview(shell);
+        });
     });
 };
 
@@ -1823,8 +1867,7 @@ const renderQuickStats = (stats = []) => {
 
 let typingRoles = ["Frontend Developer", "Full Stack Developer", "UI Builder", "Web Designer"];
 
-const applySiteData = () => {
-    const data = getSiteData();
+const applySiteData = (data = getSiteData()) => {
 
     const brand = document.getElementById('brandName');
     if (brand && data.brand) brand.textContent = data.brand;
@@ -1849,7 +1892,7 @@ const applySiteData = () => {
 };
 
 const setupHeroTilt = () => {
-    if (!heroPhotoWrap || prefersReducedMotion) return;
+    if (!heroPhotoWrap || shouldLimitMotionWork) return;
 
     const resetTilt = () => {
         heroPhotoWrap.style.setProperty("--hero-rx", "0deg");
@@ -1872,7 +1915,7 @@ const setupHeroTilt = () => {
 
 const setupProjectTilt = () => {
     const cards = getProjectCards();
-    if (cards.length === 0 || prefersReducedMotion) return;
+    if (cards.length === 0 || shouldLimitMotionWork) return;
 
     cards.forEach((card) => {
         const resetCard = () => {
@@ -1934,11 +1977,11 @@ if (themeToggle && !document.body.dataset.adminPage) {
     });
 }
 
+let portfolioRenderPromise = Promise.resolve();
 if (isPortfolioPage) {
-    renderPortfolioContent();
+    portfolioRenderPromise = renderPortfolioContent();
 }
 setupHeroTilt();
-setupProjectTilt();
 
 if (rotatePhotoBtn) {
     rotatePhotoBtn.addEventListener('click', () => {
@@ -1954,7 +1997,10 @@ const sitTrigger = document.getElementById("sitTrigger");
 const sitParticleLayer = document.getElementById("sitParticleLayer");
 
 const initSitParticles = () => {
-    if (!sitTrigger || !sitParticleLayer || prefersReducedMotion) return;
+    if (!sitTrigger || !sitParticleLayer || shouldLimitMotionWork) return;
+
+    let particleLoopId = 0;
+    let burstPlayed = false;
 
     const spawnParticle = () => {
         const layerRect = sitParticleLayer.getBoundingClientRect();
@@ -1997,16 +2043,42 @@ const initSitParticles = () => {
         window.setTimeout(() => particle.remove(), duration + 80);
     };
 
-    for (let i = 0; i < 10; i += 1) {
-        window.setTimeout(spawnParticle, i * 170);
-    }
-
-    window.setInterval(() => {
-        const burst = 1 + Math.floor(Math.random() * 2);
-        for (let i = 0; i < burst; i += 1) {
-            window.setTimeout(spawnParticle, i * (90 + Math.random() * 120));
+    const startLoop = () => {
+        if (!burstPlayed) {
+            burstPlayed = true;
+            for (let i = 0; i < 8; i += 1) {
+                window.setTimeout(spawnParticle, i * 140);
+            }
         }
-    }, 320);
+        if (particleLoopId) return;
+        particleLoopId = window.setInterval(() => {
+            const burst = 1 + Math.floor(Math.random() * 2);
+            for (let i = 0; i < burst; i += 1) {
+                window.setTimeout(spawnParticle, i * (120 + Math.random() * 160));
+            }
+        }, 700);
+    };
+
+    const stopLoop = () => {
+        if (!particleLoopId) return;
+        window.clearInterval(particleLoopId);
+        particleLoopId = 0;
+    };
+
+    if ("IntersectionObserver" in window) {
+        const sitObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    startLoop();
+                } else {
+                    stopLoop();
+                }
+            });
+        }, { threshold: 0.2 });
+        sitObserver.observe(sitTrigger);
+    } else {
+        startLoop();
+    }
 };
 
 initSitParticles();
@@ -2069,7 +2141,7 @@ if (typingText) {
         setTimeout(type, 250);
     };
 
-    type();
+    portfolioRenderPromise.finally(type);
 }
 
 if (revealItems.length > 0) {
@@ -2510,16 +2582,16 @@ window.addEventListener("scroll", () => {
     requestAnimationFrame(() => {
         updateActiveLink();
         updateScrollProgress();
-        updateBackgroundDepth();
+        if (!shouldLimitMotionWork) updateBackgroundDepth();
         ticking = false;
     });
 }, { passive: true });
 window.addEventListener("load", () => {
     updateActiveLink();
     updateScrollProgress();
-    updateBackgroundDepth();
+    if (!shouldLimitMotionWork) updateBackgroundDepth();
 });
 window.addEventListener("resize", () => {
     updateScrollProgress();
-    updateBackgroundDepth();
+    if (!shouldLimitMotionWork) updateBackgroundDepth();
 });

@@ -1349,6 +1349,48 @@ body .admin-nav-btn {
     transition: transform .45s ease;
 }
 
+.project-preview-shell {
+    min-height: 180px;
+    display: grid;
+    place-items: center;
+}
+
+.project-preview-placeholder {
+    min-height: 180px;
+    width: 100%;
+    padding: 18px;
+    display: grid;
+    align-content: center;
+    gap: 10px;
+    text-align: left;
+    background:
+        radial-gradient(circle at top right, color-mix(in oklab, var(--accent) 18%, transparent), transparent 40%),
+        linear-gradient(180deg, color-mix(in oklab, var(--surface) 84%, transparent), var(--surface-soft));
+}
+
+.project-preview-kicker {
+    font-family: var(--font-retro);
+    font-size: 0.56rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.project-preview-placeholder strong {
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.project-preview-placeholder p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.86rem;
+}
+
+.project-preview-toggle {
+    justify-self: start;
+}
+
 .project-actions {
     margin-top: 2px;
     display: flex;

@@ -1,25 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Chandra Prakash - Frontend-focused web developer portfolio.">
+    <meta name="portfolio-supabase-url" content="">
+    <meta name="portfolio-supabase-anon-key" content="">
+    <meta name="portfolio-content-table" content="portfolio_content">
+    <meta name="portfolio-admin-table" content="portfolio_admins">
+    <meta name="portfolio-media-bucket" content="portfolio-media">
+    <meta name="portfolio-content-id" content="site">
     <!-- Global leaderboard (recommended): Supabase (public anon key is OK) -->
     <meta name="eegg-supabase-url" content="">
     <meta name="eegg-supabase-anon-key" content="">
     <meta name="eegg-supabase-table" content="eegg_scores">
     <!-- Alternative: custom API endpoint that returns/accepts leaderboard scores as JSON -->
     <meta name="eegg-scores-endpoint" content="">
+    <meta name="portfolio-supabase-url" content="https://zxqxlbfyusopnyekpuzk.supabase.co">
+    <meta name="portfolio-supabase-anon-key" content="sb_publishable_HA0QatFC6lfEAkaZyWFkaQ_ehBkqxXQ">
     <title>Chandra Prakash | Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Orbitron:wght@500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Orbitron:wght@500;600;700&family=Press+Start+2P&display=swap"
+        rel="stylesheet">
     <!-- Devicon icons for skill logos -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
-    <!-- Font Awesome for extra skill icons (networking, servers, UI/UX, etc.) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
     <div class="bg-3d" aria-hidden="true">
@@ -28,7 +38,8 @@
         <span class="bg-layer layer-c"></span>
     </div>
     <button class="pacman-egg" id="pacmanEgg" type="button" aria-label=" ">
-        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false" shape-rendering="crispEdges">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"
+            shape-rendering="crispEdges">
             <rect width="16" height="16" fill="none"></rect>
             <!-- Pixel Pac-Man (open mouth) -->
             <g fill="#fef08a">
@@ -74,11 +85,14 @@
                 <a href="#contact">Contact</a>
                 <!-- <a href="about.html">More About</a> -->
             </nav>
-            <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light mode" title="Switch to light mode">
+            <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light mode"
+                title="Switch to light mode">
                 <span class="theme-icon theme-icon-sun" aria-hidden="true">
                     <svg viewBox="0 0 24 24" focusable="false">
                         <circle cx="12" cy="12" r="4.5"></circle>
-                        <path d="M12 1.75v2.5M12 19.75v2.5M4.75 4.75l1.77 1.77M17.48 17.48l1.77 1.77M1.75 12h2.5M19.75 12h2.5M4.75 19.25l1.77-1.77M17.48 6.52l1.77-1.77"></path>
+                        <path
+                            d="M12 1.75v2.5M12 19.75v2.5M4.75 4.75l1.77 1.77M17.48 17.48l1.77 1.77M1.75 12h2.5M19.75 12h2.5M4.75 19.25l1.77-1.77M17.48 6.52l1.77-1.77">
+                        </path>
                     </svg>
                 </span>
                 <span class="theme-icon theme-icon-moon" aria-hidden="true">
@@ -112,10 +126,13 @@
                 </div>
                 <div class="hero-photo-wrap">
                     <div class="hero-photo-card" id="heroPhotoCard">
-                        <img class="hero-photo hero-photo-front" src="pfp1.png" alt="Portrait of Chandra Prakash">
-                        <img class="hero-photo hero-photo-back" src="pfp.jpg" alt="Alternate portrait of Chandra Prakash">
+                        <img class="hero-photo hero-photo-front" src="pfp1-optimized.jpg"
+                            alt="Portrait of Chandra Prakash" decoding="async" fetchpriority="high">
+                        <img class="hero-photo hero-photo-back" src="pfp.jpg"
+                            alt="Alternate portrait of Chandra Prakash" loading="lazy" decoding="async">
                     </div>
-                    <button class="btn btn-secondary rotate-photo-btn" id="rotatePhotoBtn" type="button" aria-label="Flip profile photo">Flip</button>
+                    <button class="btn btn-secondary rotate-photo-btn" id="rotatePhotoBtn" type="button"
+                        aria-label="Flip profile photo">Flip</button>
                 </div>
             </div>
         </section>
@@ -124,17 +141,27 @@
             <div class="container split reveal">
                 <div id="aboutContentBlock">
                     <h2>About Me</h2>
-                    <p>Currently pursuing a B.Tech in Computer Science and Engineering at Lovely Professional University (LPU), where I continue to grow my skills in software development and technology.</p>
-                    <p>I completed a 6-month Diploma in Full Stack Development where I gained practical experience building modern web applications.</p>
-                    <p>Before that, I completed my schooling at Kendriya Vidyalaya No. 3, JRC, where my interest in computers and technology first began.</p>
-                    <a class="text-link pixel-link" href="about.html">Read detailed profile <span class="pixel-link-arrow" aria-hidden="true">â†’</span></a>
+                    <p>Currently pursuing a B.Tech in Computer Science and Engineering at Lovely Professional University
+                        (LPU), where I continue to grow my skills in software development and technology.</p>
+                    <p>I completed a 6-month Diploma in Full Stack Development where I gained practical experience
+                        building modern web applications.</p>
+                    <p>Before that, I completed my schooling at Kendriya Vidyalaya No. 3, JRC, where my interest in
+                        computers and technology first began.</p>
+                    <a class="text-link pixel-link" href="about.html">Read detailed profile <span
+                            class="pixel-link-arrow" aria-hidden="true">â†’</span></a>
                 </div>
                 <div class="panel">
                     <h3>Academic Scores</h3>
                     <div class="skill-bars academic-scores">
-                        <div class="skill-item"><span>Current CGPA: 7.0 / 10</span><div class="bar"><i style="width:70%"></i></div></div>
-                        <div class="skill-item"><span>Class 12: 70%</span><div class="bar"><i style="width:70%"></i></div></div>
-                        <div class="skill-item"><span>Class 10: 82%</span><div class="bar"><i style="width:82%"></i></div></div>
+                        <div class="skill-item"><span>Current CGPA: 7.0 / 10</span>
+                            <div class="bar"><i style="width:70%"></i></div>
+                        </div>
+                        <div class="skill-item"><span>Class 12: 70%</span>
+                            <div class="bar"><i style="width:70%"></i></div>
+                        </div>
+                        <div class="skill-item"><span>Class 10: 82%</span>
+                            <div class="bar"><i style="width:82%"></i></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -264,12 +291,24 @@
                                 <span class="skill-label">DSA</span>
                             </span>
                             <span class="skill-tag">
-                                <i class="fa-solid fa-server" aria-hidden="true"></i>
+                                <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="4" y="4" width="16" height="6" rx="1.5" stroke="currentColor"
+                                        stroke-width="1.8"></rect>
+                                    <rect x="4" y="14" width="16" height="6" rx="1.5" stroke="currentColor"
+                                        stroke-width="1.8"></rect>
+                                    <circle cx="8" cy="7" r="1" fill="currentColor"></circle>
+                                    <circle cx="8" cy="17" r="1" fill="currentColor"></circle>
+                                    <path d="M12 7H16M12 17H16" stroke="currentColor" stroke-width="1.8"
+                                        stroke-linecap="round"></path>
+                                </svg>
                                 <span class="skill-label">XAMPP</span>
                             </span>
                             <span class="skill-tag">
-                                <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M16.331 18.171V17.06l-.022.01c-.25.121-.522.19-.801.203a1.186 1.186 0 01-.806-.237 1.038 1.038 0 01-.352-.498 1.21 1.21 0 01-.023-.667c.052-.225.178-.426.357-.569.16-.134.355-.218.562-.242a1.85 1.85 0 011.061.198l.024.013v-1.117l-.051-.014a2.862 2.862 0 00-1.011-.132 2.34 2.34 0 00-.903.206c-.287.132-.54.327-.739.571a2.221 2.221 0 00-.04 2.705c.295.378.709.645 1.175.756.491.12 1.006.102 1.487-.052l.082-.023M5.336 18.171V17.06l-.022.01c-.25.121-.522.19-.801.203a1.183 1.183 0 01-.806-.237 1.03 1.03 0 01-.351-.498 1.202 1.202 0 01-.024-.667c.052-.225.177-.426.357-.569.16-.134.355-.218.562-.242a1.85 1.85 0 011.061.198l.024.013v-1.117l-.051-.014a2.862 2.862 0 00-1.011-.132 2.344 2.344 0 00-.903.206 2.08 2.08 0 00-.74.571 2.224 2.224 0 00-.041 2.705 2.11 2.11 0 001.176.756c.491.12 1.005.102 1.487-.052l.083-.023M9.26 17.249l-.004.957.07.012c.22.041.441.069.664.085.195.019.391.022.587.012.187-.014.372-.049.551-.104.21-.06.405-.163.571-.305a1.16 1.16 0 00.333-.478 1.31 1.31 0 00-.007-.96 1.068 1.068 0 00-.298-.414 1.261 1.261 0 00-.438-.255l-.722-.268a.388.388 0 01-.197-.188.245.245 0 01.008-.219.382.382 0 01.154-.142.798.798 0 01.257-.074c.153-.022.308-.021.46.005.18.02.358.051.533.096l.038.008v-.883l-.069-.015a4.749 4.749 0 00-.543-.097 2.844 2.844 0 00-.714-.003c-.3.027-.585.143-.821.33-.16.126-.281.293-.351.484-.104.29-.105.608 0 .899.054.145.14.274.252.381.097.093.207.173.327.236.157.084.324.149.497.195.057.017.114.035.17.054l.085.031.024.01c.084.03.162.078.226.14.045.042.08.094.101.151a.325.325 0 01.001.161.339.339 0 01-.166.198.856.856 0 01-.275.086 2.032 2.032 0 01-.427.021 5.208 5.208 0 01-.557-.074 9.195 9.195 0 01-.287-.067l-.033-.006zm-2.475.995h1.05v-4.167h-1.05v4.167zm12.162-2.936a1.095 1.095 0 011.541.158 1.094 1.094 0 01-.157 1.541l-.017.014a1.096 1.096 0 01-1.367-1.713m-1.525.854a2.193 2.193 0 002.666 2.107 2.139 2.139 0 00.701-3.937 2.207 2.207 0 00-3.367 1.83M22.961 10.728a.52.52 0 001.039 0V9.573a.52.52 0 00-1.039 0v1.155M20.117 10.728a.522.522 0 001.041 0V8.139a.521.521 0 00-1.04 0v2.589M17.231 11.771a.521.521 0 001.039 0V6.17a.52.52 0 00-1.039 0v5.601M14.393 10.728a.521.521 0 001.04 0V8.139a.52.52 0 00-1.039 0v2.589M11.494 10.728a.522.522 0 001.039 0V9.573a.52.52 0 00-1.039 0v1.155M8.624 10.728a.52.52 0 001.039 0V8.139a.52.52 0 00-1.039 0v2.589M5.737 11.771a.52.52 0 001.039 0V6.17a.52.52 0 00-1.039 0v5.601M2.876 10.728a.522.522 0 001.04 0V8.139a.52.52 0 00-1.039 0v2.589M0 10.728a.521.521 0 001.039 0V9.573a.52.52 0 00-1.039 0v1.155"/>
+                                <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M16.331 18.171V17.06l-.022.01c-.25.121-.522.19-.801.203a1.186 1.186 0 01-.806-.237 1.038 1.038 0 01-.352-.498 1.21 1.21 0 01-.023-.667c.052-.225.178-.426.357-.569.16-.134.355-.218.562-.242a1.85 1.85 0 011.061.198l.024.013v-1.117l-.051-.014a2.862 2.862 0 00-1.011-.132 2.34 2.34 0 00-.903.206c-.287.132-.54.327-.739.571a2.221 2.221 0 00-.04 2.705c.295.378.709.645 1.175.756.491.12 1.006.102 1.487-.052l.082-.023M5.336 18.171V17.06l-.022.01c-.25.121-.522.19-.801.203a1.183 1.183 0 01-.806-.237 1.03 1.03 0 01-.351-.498 1.202 1.202 0 01-.024-.667c.052-.225.177-.426.357-.569.16-.134.355-.218.562-.242a1.85 1.85 0 011.061.198l.024.013v-1.117l-.051-.014a2.862 2.862 0 00-1.011-.132 2.344 2.344 0 00-.903.206 2.08 2.08 0 00-.74.571 2.224 2.224 0 00-.041 2.705 2.11 2.11 0 001.176.756c.491.12 1.005.102 1.487-.052l.083-.023M9.26 17.249l-.004.957.07.012c.22.041.441.069.664.085.195.019.391.022.587.012.187-.014.372-.049.551-.104.21-.06.405-.163.571-.305a1.16 1.16 0 00.333-.478 1.31 1.31 0 00-.007-.96 1.068 1.068 0 00-.298-.414 1.261 1.261 0 00-.438-.255l-.722-.268a.388.388 0 01-.197-.188.245.245 0 01.008-.219.382.382 0 01.154-.142.798.798 0 01.257-.074c.153-.022.308-.021.46.005.18.02.358.051.533.096l.038.008v-.883l-.069-.015a4.749 4.749 0 00-.543-.097 2.844 2.844 0 00-.714-.003c-.3.027-.585.143-.821.33-.16.126-.281.293-.351.484-.104.29-.105.608 0 .899.054.145.14.274.252.381.097.093.207.173.327.236.157.084.324.149.497.195.057.017.114.035.17.054l.085.031.024.01c.084.03.162.078.226.14.045.042.08.094.101.151a.325.325 0 01.001.161.339.339 0 01-.166.198.856.856 0 01-.275.086 2.032 2.032 0 01-.427.021 5.208 5.208 0 01-.557-.074 9.195 9.195 0 01-.287-.067l-.033-.006zm-2.475.995h1.05v-4.167h-1.05v4.167zm12.162-2.936a1.095 1.095 0 011.541.158 1.094 1.094 0 01-.157 1.541l-.017.014a1.096 1.096 0 01-1.367-1.713m-1.525.854a2.193 2.193 0 002.666 2.107 2.139 2.139 0 00.701-3.937 2.207 2.207 0 00-3.367 1.83M22.961 10.728a.52.52 0 001.039 0V9.573a.52.52 0 00-1.039 0v1.155M20.117 10.728a.522.522 0 001.041 0V8.139a.521.521 0 00-1.04 0v2.589M17.231 11.771a.521.521 0 001.039 0V6.17a.52.52 0 00-1.039 0v5.601M14.393 10.728a.521.521 0 001.04 0V8.139a.52.52 0 00-1.039 0v2.589M11.494 10.728a.522.522 0 001.039 0V9.573a.52.52 0 00-1.039 0v1.155M8.624 10.728a.52.52 0 001.039 0V8.139a.52.52 0 00-1.039 0v2.589M5.737 11.771a.52.52 0 001.039 0V6.17a.52.52 0 00-1.039 0v5.601M2.876 10.728a.522.522 0 001.04 0V8.139a.52.52 0 00-1.039 0v2.589M0 10.728a.521.521 0 001.039 0V9.573a.52.52 0 00-1.039 0v1.155" />
                                 </svg>
                                 <span class="skill-label">Cisco Packet Tracer</span>
                             </span>
@@ -279,24 +318,36 @@
                         <h3>Other Technologies</h3>
                         <div class="skill-tags">
                             <span class="skill-tag">
-                                <svg aria-hidden="true" viewBox="0 0 1024 1024" width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M660.284 40.77l-271.6 157.06a70.968 70.968 0 0 0-35.94 61.84v313.61c0 35.77 23.53 69.73 58.09 82.13l271.6 103.44a70.962 70.962 0 0 0 92.1-35.76l147.04-254.4a70.963 70.963 0 0 0-35.06-96.82L660.284 40.77z" opacity=".2"/>
-                                    <path d="M596.4 701.5a70.98 70.98 0 0 0 68.86 48.34c13.43 0 26.2-3.48 37.14-9.99l104.18-55.77a70.988 70.988 0 0 0 33.37-93.47l-67.05-144.26a70.987 70.987 0 0 0-93.13-37.05l-104.18 55.78a70.982 70.982 0 0 0-33.37 94.36l41.17 158.56z" opacity=".2"/>
-                                    <path d="M820.51 83.29A70.997 70.997 0 0 0 761.2 47.5l-271.6 157.06a70.963 70.963 0 0 0-35.94 61.84v313.61c0 35.77 23.53 69.73 58.09 82.13l271.6 103.44a70.962 70.962 0 0 0 92.1-35.76l147.04-254.4a70.963 70.963 0 0 0-35.06-96.82L820.51 83.29z"/>
-                                    <path d="M519.8 412.5a70.99 70.99 0 0 0-51.38 152.16l117.92 48.12a70.99 70.99 0 1 0 51.38-152.16l-117.92-48.12z"/>
-                                    <path d="M499.3 937.8c-50.4 0-96.8-22.7-129.2-62.1l-69.3-83.8a70.985 70.985 0 0 0-80.03-24.54l-128.7 45.5a70.99 70.99 0 0 0-44.38 83.45l20.74 122.6a70.994 70.994 0 0 0 88.46 58.24l179.9-44.3a70.99 70.99 0 0 0 44.35-36.77l58.2-113.5a70.987 70.987 0 0 0-7.3-75.1 70.963 70.963 0 0 0-57.06-30.2h-.001z"/>
+                                <svg aria-hidden="true" viewBox="0 0 1024 1024" width="24" height="24"
+                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M660.284 40.77l-271.6 157.06a70.968 70.968 0 0 0-35.94 61.84v313.61c0 35.77 23.53 69.73 58.09 82.13l271.6 103.44a70.962 70.962 0 0 0 92.1-35.76l147.04-254.4a70.963 70.963 0 0 0-35.06-96.82L660.284 40.77z"
+                                        opacity=".2" />
+                                    <path
+                                        d="M596.4 701.5a70.98 70.98 0 0 0 68.86 48.34c13.43 0 26.2-3.48 37.14-9.99l104.18-55.77a70.988 70.988 0 0 0 33.37-93.47l-67.05-144.26a70.987 70.987 0 0 0-93.13-37.05l-104.18 55.78a70.982 70.982 0 0 0-33.37 94.36l41.17 158.56z"
+                                        opacity=".2" />
+                                    <path
+                                        d="M820.51 83.29A70.997 70.997 0 0 0 761.2 47.5l-271.6 157.06a70.963 70.963 0 0 0-35.94 61.84v313.61c0 35.77 23.53 69.73 58.09 82.13l271.6 103.44a70.962 70.962 0 0 0 92.1-35.76l147.04-254.4a70.963 70.963 0 0 0-35.06-96.82L820.51 83.29z" />
+                                    <path
+                                        d="M519.8 412.5a70.99 70.99 0 0 0-51.38 152.16l117.92 48.12a70.99 70.99 0 1 0 51.38-152.16l-117.92-48.12z" />
+                                    <path
+                                        d="M499.3 937.8c-50.4 0-96.8-22.7-129.2-62.1l-69.3-83.8a70.985 70.985 0 0 0-80.03-24.54l-128.7 45.5a70.99 70.99 0 0 0-44.38 83.45l20.74 122.6a70.994 70.994 0 0 0 88.46 58.24l179.9-44.3a70.99 70.99 0 0 0 44.35-36.77l58.2-113.5a70.987 70.987 0 0 0-7.3-75.1 70.963 70.963 0 0 0-57.06-30.2h-.001z" />
                                 </svg>
                                 <span class="skill-label">Generative AI</span>
                             </span>
                             <span class="skill-tag">
-                                <svg aria-hidden="true" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor">
-                                    <path d="M48 27.999a12 12 0 0 0-23.995-1.247A8 8 0 0 0 16 34h2a6 6 0 0 1 0 12H48a8 8 0 0 0 0-16z"/>
+                                <svg aria-hidden="true" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"
+                                    width="24" height="24" fill="currentColor">
+                                    <path
+                                        d="M48 27.999a12 12 0 0 0-23.995-1.247A8 8 0 0 0 16 34h2a6 6 0 0 1 0 12H48a8 8 0 0 0 0-16z" />
                                 </svg>
                                 <span class="skill-label">Cloud Computing</span>
                             </span>
                             <span class="skill-tag">
-                                <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 3C7.03 3 2.53 5.25 0 8.5l2.22 1.8C4.19 8.33 7.85 6 12 6s7.81 2.33 9.78 4.3L24 8.5C21.47 5.25 16.97 3 12 3zm0 6c-3.88 0-7.24 1.45-9.7 3.6l2.22 1.8A8.966 8.966 0 0 1 12 11c2.31 0 4.43.83 6.12 2.2l2.22-1.8C19.24 10.45 15.88 9 12 9zm0 4c-1.73 0-3.32.7-4.47 1.8l2.22 1.8A4.98 4.98 0 0 1 12 15c1.38 0 2.63.56 3.54 1.5l2.22-1.8A6.982 6.982 0 0 0 12 13zm0 4c-.83 0-1.5.67-1.5 1.5S11.17 20 12 20s1.5-.67 1.5-1.5S12.83 17 12 17z"/>
+                                <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M12 3C7.03 3 2.53 5.25 0 8.5l2.22 1.8C4.19 8.33 7.85 6 12 6s7.81 2.33 9.78 4.3L24 8.5C21.47 5.25 16.97 3 12 3zm0 6c-3.88 0-7.24 1.45-9.7 3.6l2.22 1.8A8.966 8.966 0 0 1 12 11c2.31 0 4.43.83 6.12 2.2l2.22-1.8C19.24 10.45 15.88 9 12 9zm0 4c-1.73 0-3.32.7-4.47 1.8l2.22 1.8A4.98 4.98 0 0 1 12 15c1.38 0 2.63.56 3.54 1.5l2.22-1.8A6.982 6.982 0 0 0 12 13zm0 4c-.83 0-1.5.67-1.5 1.5S11.17 20 12 20s1.5-.67 1.5-1.5S12.83 17 12 17z" />
                                 </svg>
                                 <span class="skill-label">Networking</span>
                             </span>
@@ -336,52 +387,99 @@
                     <div class="section-heading-copy">
                         <p class="section-kicker">Project Showcase</p>
                         <h2>Featured Projects</h2>
-                        <p class="section-subtext section-subtext-tight">Live work with a stronger focus on responsive UI, polished interactions, and practical product thinking.</p>
+                        <p class="section-subtext section-subtext-tight">Live work with a stronger focus on responsive
+                            UI, polished interactions, and practical product thinking.</p>
                     </div>
                     <div class="slider-controls" aria-label="Project slider controls">
-                        <button class="slider-btn" data-target="projectGrid" data-dir="prev" type="button" aria-label="Previous projects">&#8249;</button>
-                        <button class="slider-btn" data-target="projectGrid" data-dir="next" type="button" aria-label="Next projects">&#8250;</button>
+                        <button class="slider-btn" data-target="projectGrid" data-dir="prev" type="button"
+                            aria-label="Previous projects">&#8249;</button>
+                        <button class="slider-btn" data-target="projectGrid" data-dir="next" type="button"
+                            aria-label="Next projects">&#8250;</button>
                     </div>
                 </div>
                 <div class="slider-track project-slider" id="projectGrid">
-                    <article class="project-card" data-status="Live" data-highlights="Responsive UI|Community-first journey|Location-aware concept" data-stack="HTML|CSS|JavaScript">
+                    <article class="project-card" data-status="Live"
+                        data-highlights="Responsive UI|Community-first journey|Location-aware concept"
+                        data-stack="HTML|CSS|JavaScript">
                         <h3>Friday - Your Local Buddy</h3>
                         <p>Community-focused web platform for local support and discovery.</p>
-                        <div class="project-preview">
-                            <iframe data-preview-src="https://chandra170905.github.io/Friday-your-Local-buddy/" title="Friday - Your Local Buddy Preview" loading="lazy"></iframe>
+                        <div class="project-preview project-preview-shell"
+                            data-preview-src="https://chandra170905.github.io/Friday-your-Local-buddy/"
+                            data-preview-title="Friday - Your Local Buddy Preview">
+                            <div class="project-preview-placeholder">
+                                <span class="project-preview-kicker">Live Preview</span>
+                                <strong>Fast mode keeps this unloaded by default.</strong>
+                                <p>Open the preview only when you want to inspect the real site.</p>
+                                <button class="btn btn-secondary project-preview-toggle" type="button">Load
+                                    Preview</button>
+                            </div>
                         </div>
                         <div class="project-actions">
-                            <a class="btn btn-secondary" href="https://chandra170905.github.io/Friday-your-Local-buddy/" target="_blank" rel="noopener noreferrer">Open Live Project</a>
+                            <a class="btn btn-secondary" href="https://chandra170905.github.io/Friday-your-Local-buddy/"
+                                target="_blank" rel="noopener noreferrer">Open Live Project</a>
                         </div>
                     </article>
-                    <article class="project-card" data-status="Live" data-highlights="Conversion-focused sections|Trust-building layout|Business-ready flow" data-stack="HTML|CSS|JavaScript">
+                    <article class="project-card" data-status="Live"
+                        data-highlights="Conversion-focused sections|Trust-building layout|Business-ready flow"
+                        data-stack="HTML|CSS|JavaScript">
                         <h3>Swift Movers</h3>
                         <p>Service website for relocation and moving solutions.</p>
-                        <div class="project-preview">
-                            <iframe data-preview-src="https://swift-movers.onrender.com" title="Swift Movers Preview" loading="lazy"></iframe>
+                        <div class="project-preview project-preview-shell"
+                            data-preview-src="https://swift-movers.onrender.com"
+                            data-preview-title="Swift Movers Preview">
+                            <div class="project-preview-placeholder">
+                                <span class="project-preview-kicker">Live Preview</span>
+                                <strong>Fast mode keeps this unloaded by default.</strong>
+                                <p>Open the preview only when you want to inspect the real site.</p>
+                                <button class="btn btn-secondary project-preview-toggle" type="button">Load
+                                    Preview</button>
+                            </div>
                         </div>
                         <div class="project-actions">
-                            <a class="btn btn-secondary" href="https://swift-movers.onrender.com" target="_blank" rel="noopener noreferrer">Open Live Project</a>
+                            <a class="btn btn-secondary" href="https://swift-movers.onrender.com" target="_blank"
+                                rel="noopener noreferrer">Open Live Project</a>
                         </div>
                     </article>
-                    <article class="project-card" data-status="Live" data-highlights="Interactive learning|System concepts made visual|Focused interface states" data-stack="HTML|CSS|JavaScript">
+                    <article class="project-card" data-status="Live"
+                        data-highlights="Interactive learning|System concepts made visual|Focused interface states"
+                        data-stack="HTML|CSS|JavaScript">
                         <h3>Memory Management Visualizer</h3>
                         <p>An educational web application that simulates operating system memory management</p>
-                        <div class="project-preview">
-                            <iframe data-preview-src="https://memory-management-visualizer.vercel.app/?tab=sim" title="Memory Management Visualizer Preview" loading="lazy"></iframe>
+                        <div class="project-preview project-preview-shell"
+                            data-preview-src="https://memory-management-visualizer.vercel.app/?tab=sim"
+                            data-preview-title="Memory Management Visualizer Preview">
+                            <div class="project-preview-placeholder">
+                                <span class="project-preview-kicker">Live Preview</span>
+                                <strong>Fast mode keeps this unloaded by default.</strong>
+                                <p>Open the preview only when you want to inspect the real site.</p>
+                                <button class="btn btn-secondary project-preview-toggle" type="button">Load
+                                    Preview</button>
+                            </div>
                         </div>
                         <div class="project-actions">
-                            <a class="btn btn-secondary" href="https://memory-management-visualizer.vercel.app/?tab=sim" target="_blank" rel="noopener noreferrer">Open Live Project</a>
+                            <a class="btn btn-secondary" href="https://memory-management-visualizer.vercel.app/?tab=sim"
+                                target="_blank" rel="noopener noreferrer">Open Live Project</a>
                         </div>
                     </article>
-                    <article class="project-card" data-status="Live" data-highlights="Brand-driven styling|Product-first storytelling|Retail-oriented visuals" data-stack="HTML|CSS|JavaScript">
+                    <article class="project-card" data-status="Live"
+                        data-highlights="Brand-driven styling|Product-first storytelling|Retail-oriented visuals"
+                        data-stack="HTML|CSS|JavaScript">
                         <h3>Hexa Clothing</h3>
                         <p>Modern clothing storefront with focused product presentation.</p>
-                        <div class="project-preview">
-                            <iframe data-preview-src="https://hexaclothing.onrender.com" title="Hexa Clothing Preview" loading="lazy"></iframe>
+                        <div class="project-preview project-preview-shell"
+                            data-preview-src="https://hexaclothing.onrender.com"
+                            data-preview-title="Hexa Clothing Preview">
+                            <div class="project-preview-placeholder">
+                                <span class="project-preview-kicker">Live Preview</span>
+                                <strong>Fast mode keeps this unloaded by default.</strong>
+                                <p>Open the preview only when you want to inspect the real site.</p>
+                                <button class="btn btn-secondary project-preview-toggle" type="button">Load
+                                    Preview</button>
+                            </div>
                         </div>
                         <div class="project-actions">
-                            <a class="btn btn-secondary" href="https://hexaclothing.onrender.com" target="_blank" rel="noopener noreferrer">Open Live Project</a>
+                            <a class="btn btn-secondary" href="https://hexaclothing.onrender.com" target="_blank"
+                                rel="noopener noreferrer">Open Live Project</a>
                         </div>
                     </article>
                 </div>
@@ -393,7 +491,8 @@
                     <div class="section-heading-copy">
                         <p class="section-kicker">Learning Timeline</p>
                         <h2>Certificates</h2>
-                        <p class="section-subtext section-subtext-tight">A categorized snapshot of my certifications across programming, web, AI, systems, networking, security, and SoftSkills.</p>
+                        <p class="section-subtext section-subtext-tight">A categorized snapshot of my certifications
+                            across programming, web, AI, systems, networking, security, and SoftSkills.</p>
                     </div>
                     <div class="filters" id="certificateFilters">
                         <button class="chip active" data-filter="all" type="button">All</button>
@@ -406,130 +505,196 @@
                         <button class="chip" data-filter="leadership" type="button">SoftSkills</button>
                     </div>
                     <div class="slider-controls" aria-label="Certificate slider controls">
-                        <button class="slider-btn" data-target="certificateGrid" data-dir="prev" type="button" aria-label="Previous certificates">&#8249;</button>
-                        <button class="slider-btn" data-target="certificateGrid" data-dir="next" type="button" aria-label="Next certificates">&#8250;</button>
+                        <button class="slider-btn" data-target="certificateGrid" data-dir="prev" type="button"
+                            aria-label="Previous certificates">&#8249;</button>
+                        <button class="slider-btn" data-target="certificateGrid" data-dir="next" type="button"
+                            aria-label="Next certificates">&#8250;</button>
                     </div>
                 </div>
                 <div class="slider-track cert-slider" id="certificateGrid">
                     <article class="cert-card" data-category="programming">
                         <h3>C Programming</h3>
-                        <p class="cert-description">Core C programming concepts including syntax, control flow, functions, and foundational problem solving.</p>
-                        <div class="cert-preview"><img src="certificates/C.png" alt="C Programming Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/C.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Core C programming concepts including syntax, control flow,
+                            functions, and foundational problem solving.</p>
+                        <div class="cert-preview"><img src="certificates/C.png" alt="C Programming Certificate Preview"
+                                loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/C.png" target="_blank"
+                            rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="programming">
                         <h3>C++ Programming</h3>
-                        <p class="cert-description">Object-oriented development with C++, covering classes, inheritance, reusable design, and efficient logic building.</p>
-                        <div class="cert-preview"><img src="certificates/C%2B%2B.png" alt="C++ Programming Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/C%2B%2B.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Object-oriented development with C++, covering classes, inheritance,
+                            reusable design, and efficient logic building.</p>
+                        <div class="cert-preview"><img src="certificates/C%2B%2B.png"
+                                alt="C++ Programming Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/C%2B%2B.png" target="_blank"
+                            rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="programming">
                         <h3>Java Programming</h3>
-                        <p class="cert-description">General Java development training focused on syntax, OOP thinking, and practical application building.</p>
-                        <div class="cert-preview"><img src="certificates/JAVA.png" alt="Java Programming Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/JAVA.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">General Java development training focused on syntax, OOP thinking,
+                            and practical application building.</p>
+                        <div class="cert-preview"><img src="certificates/JAVA.png"
+                                alt="Java Programming Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/JAVA.png" target="_blank"
+                            rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="programming">
                         <h3>Data Structures and Algorithms</h3>
-                        <p class="cert-description">Problem-solving with arrays, linked lists, trees, graphs, sorting, and algorithmic thinking.</p>
-                        <div class="cert-preview"><img src="certificates/DSA.png" alt="Data Structures and Algorithms Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/DSA.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Problem-solving with arrays, linked lists, trees, graphs, sorting,
+                            and algorithmic thinking.</p>
+                        <div class="cert-preview"><img src="certificates/DSA.png"
+                                alt="Data Structures and Algorithms Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/DSA.png" target="_blank"
+                            rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="programming">
                         <h3>Java Fundamentals</h3>
-                        <p class="cert-description">Java basics focused on syntax, data types, control structures, and beginner-friendly coding practice.</p>
-                        <div class="cert-preview"><img src="certificates/JAVA%20FUNDAMENTALS.png" alt="Java Fundamentals Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/JAVA%20FUNDAMENTALS.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Java basics focused on syntax, data types, control structures, and
+                            beginner-friendly coding practice.</p>
+                        <div class="cert-preview"><img src="certificates/JAVA%20FUNDAMENTALS.png"
+                                alt="Java Fundamentals Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/JAVA%20FUNDAMENTALS.png" target="_blank"
+                            rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="webdev">
                         <h3>Responsive Web Designing</h3>
-                        <p class="cert-description">Responsive design skills for building adaptable layouts with HTML, CSS, and mobile-first thinking.</p>
-                        <div class="cert-preview"><img src="certificates/RESPONSIVE%20WEB%20DESIGNING.png" alt="Responsive Web Designing Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/RESPONSIVE%20WEB%20DESIGNING.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Responsive design skills for building adaptable layouts with HTML,
+                            CSS, and mobile-first thinking.</p>
+                        <div class="cert-preview"><img src="certificates/RESPONSIVE%20WEB%20DESIGNING.png"
+                                alt="Responsive Web Designing Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/RESPONSIVE%20WEB%20DESIGNING.png"
+                            target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="webdev">
                         <h3>Web Development with Python and Django</h3>
-                        <p class="cert-description">Full-stack web development using Python, Django, templating, and practical web application workflows.</p>
-                        <div class="cert-preview"><img src="certificates/WEB%20DEVELOPMENT%20PYTHON%20%26%20DJANGO.jpg" alt="Web Development with Python and Django Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/WEB%20DEVELOPMENT%20PYTHON%20%26%20DJANGO.jpg" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Full-stack web development using Python, Django, templating, and
+                            practical web application workflows.</p>
+                        <div class="cert-preview"><img src="certificates/WEB%20DEVELOPMENT%20PYTHON%20%26%20DJANGO.jpg"
+                                alt="Web Development with Python and Django Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/WEB%20DEVELOPMENT%20PYTHON%20%26%20DJANGO.jpg"
+                            target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="ai">
                         <h3>AI Essentials</h3>
-                        <p class="cert-description">Foundational AI knowledge covering core concepts, use cases, and real-world applications of intelligent systems.</p>
-                        <div class="cert-preview"><img src="certificates/AI%20ESSENTIALS.png" alt="AI Essentials Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/AI%20ESSENTIALS.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Foundational AI knowledge covering core concepts, use cases, and
+                            real-world applications of intelligent systems.</p>
+                        <div class="cert-preview"><img src="certificates/AI%20ESSENTIALS.png"
+                                alt="AI Essentials Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/AI%20ESSENTIALS.png" target="_blank"
+                            rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="ai">
                         <h3>Generative AI</h3>
-                        <p class="cert-description">Applied generative AI concepts with emphasis on modern tools, prompts, and creative automation workflows.</p>
-                        <div class="cert-preview"><img src="certificates/GENERATIVE%20AI.png" alt="Generative AI Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/GENERATIVE%20AI.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Applied generative AI concepts with emphasis on modern tools,
+                            prompts, and creative automation workflows.</p>
+                        <div class="cert-preview"><img src="certificates/GENERATIVE%20AI.png"
+                                alt="Generative AI Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/GENERATIVE%20AI.png" target="_blank"
+                            rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="ai">
                         <h3>Master Generative AI and Tools</h3>
-                        <p class="cert-description">Advanced generative AI exposure spanning tools, workflows, and practical productivity-focused implementations.</p>
-                        <div class="cert-preview"><img src="certificates/MASTER%20GENERATIVE%20AI%20%26%20TOOL.png" alt="Master Generative AI and Tools Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/MASTER%20GENERATIVE%20AI%20%26%20TOOL.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Advanced generative AI exposure spanning tools, workflows, and
+                            practical productivity-focused implementations.</p>
+                        <div class="cert-preview"><img src="certificates/MASTER%20GENERATIVE%20AI%20%26%20TOOL.png"
+                                alt="Master Generative AI and Tools Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/MASTER%20GENERATIVE%20AI%20%26%20TOOL.png"
+                            target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="cloud">
                         <h3>Cloud Computing</h3>
-                        <p class="cert-description">Cloud platform basics including deployment models, service layers, and scalable application hosting concepts.</p>
-                        <div class="cert-preview"><img src="certificates/CLOUD%20COMPUTING.png" alt="Cloud Computing Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/CLOUD%20COMPUTING.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Cloud platform basics including deployment models, service layers,
+                            and scalable application hosting concepts.</p>
+                        <div class="cert-preview"><img src="certificates/CLOUD%20COMPUTING.png"
+                                alt="Cloud Computing Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/CLOUD%20COMPUTING.png" target="_blank"
+                            rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="cloud">
                         <h3>Hardware and Operating Systems</h3>
-                        <p class="cert-description">Computer system fundamentals covering hardware components, OS behavior, and system-level understanding.</p>
-                        <div class="cert-preview"><img src="certificates/HARDWARE%20%26%20OS.png" alt="Hardware and Operating Systems Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/HARDWARE%20%26%20OS.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Computer system fundamentals covering hardware components, OS
+                            behavior, and system-level understanding.</p>
+                        <div class="cert-preview"><img src="certificates/HARDWARE%20%26%20OS.png"
+                                alt="Hardware and Operating Systems Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/HARDWARE%20%26%20OS.png" target="_blank"
+                            rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="cloud">
                         <h3>Bits and Bytes of Networking</h3>
-                        <p class="cert-description">Introductory networking concepts focused on digital communication, binary representation, and infrastructure basics.</p>
-                        <div class="cert-preview"><img src="certificates/BITS%20%26%20BYTES%20NETWORKING%20.png" alt="Bits and Bytes of Networking Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/BITS%20%26%20BYTES%20NETWORKING%20.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Introductory networking concepts focused on digital communication,
+                            binary representation, and infrastructure basics.</p>
+                        <div class="cert-preview"><img src="certificates/BITS%20%26%20BYTES%20NETWORKING%20.png"
+                                alt="Bits and Bytes of Networking Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/BITS%20%26%20BYTES%20NETWORKING%20.png"
+                            target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="networking">
                         <h3>Network Communication</h3>
-                        <p class="cert-description">Communication models, layered networking ideas, and essential concepts for reliable data exchange.</p>
-                        <div class="cert-preview"><img src="certificates/NETWORK%20COMMUNICATION.png" alt="Network Communication Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/NETWORK%20COMMUNICATION.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Communication models, layered networking ideas, and essential
+                            concepts for reliable data exchange.</p>
+                        <div class="cert-preview"><img src="certificates/NETWORK%20COMMUNICATION.png"
+                                alt="Network Communication Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/NETWORK%20COMMUNICATION.png" target="_blank"
+                            rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="networking">
                         <h3>Packet Switching Networks and Algorithms</h3>
-                        <p class="cert-description">Packet delivery methods, routing logic, and algorithmic ideas behind efficient network traffic movement.</p>
-                        <div class="cert-preview"><img src="certificates/PACKET%20SWITCHING%20NETWORKS%20%26%20ALGORITHM.png" alt="Packet Switching Networks and Algorithms Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/PACKET%20SWITCHING%20NETWORKS%20%26%20ALGORITHM.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Packet delivery methods, routing logic, and algorithmic ideas behind
+                            efficient network traffic movement.</p>
+                        <div class="cert-preview"><img
+                                src="certificates/PACKET%20SWITCHING%20NETWORKS%20%26%20ALGORITHM.png"
+                                alt="Packet Switching Networks and Algorithms Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary"
+                            href="certificates/PACKET%20SWITCHING%20NETWORKS%20%26%20ALGORITHM.png" target="_blank"
+                            rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="networking">
                         <h3>Peer to Peer Protocol and LAN</h3>
-                        <p class="cert-description">Distributed communication concepts, peer networks, and local area networking fundamentals.</p>
-                        <div class="cert-preview"><img src="certificates/PEER%20TO%20PEER%20PROTOCOL%20%26%20LOCAL%20AREA%20NETWORK.png" alt="Peer to Peer Protocol and LAN Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/PEER%20TO%20PEER%20PROTOCOL%20%26%20LOCAL%20AREA%20NETWORK.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Distributed communication concepts, peer networks, and local area
+                            networking fundamentals.</p>
+                        <div class="cert-preview"><img
+                                src="certificates/PEER%20TO%20PEER%20PROTOCOL%20%26%20LOCAL%20AREA%20NETWORK.png"
+                                alt="Peer to Peer Protocol and LAN Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary"
+                            href="certificates/PEER%20TO%20PEER%20PROTOCOL%20%26%20LOCAL%20AREA%20NETWORK.png"
+                            target="_blank" rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="networking">
                         <h3>TCP/IP</h3>
-                        <p class="cert-description">Core TCP/IP concepts including protocols, packet flow, addressing, and dependable network communication.</p>
-                        <div class="cert-preview"><img src="certificates/TCPA%20%26%20IP.png" alt="TCP IP Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/TCPA%20%26%20IP.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Core TCP/IP concepts including protocols, packet flow, addressing,
+                            and dependable network communication.</p>
+                        <div class="cert-preview"><img src="certificates/TCPA%20%26%20IP.png"
+                                alt="TCP IP Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/TCPA%20%26%20IP.png" target="_blank"
+                            rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="security">
                         <h3>RCS CTF</h3>
-                        <p class="cert-description">Capture-the-flag participation highlighting curiosity in cybersecurity, puzzles, and hands-on security learning.</p>
-                        <div class="cert-preview"><img src="certificates/RCSCTF.png" alt="RCS CTF Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/RCSCTF.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Capture-the-flag participation highlighting curiosity in
+                            cybersecurity, puzzles, and hands-on security learning.</p>
+                        <div class="cert-preview"><img src="certificates/RCSCTF.png" alt="RCS CTF Certificate Preview"
+                                loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/RCSCTF.png" target="_blank"
+                            rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="security">
                         <h3>DevCreate Hackathon</h3>
-                        <p class="cert-description">Hackathon participation demonstrating teamwork, rapid prototyping, and building under time constraints.</p>
-                        <div class="cert-preview"><img src="certificates/DEVCREATE%20HACKATHON.png" alt="DevCreate Hackathon Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/DEVCREATE%20HACKATHON.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Hackathon participation demonstrating teamwork, rapid prototyping,
+                            and building under time constraints.</p>
+                        <div class="cert-preview"><img src="certificates/DEVCREATE%20HACKATHON.png"
+                                alt="DevCreate Hackathon Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/DEVCREATE%20HACKATHON.png" target="_blank"
+                            rel="noopener noreferrer">Open Certificate</a>
                     </article>
                     <article class="cert-card" data-category="leadership">
                         <h3>Become a Leader</h3>
-                        <p class="cert-description">Leadership-focused learning around communication, responsibility, initiative, and collaborative growth.</p>
-                        <div class="cert-preview"><img src="certificates/BECOME%20A%20LEADER.png" alt="Become a Leader Certificate Preview" loading="lazy"></div>
-                        <a class="btn btn-secondary" href="certificates/BECOME%20A%20LEADER.png" target="_blank" rel="noopener noreferrer">Open Certificate</a>
+                        <p class="cert-description">Leadership-focused learning around communication, responsibility,
+                            initiative, and collaborative growth.</p>
+                        <div class="cert-preview"><img src="certificates/BECOME%20A%20LEADER.png"
+                                alt="Become a Leader Certificate Preview" loading="lazy"></div>
+                        <a class="btn btn-secondary" href="certificates/BECOME%20A%20LEADER.png" target="_blank"
+                            rel="noopener noreferrer">Open Certificate</a>
                     </article>
                 </div>
             </div>
@@ -540,54 +705,66 @@
                 <h2 class="title-retro">Coding Platforms</h2>
                 <p class="section-subtext">Profiles and practice platforms I use for problem solving and contests.</p>
                 <div class="platform-grid">
-                    <a class="platform-card" href="https://www.geeksforgeeks.org/" target="_blank" rel="noopener noreferrer" aria-label="GeeksforGeeks">
+                    <a class="platform-card" href="https://www.geeksforgeeks.org/" target="_blank"
+                        rel="noopener noreferrer" aria-label="GeeksforGeeks">
                         <span class="platform-icon" style="--platform-bg: #2f8d46" data-fallback="GFG">
-                            <img class="platform-logo" src="https://cdn.simpleicons.org/geeksforgeeks/ffffff" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+                            <img class="platform-logo" src="https://cdn.simpleicons.org/geeksforgeeks/ffffff" alt=""
+                                loading="lazy" decoding="async" referrerpolicy="no-referrer">
                         </span>
                         <div>
                             <h3>GeeksforGeeks</h3>
                             <p>Practice and learning resources</p>
                         </div>
                     </a>
-                    <a class="platform-card" href="https://www.hackerrank.com/contests" target="_blank" rel="noopener noreferrer" aria-label="HackerRank Contests">
+                    <a class="platform-card" href="https://www.hackerrank.com/contests" target="_blank"
+                        rel="noopener noreferrer" aria-label="HackerRank Contests">
                         <span class="platform-icon" style="--platform-bg: #00ea64" data-fallback="HR">
-                            <img class="platform-logo" src="https://cdn.simpleicons.org/hackerrank/ffffff" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+                            <img class="platform-logo" src="https://cdn.simpleicons.org/hackerrank/ffffff" alt=""
+                                loading="lazy" decoding="async" referrerpolicy="no-referrer">
                         </span>
                         <div>
                             <h3>HackerRank</h3>
                             <p>Contests and challenge tracks</p>
                         </div>
                     </a>
-                    <a class="platform-card" href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer" aria-label="AtCoder">
+                    <a class="platform-card" href="https://atcoder.jp/home" target="_blank" rel="noopener noreferrer"
+                        aria-label="AtCoder">
                         <span class="platform-icon" style="--platform-bg: #111827" data-fallback="AC">
-                            <img class="platform-logo" src="https://cdn.simpleicons.org/atcoder/ffffff" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+                            <img class="platform-logo" src="https://cdn.simpleicons.org/atcoder/ffffff" alt=""
+                                loading="lazy" decoding="async" referrerpolicy="no-referrer">
                         </span>
                         <div>
                             <h3>AtCoder</h3>
                             <p>Competitive programming contests</p>
                         </div>
                     </a>
-                    <a class="platform-card" href="https://codeforces.com/" target="_blank" rel="noopener noreferrer" aria-label="Codeforces">
+                    <a class="platform-card" href="https://codeforces.com/" target="_blank" rel="noopener noreferrer"
+                        aria-label="Codeforces">
                         <span class="platform-icon" style="--platform-bg: #1f8acb" data-fallback="CF">
-                            <img class="platform-logo" src="https://cdn.simpleicons.org/codeforces/ffffff" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+                            <img class="platform-logo" src="https://cdn.simpleicons.org/codeforces/ffffff" alt=""
+                                loading="lazy" decoding="async" referrerpolicy="no-referrer">
                         </span>
                         <div>
                             <h3>Codeforces</h3>
                             <p>Rated contests and editorials</p>
                         </div>
                     </a>
-                    <a class="platform-card" href="https://www.codechef.com/practice" target="_blank" rel="noopener noreferrer" aria-label="CodeChef Practice">
+                    <a class="platform-card" href="https://www.codechef.com/practice" target="_blank"
+                        rel="noopener noreferrer" aria-label="CodeChef Practice">
                         <span class="platform-icon" style="--platform-bg: #5b4638" data-fallback="CC">
-                            <img class="platform-logo" src="https://cdn.simpleicons.org/codechef/ffffff" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+                            <img class="platform-logo" src="https://cdn.simpleicons.org/codechef/ffffff" alt=""
+                                loading="lazy" decoding="async" referrerpolicy="no-referrer">
                         </span>
                         <div>
                             <h3>CodeChef</h3>
                             <p>Practice problems by difficulty</p>
                         </div>
                     </a>
-                    <a class="platform-card" href="https://leetcode.com/u/Chandra1709/" target="_blank" rel="noopener noreferrer" aria-label="LeetCode profile">
+                    <a class="platform-card" href="https://leetcode.com/u/Chandra1709/" target="_blank"
+                        rel="noopener noreferrer" aria-label="LeetCode profile">
                         <span class="platform-icon" style="--platform-bg: #ffa116" data-fallback="LC">
-                            <img class="platform-logo" src="https://cdn.simpleicons.org/leetcode/ffffff" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+                            <img class="platform-logo" src="https://cdn.simpleicons.org/leetcode/ffffff" alt=""
+                                loading="lazy" decoding="async" referrerpolicy="no-referrer">
                         </span>
                         <div>
                             <h3>LeetCode</h3>
@@ -604,11 +781,13 @@
                 <div class="timeline">
                     <article>
                         <h3>Frontend Projects Practice</h3>
-                        <p>Built portfolio-ready practice projects emphasizing responsive design and micro-interactions.</p>
+                        <p>Built portfolio-ready practice projects emphasizing responsive design and micro-interactions.
+                        </p>
                     </article>
                     <article>
                         <h3>UI Refinement Workflow</h3>
-                        <p>Iterated layout spacing, typography scale, and component consistency based on usability checks.</p>
+                        <p>Iterated layout spacing, typography scale, and component consistency based on usability
+                            checks.</p>
                     </article>
                     <article>
                         <h3>Performance Basics</h3>
@@ -623,47 +802,65 @@
                 <div>
                     <h2 id="contactHeading">Let us build something solid.</h2>
                     <p id="contactIntro">Available for internships, freelance work, and junior frontend roles.</p>
-                    <p id="contactEmailRow">Email: <a class="text-link" id="contactEmailLink" href="mailto:chandra170905@gmail.com">chandra170905@gmail.com</a></p>
-                    <p id="contactGithubRow">GitHub: <a class="text-link" id="contactGithubLink" href="https://github.com/Chandra170905" target="_blank" rel="noopener noreferrer">github.com/Chandra170905</a></p>
-                    <p id="contactLinkedinRow">LinkedIn: <a class="text-link" id="contactLinkedinLink" href="https://www.linkedin.com/in/chandra-prakash-2960553a0/" target="_blank" rel="noopener noreferrer">linkedin.com/in/chandra-prakash-2960553a0</a></p>
+                    <p id="contactEmailRow">Email: <a class="text-link" id="contactEmailLink"
+                            href="mailto:chandra170905@gmail.com">chandra170905@gmail.com</a></p>
+                    <p id="contactGithubRow">GitHub: <a class="text-link" id="contactGithubLink"
+                            href="https://github.com/Chandra170905" target="_blank"
+                            rel="noopener noreferrer">github.com/Chandra170905</a></p>
+                    <p id="contactLinkedinRow">LinkedIn: <a class="text-link" id="contactLinkedinLink"
+                            href="https://www.linkedin.com/in/chandra-prakash-2960553a0/" target="_blank"
+                            rel="noopener noreferrer">linkedin.com/in/chandra-prakash-2960553a0</a></p>
                     <div class="contact-direct">
-                        <a class="btn btn-primary" id="contactEmailCta" href="mailto:chandra170905@gmail.com?subject=Portfolio%20Inquiry">Contact Me by Email</a>
-                        <button class="btn btn-secondary" id="copyEmailBtn" type="button" data-email="chandra170905@gmail.com">Copy Email</button>
+                        <a class="btn btn-primary" id="contactEmailCta"
+                            href="mailto:chandra170905@gmail.com?subject=Portfolio%20Inquiry">Contact Me by Email</a>
+                        <button class="btn btn-secondary" id="copyEmailBtn" type="button"
+                            data-email="chandra170905@gmail.com">Copy Email</button>
                         <p class="copy-status" id="copyStatus" aria-live="polite"></p>
                     </div>
                     <div class="social-links" aria-label="Social links">
-                        <a class="social-icon" href="https://github.com/Chandra170905" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+                        <a class="social-icon" href="https://github.com/Chandra170905" target="_blank"
+                            rel="noopener noreferrer" aria-label="GitHub profile">
                             <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.17c-3.34.73-4.04-1.42-4.04-1.42-.55-1.36-1.33-1.72-1.33-1.72-1.09-.73.08-.72.08-.72 1.2.08 1.83 1.23 1.83 1.23 1.08 1.83 2.82 1.3 3.5 1 .11-.78.42-1.31.76-1.61-2.66-.3-5.47-1.31-5.47-5.92 0-1.31.47-2.39 1.24-3.24-.13-.3-.54-1.53.12-3.2 0 0 1-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.6a11.7 11.7 0 0 1 3 .4c2.3-1.55 3.3-1.23 3.3-1.23.66 1.67.25 2.9.12 3.2.77.85 1.24 1.93 1.24 3.24 0 4.62-2.81 5.61-5.49 5.91.43.37.82 1.09.82 2.2v3.26c0 .32.22.69.83.58A12 12 0 0 0 12 .5Z"/>
+                                <path
+                                    d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.17c-3.34.73-4.04-1.42-4.04-1.42-.55-1.36-1.33-1.72-1.33-1.72-1.09-.73.08-.72.08-.72 1.2.08 1.83 1.23 1.83 1.23 1.08 1.83 2.82 1.3 3.5 1 .11-.78.42-1.31.76-1.61-2.66-.3-5.47-1.31-5.47-5.92 0-1.31.47-2.39 1.24-3.24-.13-.3-.54-1.53.12-3.2 0 0 1-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.6a11.7 11.7 0 0 1 3 .4c2.3-1.55 3.3-1.23 3.3-1.23.66 1.67.25 2.9.12 3.2.77.85 1.24 1.93 1.24 3.24 0 4.62-2.81 5.61-5.49 5.91.43.37.82 1.09.82 2.2v3.26c0 .32.22.69.83.58A12 12 0 0 0 12 .5Z" />
                             </svg>
                         </a>
-                        <a class="social-icon" href="https://www.linkedin.com/in/chandra-prakash-2960553a0/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+                        <a class="social-icon" href="https://www.linkedin.com/in/chandra-prakash-2960553a0/"
+                            target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
                             <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5 2.5 2.5 0 0 0 4.98 3.5ZM3 9.5h4v11H3v-11Zm7 0h3.84v1.6h.05c.53-1 1.84-2.05 3.8-2.05 4.06 0 4.81 2.67 4.81 6.14v5.31h-4v-4.7c0-1.12-.02-2.56-1.56-2.56-1.56 0-1.8 1.22-1.8 2.48v4.78h-4v-11Z"/>
+                                <path
+                                    d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5 2.5 2.5 0 0 0 4.98 3.5ZM3 9.5h4v11H3v-11Zm7 0h3.84v1.6h.05c.53-1 1.84-2.05 3.8-2.05 4.06 0 4.81 2.67 4.81 6.14v5.31h-4v-4.7c0-1.12-.02-2.56-1.56-2.56-1.56 0-1.8 1.22-1.8 2.48v4.78h-4v-11Z" />
                             </svg>
                         </a>
                     </div>
                     <div class="contact-gate" aria-hidden="true">
                         <button class="sit-trigger" id="sitTrigger" type="button" tabindex="-1">
                             <img class="sit-image sit-image-dark" src="sit.png" alt="" loading="lazy" decoding="async">
-                            <img class="sit-image sit-image-light" src="sit2.png" alt="" loading="lazy" decoding="async">
+                            <img class="sit-image sit-image-light" src="sit2.png" alt="" loading="lazy"
+                                decoding="async">
                             <span class="sit-particle-layer" id="sitParticleLayer"></span>
                         </button>
                     </div>
                 </div>
-                <form class="contact-form" id="contactForm" action="https://formsubmit.co/chandra170905@gmail.com" method="post">
+                <form class="contact-form" id="contactForm" action="https://formsubmit.co/chandra170905@gmail.com"
+                    method="post">
                     <input type="hidden" name="_subject" value="New Portfolio Message">
                     <input type="hidden" name="_captcha" value="false">
                     <input type="hidden" name="_template" value="table">
                     <label for="name">Name</label>
-                    <input id="name" name="name" required type="text" placeholder="Your name" minlength="2" maxlength="60" pattern="^[A-Za-z][A-Za-z .'-]{1,59}$" autocomplete="name">
-                    <p class="field-hint" data-hint-for="name" data-default="2-60 characters. Letters, spaces, ., ' and - only."></p>
+                    <input id="name" name="name" required type="text" placeholder="Your name" minlength="2"
+                        maxlength="60" pattern="^[A-Za-z][A-Za-z .'-]{1,59}$" autocomplete="name">
+                    <p class="field-hint" data-hint-for="name"
+                        data-default="2-60 characters. Letters, spaces, ., ' and - only."></p>
                     <label for="email">Email</label>
-                    <input id="email" name="email" required type="email" placeholder="you@example.com" maxlength="120" autocomplete="email">
+                    <input id="email" name="email" required type="email" placeholder="you@example.com" maxlength="120"
+                        autocomplete="email">
                     <p class="field-hint" data-hint-for="email" data-default="Enter a valid email address."></p>
                     <label for="message">Message</label>
-                    <textarea id="message" name="message" required rows="5" placeholder="Tell me about your project" minlength="20" maxlength="1200"></textarea>
-                    <p class="field-hint" data-hint-for="message" data-default="Minimum 20 characters, maximum 1200."></p>
+                    <textarea id="message" name="message" required rows="5" placeholder="Tell me about your project"
+                        minlength="20" maxlength="1200"></textarea>
+                    <p class="field-hint" data-hint-for="message" data-default="Minimum 20 characters, maximum 1200.">
+                    </p>
                     <button class="btn btn-primary" type="submit">Send Message</button>
                     <p class="form-hint">Messages are sent directly to my inbox.</p>
                 </form>
@@ -671,7 +868,8 @@
         </section>
     </main>
 
-    <div class="modal" id="hireModal" role="dialog" aria-modal="true" aria-labelledby="hireModalTitle" aria-hidden="true">
+    <div class="modal" id="hireModal" role="dialog" aria-modal="true" aria-labelledby="hireModalTitle"
+        aria-hidden="true">
         <div class="modal-backdrop" data-modal-close></div>
         <div class="modal-panel" role="document">
             <button class="modal-close" type="button" aria-label="Close hire form" data-modal-close>Ã—</button>
@@ -683,19 +881,24 @@
                 <input type="hidden" name="_template" value="table">
                 <input type="text" name="_honey" class="honeypot" tabindex="-1" autocomplete="off">
                 <label for="hireName">Full Name</label>
-                <input id="hireName" name="name" required type="text" placeholder="Your name" minlength="2" maxlength="60" pattern="^[A-Za-z][A-Za-z .'-]{1,59}$" autocomplete="name">
+                <input id="hireName" name="name" required type="text" placeholder="Your name" minlength="2"
+                    maxlength="60" pattern="^[A-Za-z][A-Za-z .'-]{1,59}$" autocomplete="name">
                 <label for="hireEmail">Email</label>
-                <input id="hireEmail" name="email" required type="email" placeholder="you@example.com" maxlength="120" autocomplete="email">
+                <input id="hireEmail" name="email" required type="email" placeholder="you@example.com" maxlength="120"
+                    autocomplete="email">
                 <label for="hireMarket">Client Region</label>
                 <select id="hireMarket" name="client_region" required>
                     <option value="" disabled selected>Select client region</option>
                     <option value="india">India (INR)</option>
                     <option value="international">International (USD)</option>
                 </select>
-                <p class="field-hint" data-hint-for="hireMarket" data-default="Choose region to set phone and budget rules."></p>
+                <p class="field-hint" data-hint-for="hireMarket"
+                    data-default="Choose region to set phone and budget rules."></p>
                 <label for="hirePhone">Phone</label>
-                <input id="hirePhone" name="phone" required type="tel" placeholder="10-digit mobile number" pattern="^[6-9][0-9]{9}$" inputmode="tel" autocomplete="tel">
-                <p class="field-hint" data-hint-for="hirePhone" data-default="India: 10 digits starting 6-9. International: country code with + allowed."></p>
+                <input id="hirePhone" name="phone" required type="tel" placeholder="10-digit mobile number"
+                    pattern="^[6-9][0-9]{9}$" inputmode="tel" autocomplete="tel">
+                <p class="field-hint" data-hint-for="hirePhone"
+                    data-default="India: 10 digits starting 6-9. International: country code with + allowed."></p>
                 <label for="hireWork">Work Needed</label>
                 <select id="hireWork" name="work_type" required>
                     <option value="" disabled selected>Select the work type</option>
@@ -706,7 +909,8 @@
                     <option value="other">Other</option>
                 </select>
                 <label for="hireDetails">Project Details</label>
-                <textarea id="hireDetails" name="project_details" required rows="4" placeholder="Describe goals, timeline, and features" minlength="20" maxlength="1500"></textarea>
+                <textarea id="hireDetails" name="project_details" required rows="4"
+                    placeholder="Describe goals, timeline, and features" minlength="20" maxlength="1500"></textarea>
                 <label for="hireStart">Preferred Start Date (optional)</label>
                 <input id="hireStart" name="start_date" type="date">
                 <label for="hireRange">Budget Range</label>
@@ -714,8 +918,10 @@
                     <option value="" disabled selected>Select a range</option>
                 </select>
                 <label for="hireBudget">Proposed Amount (<span id="hireCurrency">INR</span>)</label>
-                <input id="hireBudget" name="budget" required type="number" min="1000" step="100" placeholder="e.g. 15000" inputmode="numeric">
-                <p class="field-hint" data-hint-for="hireBudget" data-default="Enter your estimated budget in INR or USD based on region."></p>
+                <input id="hireBudget" name="budget" required type="number" min="1000" step="100"
+                    placeholder="e.g. 15000" inputmode="numeric">
+                <p class="field-hint" data-hint-for="hireBudget"
+                    data-default="Enter your estimated budget in INR or USD based on region."></p>
                 <button class="btn btn-primary" type="submit">Send Request</button>
                 <p class="form-hint" id="hireFormHint">Request goes to my inbox.</p>
             </form>
@@ -730,6 +936,9 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="backend.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>

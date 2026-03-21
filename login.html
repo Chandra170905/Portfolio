@@ -1,13 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Admin login for Chandra Prakash portfolio panel.">
     <title>Admin Login | Chandra Prakash</title>
+    <meta name="portfolio-supabase-url" content="">
+    <meta name="portfolio-supabase-anon-key" content="">
+    <meta name="portfolio-content-table" content="portfolio_content">
+    <meta name="portfolio-admin-table" content="portfolio_admins">
+    <meta name="portfolio-media-bucket" content="portfolio-media">
+    <meta name="portfolio-content-id" content="site">
+    <meta name="portfolio-supabase-url" content="https://zxqxlbfyusopnyekpuzk.supabase.co">
+    <meta name="portfolio-supabase-anon-key" content="sb_publishable_HA0QatFC6lfEAkaZyWFkaQ_ehBkqxXQ">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Orbitron:wght@500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Orbitron:wght@500;600;700&family=Press+Start+2P&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
         .login-wrap {
@@ -22,10 +34,21 @@
             padding: 20px;
         }
 
-        .login-card h1 { margin: 6px 0 6px; }
-        .login-card .section-subtext { margin: 0 0 14px; }
-        .login-card .modal-form { gap: 8px; }
-        .login-card .form-hint { margin-top: 2px; }
+        .login-card h1 {
+            margin: 6px 0 6px;
+        }
+
+        .login-card .section-subtext {
+            margin: 0 0 14px;
+        }
+
+        .login-card .modal-form {
+            gap: 8px;
+        }
+
+        .login-card .form-hint {
+            margin-top: 2px;
+        }
 
         .back-btn {
             display: inline-flex;
@@ -51,6 +74,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="bg-3d" aria-hidden="true">
         <span class="bg-layer layer-a"></span>
@@ -65,91 +89,35 @@
                     <a class="back-btn" href="index.html" aria-label="Back to home">←</a>
                     <p class="eyebrow">Restricted</p>
                     <h1>Admin Login</h1>
-                    <p class="section-subtext">Enter your credentials to open the admin panel.</p>
+                    <p class="section-subtext">Sign in with your Supabase admin email and password.</p>
 
                     <form class="modal-form" id="adminLoginForm" autocomplete="on" novalidate>
-                        <label for="adminUsername">Username</label>
-                        <input id="adminUsername" name="username" type="text" required placeholder="Enter username" autocomplete="username" maxlength="40">
-                        <p class="field-hint" data-hint-for="adminUsername" data-default="Enter your admin username."></p>
+                        <label for="adminEmail">Email</label>
+                        <input id="adminEmail" name="email" type="email" required placeholder="you@example.com"
+                            autocomplete="username" maxlength="120">
+                        <p class="field-hint" data-hint-for="adminEmail"
+                            data-default="Use the email address you created in Supabase Auth."></p>
 
                         <label for="adminPassword">Password</label>
-                        <input id="adminPassword" name="password" type="password" required placeholder="Enter password" autocomplete="current-password" maxlength="80">
-                        <p class="field-hint" data-hint-for="adminPassword" data-default="Enter your admin password."></p>
+                        <input id="adminPassword" name="password" type="password" required placeholder="Enter password"
+                            autocomplete="current-password" maxlength="80">
+                        <p class="field-hint" data-hint-for="adminPassword" data-default="Enter your admin password.">
+                        </p>
 
                         <button class="btn btn-primary" type="submit">Login</button>
-                        <p class="form-hint" id="loginHint">Tip: Login is stored for this session only.</p>
-                        <div class="toast" id="loginToast" role="status" aria-live="polite">Login successful. Redirecting…</div>
+                        <p class="form-hint" id="loginHint">Tip: this uses your live backend account, not a local-only
+                            password.</p>
+                        <div class="toast" id="loginToast" role="status" aria-live="polite">Login successful.
+                            Redirecting…</div>
                     </form>
                 </div>
             </div>
         </section>
     </main>
 
-    <script>
-        (function () {
-            const storedTheme = localStorage.getItem("portfolio-theme");
-            if (storedTheme === "light") {
-                document.body.classList.add("light");
-            }
-
-            const AUTH_KEY = "portfolio_admin_auth_v1";
-            const raw = sessionStorage.getItem(AUTH_KEY);
-            const token = raw ? (() => { try { return JSON.parse(raw); } catch { return null; } })() : null;
-            const isAuthed = Boolean(token && token.ok === true && typeof token.exp === "number" && Date.now() < token.exp);
-            const url = new URL(window.location.href);
-            const next = url.searchParams.get("next") || "admin.html";
-
-            if (isAuthed) {
-                window.location.replace(new URL(next, window.location.href).toString());
-                return;
-            }
-
-            const form = document.getElementById("adminLoginForm");
-            const username = document.getElementById("adminUsername");
-            const password = document.getElementById("adminPassword");
-            const hint = document.getElementById("loginHint");
-            const toast = document.getElementById("loginToast");
-
-            const setHint = (msg, isError) => {
-                if (!hint) return;
-                hint.textContent = msg;
-                hint.style.color = isError ? "#ff7a7a" : "";
-            };
-
-            const EXPECTED_USERNAME = "Chandra05";
-            const EXPECTED_PASSWORD = "Chandra#2005";
-
-            if (username) username.focus();
-
-            form?.addEventListener("submit", (e) => {
-                e.preventDefault();
-
-                const u = String(username?.value || "").trim();
-                const p = String(password?.value || "");
-
-                if (!u || !p) {
-                    setHint("Please enter username and password.", true);
-                    return;
-                }
-
-                if (u === EXPECTED_USERNAME && p === EXPECTED_PASSWORD) {
-                    const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
-                    sessionStorage.setItem(AUTH_KEY, JSON.stringify({ ok: true, exp: Date.now() + TWO_HOURS_MS }));
-
-                    if (toast) toast.classList.add("show");
-                    setHint("Login successful.", false);
-
-                    window.setTimeout(() => {
-                        window.location.replace(new URL(next, window.location.href).toString());
-                    }, 650);
-                    return;
-                }
-
-                setHint("Invalid username or password.", true);
-                if (toast) toast.classList.remove("show");
-                password?.select?.();
-            });
-        })();
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="backend.js"></script>
+    <script src="login-app.js"></script>
 </body>
+
 </html>

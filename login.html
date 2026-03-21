@@ -84,23 +84,23 @@
         }
 
         .sprite-left {
-            top: 10vh;
-            left: max(18px, 4vw);
+            top: 11vh;
+            left: clamp(12px, 5vw, 84px);
             --sprite-color: color-mix(in oklab, #4ade80 78%, white);
             --float-duration: 17s;
         }
 
         .sprite-right {
-            top: 16vh;
-            right: max(22px, 4vw);
+            top: 18vh;
+            right: clamp(12px, 5vw, 92px);
             --sprite-color: color-mix(in oklab, #22d3ee 78%, white);
             --float-duration: 15s;
             --phase: -2s;
         }
 
         .sprite-bottom {
-            right: 16vw;
-            bottom: 7vh;
+            right: clamp(18px, 7vw, 132px);
+            bottom: 8vh;
             width: 126px;
             --sprite-color: color-mix(in oklab, #fb7185 74%, white);
             --float-duration: 18s;
@@ -536,17 +536,17 @@
 
             .sprite-left {
                 top: 9vh;
-                left: -8px;
+                left: -12px;
             }
 
             .sprite-right {
-                top: 12vh;
+                top: 16vh;
                 right: -10px;
             }
 
             .sprite-bottom {
-                right: 10vw;
-                bottom: 8vh;
+                right: 2vw;
+                bottom: 7vh;
                 width: 88px;
             }
 

@@ -460,6 +460,18 @@ a { color: inherit; }
 .container { width: min(1120px, 92%); margin-inline: auto; }
 .section { padding: 96px 0; }
 
+@supports (content-visibility: auto) {
+    #skills,
+    #projects,
+    #certificates,
+    #coding,
+    #experience,
+    #contact {
+        content-visibility: auto;
+        contain-intrinsic-size: 920px;
+    }
+}
+
 .site-header {
     position: sticky;
     top: 0;
@@ -2148,6 +2160,27 @@ body.light .sit-particle::before {
 
     .platform-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 760px), (pointer: coarse) {
+    body::before,
+    body::after,
+    .bg-3d,
+    .pacman-egg {
+        display: none;
+    }
+
+    .site-header {
+        backdrop-filter: none;
+    }
+
+    .hero-photo-wrap::after {
+        display: none;
+    }
+
+    .hero-photo {
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
     }
 }
 

@@ -22,19 +22,19 @@
         contentId: readMeta("portfolio-content-id", "site")
     });
 
+    const hasClientSdk = () => Boolean(
+        window.supabase
+        && typeof window.supabase.createClient === "function"
+    );
+
     const isConfigured = () => {
         const config = getConfig();
-        return Boolean(
-            config.url
-            && config.anonKey
-            && window.supabase
-            && typeof window.supabase.createClient === "function"
-        );
+        return Boolean(config.url && config.anonKey);
     };
 
     let cachedClient = null;
     const getClient = () => {
-        if (!isConfigured()) return null;
+        if (!isConfigured() || !hasClientSdk()) return null;
         if (cachedClient) return cachedClient;
 
         const config = getConfig();
@@ -59,6 +59,48 @@
             about: source.about && typeof source.about === "object" ? source.about : undefined,
             contact: source.contact && typeof source.contact === "object" ? source.contact : undefined
         };
+    };
+
+    const fetchContentViaRest = async () => {
+        const config = getConfig();
+        if (!config.url || !config.anonKey) {
+            return { data: null, updatedAt: null, error: new Error("Supabase is not configured.") };
+        }
+
+        const endpoint = new URL(`/rest/v1/${encodeURIComponent(config.contentTable)}`, config.url);
+        endpoint.searchParams.set("select", "id,content,updated_at");
+        endpoint.searchParams.set("id", `eq.${config.contentId}`);
+        endpoint.searchParams.set("limit", "1");
+
+        try {
+            const response = await fetch(endpoint.toString(), {
+                method: "GET",
+                headers: {
+                    apikey: config.anonKey,
+                    authorization: `Bearer ${config.anonKey}`,
+                    accept: "application/json"
+                }
+            });
+
+            if (!response.ok) {
+                const message = await response.text().catch(() => "");
+                return {
+                    data: null,
+                    updatedAt: null,
+                    error: new Error(message || `Portfolio content request failed with status ${response.status}.`)
+                };
+            }
+
+            const payload = await response.json();
+            const row = Array.isArray(payload) ? payload[0] : null;
+            return {
+                data: row?.content ? normalizeBundle(row.content) : null,
+                updatedAt: row?.updated_at || null,
+                error: null
+            };
+        } catch (error) {
+            return { data: null, updatedAt: null, error };
+        }
     };
 
     const getCurrentUser = async () => {
@@ -123,7 +165,9 @@
 
     const fetchContent = async () => {
         const client = getClient();
-        if (!client) return { data: null, error: new Error("Supabase is not configured.") };
+        if (!client) {
+            return fetchContentViaRest();
+        }
 
         const config = getConfig();
         const { data, error } = await client

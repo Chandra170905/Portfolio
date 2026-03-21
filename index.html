@@ -18,13 +18,18 @@
     <meta name="portfolio-supabase-url" content="https://zxqxlbfyusopnyekpuzk.supabase.co">
     <meta name="portfolio-supabase-anon-key" content="sb_publishable_HA0QatFC6lfEAkaZyWFkaQ_ehBkqxXQ">
     <title>Chandra Prakash | Portfolio</title>
+    <link rel="preload" as="image" href="pfp1-optimized.jpg" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Orbitron:wght@500;600;700&family=Press+Start+2P&display=swap"
         rel="stylesheet">
     <!-- Devicon icons for skill logos -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css"
+        media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+    </noscript>
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -105,7 +110,7 @@
 
     <main>
         <section class="hero section" id="home">
-            <div class="container hero-grid reveal">
+            <div class="container hero-grid">
                 <div class="hero-content">
                     <p class="eyebrow">Open To Frontend Opportunities</p>
                     <h1 id="heroHeadline">Building clean, responsive, user-first web experiences.</h1>
@@ -914,9 +919,8 @@
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="backend.js"></script>
-    <script src="script.js"></script>
+    <script src="backend.js" defer></script>
+    <script src="script.js" defer></script>
 </body>
 
 </html>

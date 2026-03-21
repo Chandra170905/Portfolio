@@ -33,6 +33,80 @@
             min-height: 100dvh;
         }
 
+        .login-sprite-field {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .login-sprite {
+            --phase: 0s;
+            --sprite-color: color-mix(in oklab, var(--accent) 72%, white);
+            position: absolute;
+            width: 144px;
+            aspect-ratio: 1 / 1;
+            opacity: 0.22;
+            filter: drop-shadow(0 0 18px color-mix(in oklab, var(--sprite-color) 36%, transparent));
+            animation: spriteDrift var(--float-duration, 16s) ease-in-out infinite;
+            transform-origin: center;
+        }
+
+        .login-sprite-frame {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            color: var(--sprite-color);
+            opacity: 0;
+            animation: spriteCycle 12s steps(1, end) infinite;
+        }
+
+        .login-sprite-frame.frame-1 {
+            animation-delay: var(--phase);
+        }
+
+        .login-sprite-frame.frame-2 {
+            animation-delay: calc(var(--phase) + 4s);
+        }
+
+        .login-sprite-frame.frame-3 {
+            animation-delay: calc(var(--phase) + 8s);
+        }
+
+        .login-sprite svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+            image-rendering: pixelated;
+            shape-rendering: crispEdges;
+        }
+
+        .sprite-left {
+            top: 10vh;
+            left: max(18px, 4vw);
+            --sprite-color: color-mix(in oklab, #4ade80 78%, white);
+            --float-duration: 17s;
+        }
+
+        .sprite-right {
+            top: 16vh;
+            right: max(22px, 4vw);
+            --sprite-color: color-mix(in oklab, #22d3ee 78%, white);
+            --float-duration: 15s;
+            --phase: -2s;
+        }
+
+        .sprite-bottom {
+            right: 16vw;
+            bottom: 7vh;
+            width: 126px;
+            --sprite-color: color-mix(in oklab, #fb7185 74%, white);
+            --float-duration: 18s;
+            --phase: -4.5s;
+        }
+
         #admin-login.section {
             padding: 0;
             display: grid;
@@ -391,6 +465,30 @@
             }
         }
 
+        @keyframes spriteCycle {
+            0%,
+            26% {
+                opacity: 1;
+            }
+            33%,
+            100% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes spriteDrift {
+            0%,
+            100% {
+                transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+            }
+            33% {
+                transform: translate3d(10px, -14px, 0) scale(1.04) rotate(-3deg);
+            }
+            66% {
+                transform: translate3d(-12px, 8px, 0) scale(0.97) rotate(3deg);
+            }
+        }
+
         @keyframes pixelBlink {
             0%,
             40%,
@@ -431,6 +529,27 @@
                 padding: 14px;
             }
 
+            .login-sprite {
+                width: 96px;
+                opacity: 0.16;
+            }
+
+            .sprite-left {
+                top: 9vh;
+                left: -8px;
+            }
+
+            .sprite-right {
+                top: 12vh;
+                right: -10px;
+            }
+
+            .sprite-bottom {
+                right: 10vw;
+                bottom: 8vh;
+                width: 88px;
+            }
+
             .login-card {
                 width: min(405px, 92vw);
                 padding: 18px;
@@ -451,6 +570,21 @@
                 max-width: none;
             }
         }
+
+        @media (prefers-reduced-motion: reduce) {
+            .login-sprite {
+                animation: none;
+            }
+
+            .login-sprite-frame {
+                animation: none;
+                opacity: 0;
+            }
+
+            .login-sprite-frame.frame-1 {
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 
@@ -459,6 +593,176 @@
         <span class="bg-layer layer-a"></span>
         <span class="bg-layer layer-b"></span>
         <span class="bg-layer layer-c"></span>
+    </div>
+    <div class="login-sprite-field" aria-hidden="true">
+        <div class="login-sprite sprite-left">
+            <div class="login-sprite-frame frame-1">
+                <svg viewBox="0 0 16 16" focusable="false">
+                    <g fill="currentColor">
+                        <rect x="5" y="2" width="6" height="1"></rect>
+                        <rect x="4" y="3" width="8" height="1"></rect>
+                        <rect x="3" y="4" width="10" height="1"></rect>
+                        <rect x="2" y="5" width="3" height="1"></rect>
+                        <rect x="6" y="5" width="1" height="1"></rect>
+                        <rect x="9" y="5" width="1" height="1"></rect>
+                        <rect x="11" y="5" width="3" height="1"></rect>
+                        <rect x="2" y="6" width="12" height="1"></rect>
+                        <rect x="2" y="7" width="2" height="1"></rect>
+                        <rect x="5" y="7" width="6" height="1"></rect>
+                        <rect x="12" y="7" width="2" height="1"></rect>
+                        <rect x="3" y="8" width="2" height="1"></rect>
+                        <rect x="11" y="8" width="2" height="1"></rect>
+                        <rect x="4" y="9" width="1" height="1"></rect>
+                        <rect x="7" y="9" width="2" height="1"></rect>
+                        <rect x="11" y="9" width="1" height="1"></rect>
+                    </g>
+                </svg>
+            </div>
+            <div class="login-sprite-frame frame-2">
+                <svg viewBox="0 0 16 16" focusable="false">
+                    <g fill="currentColor">
+                        <rect x="5" y="2" width="6" height="1"></rect>
+                        <rect x="4" y="3" width="8" height="1"></rect>
+                        <rect x="3" y="4" width="10" height="1"></rect>
+                        <rect x="3" y="5" width="2" height="1"></rect>
+                        <rect x="6" y="5" width="1" height="1"></rect>
+                        <rect x="9" y="5" width="1" height="1"></rect>
+                        <rect x="11" y="5" width="2" height="1"></rect>
+                        <rect x="2" y="6" width="12" height="1"></rect>
+                        <rect x="2" y="7" width="12" height="1"></rect>
+                        <rect x="2" y="8" width="12" height="1"></rect>
+                        <rect x="2" y="9" width="3" height="1"></rect>
+                        <rect x="6" y="9" width="4" height="1"></rect>
+                        <rect x="11" y="9" width="3" height="1"></rect>
+                        <rect x="3" y="10" width="2" height="1"></rect>
+                        <rect x="6" y="10" width="1" height="1"></rect>
+                        <rect x="9" y="10" width="1" height="1"></rect>
+                        <rect x="11" y="10" width="2" height="1"></rect>
+                    </g>
+                </svg>
+            </div>
+            <div class="login-sprite-frame frame-3">
+                <svg viewBox="0 0 16 16" focusable="false">
+                    <g fill="currentColor">
+                        <rect x="4" y="3" width="2" height="1"></rect>
+                        <rect x="10" y="3" width="2" height="1"></rect>
+                        <rect x="3" y="4" width="4" height="1"></rect>
+                        <rect x="9" y="4" width="4" height="1"></rect>
+                        <rect x="3" y="5" width="10" height="1"></rect>
+                        <rect x="4" y="6" width="8" height="1"></rect>
+                        <rect x="5" y="7" width="6" height="1"></rect>
+                        <rect x="6" y="8" width="4" height="1"></rect>
+                        <rect x="7" y="9" width="2" height="1"></rect>
+                    </g>
+                </svg>
+            </div>
+        </div>
+
+        <div class="login-sprite sprite-right">
+            <div class="login-sprite-frame frame-1">
+                <svg viewBox="0 0 16 16" focusable="false">
+                    <g fill="currentColor">
+                        <rect x="6" y="2" width="4" height="1"></rect>
+                        <rect x="5" y="3" width="6" height="1"></rect>
+                        <rect x="4" y="4" width="8" height="1"></rect>
+                        <rect x="2" y="5" width="12" height="1"></rect>
+                        <rect x="3" y="6" width="3" height="1"></rect>
+                        <rect x="7" y="6" width="2" height="1"></rect>
+                        <rect x="10" y="6" width="3" height="1"></rect>
+                        <rect x="4" y="7" width="2" height="1"></rect>
+                        <rect x="10" y="7" width="2" height="1"></rect>
+                        <rect x="5" y="8" width="1" height="1"></rect>
+                        <rect x="10" y="8" width="1" height="1"></rect>
+                    </g>
+                </svg>
+            </div>
+            <div class="login-sprite-frame frame-2">
+                <svg viewBox="0 0 16 16" focusable="false">
+                    <g fill="currentColor">
+                        <rect x="6" y="2" width="4" height="1"></rect>
+                        <rect x="5" y="3" width="6" height="1"></rect>
+                        <rect x="4" y="4" width="8" height="1"></rect>
+                        <rect x="3" y="5" width="10" height="1"></rect>
+                        <rect x="2" y="6" width="12" height="1"></rect>
+                        <rect x="2" y="7" width="3" height="1"></rect>
+                        <rect x="6" y="7" width="4" height="1"></rect>
+                        <rect x="11" y="7" width="3" height="1"></rect>
+                        <rect x="3" y="8" width="2" height="1"></rect>
+                        <rect x="11" y="8" width="2" height="1"></rect>
+                        <rect x="5" y="9" width="1" height="1"></rect>
+                        <rect x="10" y="9" width="1" height="1"></rect>
+                    </g>
+                </svg>
+            </div>
+            <div class="login-sprite-frame frame-3">
+                <svg viewBox="0 0 16 16" focusable="false">
+                    <g fill="currentColor">
+                        <rect x="7" y="2" width="2" height="1"></rect>
+                        <rect x="6" y="3" width="4" height="1"></rect>
+                        <rect x="5" y="4" width="6" height="1"></rect>
+                        <rect x="3" y="5" width="10" height="1"></rect>
+                        <rect x="5" y="6" width="6" height="1"></rect>
+                        <rect x="6" y="7" width="4" height="1"></rect>
+                        <rect x="7" y="8" width="2" height="1"></rect>
+                        <rect x="6" y="10" width="1" height="1"></rect>
+                        <rect x="9" y="10" width="1" height="1"></rect>
+                    </g>
+                </svg>
+            </div>
+        </div>
+
+        <div class="login-sprite sprite-bottom">
+            <div class="login-sprite-frame frame-1">
+                <svg viewBox="0 0 16 16" focusable="false">
+                    <g fill="currentColor">
+                        <rect x="4" y="3" width="8" height="1"></rect>
+                        <rect x="3" y="4" width="10" height="1"></rect>
+                        <rect x="3" y="5" width="2" height="1"></rect>
+                        <rect x="6" y="5" width="4" height="1"></rect>
+                        <rect x="11" y="5" width="2" height="1"></rect>
+                        <rect x="2" y="6" width="12" height="1"></rect>
+                        <rect x="3" y="7" width="10" height="1"></rect>
+                        <rect x="4" y="8" width="2" height="1"></rect>
+                        <rect x="7" y="8" width="2" height="1"></rect>
+                        <rect x="10" y="8" width="2" height="1"></rect>
+                        <rect x="5" y="9" width="1" height="1"></rect>
+                        <rect x="10" y="9" width="1" height="1"></rect>
+                    </g>
+                </svg>
+            </div>
+            <div class="login-sprite-frame frame-2">
+                <svg viewBox="0 0 16 16" focusable="false">
+                    <g fill="currentColor">
+                        <rect x="5" y="3" width="6" height="1"></rect>
+                        <rect x="4" y="4" width="8" height="1"></rect>
+                        <rect x="4" y="5" width="2" height="1"></rect>
+                        <rect x="7" y="5" width="2" height="1"></rect>
+                        <rect x="10" y="5" width="2" height="1"></rect>
+                        <rect x="3" y="6" width="10" height="1"></rect>
+                        <rect x="3" y="7" width="10" height="1"></rect>
+                        <rect x="3" y="8" width="10" height="1"></rect>
+                        <rect x="4" y="9" width="2" height="1"></rect>
+                        <rect x="7" y="9" width="2" height="1"></rect>
+                        <rect x="10" y="9" width="2" height="1"></rect>
+                    </g>
+                </svg>
+            </div>
+            <div class="login-sprite-frame frame-3">
+                <svg viewBox="0 0 16 16" focusable="false">
+                    <g fill="currentColor">
+                        <rect x="7" y="2" width="2" height="1"></rect>
+                        <rect x="6" y="3" width="4" height="1"></rect>
+                        <rect x="5" y="4" width="6" height="1"></rect>
+                        <rect x="4" y="5" width="8" height="1"></rect>
+                        <rect x="3" y="6" width="10" height="1"></rect>
+                        <rect x="4" y="7" width="8" height="1"></rect>
+                        <rect x="5" y="8" width="6" height="1"></rect>
+                        <rect x="6" y="9" width="4" height="1"></rect>
+                        <rect x="7" y="10" width="2" height="1"></rect>
+                    </g>
+                </svg>
+            </div>
+        </div>
     </div>
 
     <main>

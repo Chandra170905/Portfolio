@@ -20,40 +20,142 @@
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
+        body.login-page {
+            background:
+                radial-gradient(820px 420px at 84% -4%, color-mix(in oklab, #22d3ee 10%, transparent), transparent 68%),
+                radial-gradient(680px 340px at 0% 8%, color-mix(in oklab, #22c55e 8%, transparent), transparent 72%),
+                var(--bg);
+        }
+
         .login-wrap {
             min-height: 100vh;
             display: grid;
             place-items: center;
-            padding: 24px;
+            padding: 26px;
         }
 
         .login-card {
-            width: min(420px, 92vw);
-            padding: 20px;
+            width: min(540px, 94vw);
+            padding: 22px;
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+            border-radius: 24px;
+            border-color: color-mix(in oklab, var(--accent) 20%, var(--line));
+            background:
+                linear-gradient(180deg, color-mix(in oklab, var(--surface) 97%, transparent), color-mix(in oklab, var(--surface-soft) 93%, transparent));
+            box-shadow:
+                0 24px 50px rgba(0, 0, 0, 0.34),
+                0 0 0 1px color-mix(in oklab, var(--accent) 8%, transparent);
         }
 
-        .login-card h1 {
-            margin: 6px 0 6px;
+        .login-card::before,
+        .login-card::after {
+            content: "";
+            position: absolute;
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .login-card .section-subtext {
-            margin: 0 0 14px;
+        .login-card::before {
+            inset: 0;
+            background:
+                repeating-linear-gradient(to bottom,
+                    rgba(255, 255, 255, 0.05) 0,
+                    rgba(255, 255, 255, 0.05) 1px,
+                    transparent 1px,
+                    transparent 4px);
+            opacity: 0.2;
+            mix-blend-mode: overlay;
+            animation: loginScan 12s linear infinite;
         }
 
-        .login-card .modal-form {
-            gap: 8px;
+        .login-card::after {
+            inset: 10px;
+            border: 1px dashed color-mix(in oklab, var(--line-strong) 84%, transparent);
+            border-radius: 18px;
+            opacity: 0.55;
         }
 
-        .login-card .form-hint {
-            margin-top: 2px;
+        .login-card>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-pixels {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .login-pixels span {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: color-mix(in oklab, var(--accent) 70%, white);
+            opacity: 0.15;
+            image-rendering: pixelated;
+            box-shadow: 0 0 18px color-mix(in oklab, var(--accent) 28%, transparent);
+            animation: pixelBlink var(--blink-speed, 3.6s) steps(2, end) infinite;
+        }
+
+        .login-pixels span:nth-child(1) {
+            top: 20px;
+            left: 68px;
+            --blink-speed: 2.8s;
+        }
+
+        .login-pixels span:nth-child(2) {
+            top: 60px;
+            right: 84px;
+            background: #4ade80;
+            --blink-speed: 3.9s;
+        }
+
+        .login-pixels span:nth-child(3) {
+            top: 148px;
+            right: 26px;
+            background: #fbbf24;
+            --blink-speed: 4.2s;
+        }
+
+        .login-pixels span:nth-child(4) {
+            bottom: 118px;
+            left: 28px;
+            background: #fb7185;
+            --blink-speed: 3.3s;
+        }
+
+        .login-pixels span:nth-child(5) {
+            bottom: 82px;
+            right: 52px;
+            width: 8px;
+            height: 8px;
+            --blink-speed: 2.7s;
+        }
+
+        .login-pixels span:nth-child(6) {
+            bottom: 26px;
+            left: 108px;
+            background: #22d3ee;
+            --blink-speed: 4.5s;
+        }
+
+        .login-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
         }
 
         .back-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 14px;
             border: 1px solid var(--line);
             background: color-mix(in oklab, var(--surface) 88%, transparent);
@@ -70,10 +172,311 @@
             box-shadow: 0 0 22px rgba(34, 211, 238, 0.18);
             outline: none;
         }
+
+        .login-leds {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: color-mix(in oklab, var(--surface) 90%, transparent);
+        }
+
+        .login-leds span {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: currentColor;
+            box-shadow: 0 0 12px currentColor;
+            animation: ledPulse 2.1s ease-in-out infinite;
+        }
+
+        .login-leds span:nth-child(1) {
+            color: #4ade80;
+        }
+
+        .login-leds span:nth-child(2) {
+            color: #fbbf24;
+            animation-delay: .2s;
+        }
+
+        .login-leds span:nth-child(3) {
+            color: #fb7185;
+            animation-delay: .4s;
+        }
+
+        .login-hero {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 10px;
+        }
+
+        .login-badge-stack {
+            min-width: 0;
+        }
+
+        .login-chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .login-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            min-height: 30px;
+            padding: 7px 11px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: color-mix(in oklab, var(--surface) 90%, transparent);
+            font-family: var(--font-retro);
+            font-size: 0.52rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            line-height: 1.4;
+            color: var(--accent-strong);
+        }
+
+        .login-chip::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            background: currentColor;
+            border-radius: 999px;
+            box-shadow: 0 0 12px currentColor;
+            opacity: 0.88;
+            flex: 0 0 auto;
+        }
+
+        .login-chip.is-live {
+            color: #4ade80;
+        }
+
+        .login-chip.is-route {
+            color: #22d3ee;
+        }
+
+        .login-chip.is-success {
+            color: #c4f8d2;
+        }
+
+        .login-chip.is-busy {
+            color: #fde68a;
+        }
+
+        .login-chip.is-error {
+            color: #fda4af;
+        }
+
+        .login-emblem {
+            width: 96px;
+            height: 96px;
+            flex: 0 0 auto;
+            display: grid;
+            place-items: center;
+            border-radius: 20px;
+            border: 1px solid var(--line);
+            background:
+                radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.08), transparent 42%),
+                color-mix(in oklab, var(--surface) 92%, transparent);
+            box-shadow:
+                inset 0 0 0 1px color-mix(in oklab, var(--accent) 10%, transparent),
+                0 18px 28px rgba(0, 0, 0, 0.16);
+            animation: emblemFloat 3.8s ease-in-out infinite;
+        }
+
+        .login-emblem svg {
+            width: 48px;
+            height: 48px;
+            display: block;
+            color: color-mix(in oklab, #f8fafc 88%, #22d3ee);
+            image-rendering: pixelated;
+            filter: drop-shadow(0 0 14px rgba(34, 211, 238, 0.18));
+        }
+
+        .login-card h1 {
+            margin: 4px 0 8px;
+            max-width: 12ch;
+            font-size: clamp(1.45rem, 3vw, 2rem);
+            line-height: 1.36;
+        }
+
+        .login-card .section-subtext {
+            margin: 0 0 14px;
+            max-width: 42ch;
+        }
+
+        .login-divider {
+            height: 12px;
+            margin: 0 0 14px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background:
+                repeating-linear-gradient(90deg,
+                    color-mix(in oklab, var(--accent) 52%, transparent) 0 16px,
+                    transparent 16px 24px,
+                    color-mix(in oklab, #22d3ee 44%, transparent) 24px 36px,
+                    transparent 36px 44px);
+            opacity: 0.6;
+        }
+
+        .login-card .modal-form {
+            gap: 10px;
+        }
+
+        .login-card label {
+            font-family: var(--font-retro);
+            font-size: 0.56rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent-strong);
+        }
+
+        .login-card .modal-form input {
+            min-height: 50px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: color-mix(in oklab, var(--surface) 95%, transparent);
+            transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+        }
+
+        .login-card .modal-form input:focus {
+            border-color: color-mix(in oklab, var(--accent) 42%, white);
+            box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 10%, transparent);
+            outline: none;
+            transform: translateY(-1px);
+        }
+
+        .login-card .btn-primary {
+            width: 100%;
+            margin-top: 6px;
+            min-height: 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card .btn-primary::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg,
+                    transparent 10%,
+                    rgba(255, 255, 255, 0.36) 48%,
+                    transparent 84%);
+            transform: translateX(-135%);
+            transition: transform .72s ease;
+            pointer-events: none;
+        }
+
+        .login-card .btn-primary:hover::after,
+        .login-card .btn-primary:focus-visible::after {
+            transform: translateX(135%);
+        }
+
+        .login-card .form-hint,
+        .login-card .toast {
+            padding: 10px 12px;
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            background: color-mix(in oklab, var(--surface) 90%, transparent);
+        }
+
+        .login-card .form-hint {
+            margin-top: 4px;
+        }
+
+        .login-card .toast {
+            margin-top: 10px;
+        }
+
+        .login-footnote {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .login-footnote .login-chip {
+            font-size: 0.48rem;
+        }
+
+        @keyframes loginScan {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(4px);
+            }
+        }
+
+        @keyframes pixelBlink {
+            0%,
+            40%,
+            100% {
+                opacity: 0.12;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes ledPulse {
+            0%,
+            100% {
+                opacity: 0.45;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.16);
+            }
+        }
+
+        @keyframes emblemFloat {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-4px);
+            }
+        }
+
+        @media (max-width: 620px) {
+            .login-wrap {
+                padding: 18px;
+            }
+
+            .login-card {
+                padding: 18px;
+            }
+
+            .login-hero {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .login-emblem {
+                width: 82px;
+                height: 82px;
+                align-self: flex-end;
+            }
+
+            .login-card h1 {
+                max-width: none;
+            }
+        }
     </style>
 </head>
 
-<body>
+<body class="login-page">
     <div class="bg-3d" aria-hidden="true">
         <span class="bg-layer layer-a"></span>
         <span class="bg-layer layer-b"></span>
@@ -84,10 +487,53 @@
         <section class="section" id="admin-login">
             <div class="container login-wrap">
                 <div class="panel login-card" role="region" aria-label="Admin login">
-                    <a class="back-btn" href="index.html" aria-label="Back to home">&larr;</a>
-                    <p class="eyebrow">Restricted</p>
+                    <div class="login-pixels" aria-hidden="true">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    <div class="login-topbar">
+                        <a class="back-btn" href="index.html" aria-label="Back to home">&larr;</a>
+                        <div class="login-leds" aria-hidden="true">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+
+                    <div class="login-hero">
+                        <div class="login-badge-stack">
+                            <p class="eyebrow">Restricted</p>
+                            <div class="login-chip-row">
+                                <span class="login-chip is-live">Live Auth</span>
+                                <span class="login-chip is-route">Admin Route</span>
+                                <span class="login-chip is-success" id="loginStateChip">Ready</span>
+                            </div>
+                        </div>
+
+                        <div class="login-emblem" aria-hidden="true">
+                            <svg viewBox="0 0 32 32" focusable="false" shape-rendering="crispEdges">
+                                <g fill="currentColor">
+                                    <rect x="10" y="4" width="12" height="2"></rect>
+                                    <rect x="8" y="6" width="2" height="4"></rect>
+                                    <rect x="22" y="6" width="2" height="4"></rect>
+                                    <rect x="8" y="10" width="16" height="2"></rect>
+                                    <rect x="6" y="12" width="20" height="2"></rect>
+                                    <rect x="6" y="14" width="20" height="12"></rect>
+                                    <rect x="12" y="18" width="8" height="2"></rect>
+                                    <rect x="14" y="20" width="4" height="4"></rect>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+
                     <h1>Admin Login</h1>
                     <p class="section-subtext">Sign in with your Supabase admin email and password.</p>
+                    <div class="login-divider" aria-hidden="true"></div>
 
                     <form class="modal-form" id="adminLoginForm" autocomplete="on" novalidate>
                         <label for="adminEmail">Email</label>
@@ -102,12 +548,17 @@
                         <p class="field-hint" data-hint-for="adminPassword" data-default="Enter your admin password.">
                         </p>
 
-                        <button class="btn btn-primary" type="submit">Login</button>
+                        <button class="btn btn-primary" type="submit">Enter Admin Panel</button>
                         <p class="form-hint" id="loginHint">Tip: this uses your live backend account, not a local-only
                             password.</p>
                         <div class="toast" id="loginToast" role="status" aria-live="polite">Login successful.
                             Redirecting...</div>
                     </form>
+
+                    <div class="login-footnote" aria-hidden="true">
+                        <span class="login-chip is-route">Portfolio Admin</span>
+                        <span class="login-chip is-live">Supabase Secure</span>
+                    </div>
                 </div>
             </div>
         </section>

@@ -5,6 +5,16 @@
     const passwordInput = document.getElementById("adminPassword");
     const hint = document.getElementById("loginHint");
     const toast = document.getElementById("loginToast");
+    const stateChip = document.getElementById("loginStateChip");
+
+    const setStateChip = (message, tone = "success") => {
+        if (!stateChip) return;
+        stateChip.textContent = message;
+        stateChip.classList.remove("is-success", "is-error", "is-busy");
+        if (tone) {
+            stateChip.classList.add(`is-${tone}`);
+        }
+    };
 
     const setHint = (message, isError = false) => {
         if (!hint) return;
@@ -38,6 +48,7 @@
         const reason = url.searchParams.get("reason");
         if (reason === "forbidden") {
             setHint("This account is signed in, but it is not listed in portfolio_admins yet.", true);
+            setStateChip("Blocked", "error");
         }
     };
 
@@ -51,9 +62,11 @@
 
         if (!window.PortfolioBackend?.isConfigured?.()) {
             setHint("Supabase is not configured yet. Add the backend keys before logging in.", true);
+            setStateChip("Offline", "error");
             return;
         }
 
+        setStateChip("Checking", "busy");
         const sessionResult = await window.PortfolioBackend.getSession();
         if (sessionResult.session) {
             const adminResult = await window.PortfolioBackend.isAdminUser();
@@ -64,6 +77,7 @@
             await window.PortfolioBackend.signOut();
         }
 
+        setStateChip("Ready", "success");
         emailInput?.focus();
     };
 
@@ -75,14 +89,17 @@
 
         if (!email || !password) {
             setHint("Please enter email and password.", true);
+            setStateChip("Input", "error");
             return;
         }
 
         setHint("Signing in...", false);
+        setStateChip("Authing", "busy");
 
         const signInResult = await window.PortfolioBackend.signIn(email, password);
         if (signInResult.error) {
             setHint(signInResult.error.message || "Could not sign in.", true);
+            setStateChip("Denied", "error");
             toast?.classList.remove("show");
             passwordInput?.select?.();
             return;
@@ -92,6 +109,7 @@
         if (adminResult.error) {
             await window.PortfolioBackend.signOut();
             setHint(adminResult.error.message || "Could not verify admin access.", true);
+            setStateChip("Error", "error");
             toast?.classList.remove("show");
             return;
         }
@@ -99,12 +117,14 @@
         if (!adminResult.isAdmin) {
             await window.PortfolioBackend.signOut();
             setHint("Your account signed in, but it is not listed in portfolio_admins.", true);
+            setStateChip("Blocked", "error");
             toast?.classList.remove("show");
             return;
         }
 
         toast?.classList.add("show");
         setHint("Login successful.", false);
+        setStateChip("Granted", "success");
         window.setTimeout(redirectToNext, 650);
     });
 

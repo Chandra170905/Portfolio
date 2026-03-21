@@ -313,25 +313,6 @@
             line-height: 1.36;
         }
 
-        .login-card .section-subtext {
-            margin: 0 0 14px;
-            max-width: 42ch;
-        }
-
-        .login-divider {
-            height: 12px;
-            margin: 0 0 14px;
-            border-radius: 999px;
-            border: 1px solid var(--line);
-            background:
-                repeating-linear-gradient(90deg,
-                    color-mix(in oklab, var(--accent) 52%, transparent) 0 16px,
-                    transparent 16px 24px,
-                    color-mix(in oklab, #22d3ee 44%, transparent) 24px 36px,
-                    transparent 36px 44px);
-            opacity: 0.6;
-        }
-
         .login-card .modal-form {
             gap: 10px;
         }
@@ -527,8 +508,6 @@
                     </div>
 
                     <h1>Admin Login</h1>
-                    <p class="section-subtext">Sign in with your Supabase admin email and password.</p>
-                    <div class="login-divider" aria-hidden="true"></div>
 
                     <form class="modal-form" id="adminLoginForm" autocomplete="on" novalidate>
                         <label for="adminEmail">Email</label>

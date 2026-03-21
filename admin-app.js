@@ -408,9 +408,8 @@
                 </div>
                 <div class="item-actions">
                     <div class="order-actions">
-                        <button class="btn btn-secondary btn-mini" type="button" onclick="moveItem('projects','${esc(item.id)}','top')" ${index === 0 ? "disabled" : ""}>Top</button>
-                        <button class="btn btn-secondary btn-mini" type="button" onclick="moveItem('projects','${esc(item.id)}','up')" ${index === 0 ? "disabled" : ""}>Up</button>
-                        <button class="btn btn-secondary btn-mini" type="button" onclick="moveItem('projects','${esc(item.id)}','down')" ${index === currentContent.projects.length - 1 ? "disabled" : ""}>Down</button>
+                        <button class="btn btn-secondary btn-mini" type="button" onclick="moveItem('projects','${esc(item.id)}','up')" ${index === 0 ? "disabled" : ""} title="Move up" aria-label="Move project up">&#8593;</button>
+                        <button class="btn btn-secondary btn-mini" type="button" onclick="moveItem('projects','${esc(item.id)}','down')" ${index === currentContent.projects.length - 1 ? "disabled" : ""} title="Move down" aria-label="Move project down">&#8595;</button>
                     </div>
                     <button class="btn btn-secondary btn-mini" type="button" onclick="editItem('projects','${esc(item.id)}')">Edit</button>
                     <button class="btn btn-danger btn-mini" type="button" onclick="deleteItem('projects','${esc(item.id)}')">Delete</button>
@@ -441,9 +440,8 @@
                 </div>
                 <div class="item-actions">
                     <div class="order-actions">
-                        <button class="btn btn-secondary btn-mini" type="button" onclick="moveItem('certificates','${esc(item.id)}','top')" ${index === 0 ? "disabled" : ""}>Top</button>
-                        <button class="btn btn-secondary btn-mini" type="button" onclick="moveItem('certificates','${esc(item.id)}','up')" ${index === 0 ? "disabled" : ""}>Up</button>
-                        <button class="btn btn-secondary btn-mini" type="button" onclick="moveItem('certificates','${esc(item.id)}','down')" ${index === currentContent.certificates.length - 1 ? "disabled" : ""}>Down</button>
+                        <button class="btn btn-secondary btn-mini" type="button" onclick="moveItem('certificates','${esc(item.id)}','up')" ${index === 0 ? "disabled" : ""} title="Move up" aria-label="Move certificate up">&#8593;</button>
+                        <button class="btn btn-secondary btn-mini" type="button" onclick="moveItem('certificates','${esc(item.id)}','down')" ${index === currentContent.certificates.length - 1 ? "disabled" : ""} title="Move down" aria-label="Move certificate down">&#8595;</button>
                     </div>
                     <button class="btn btn-secondary btn-mini" type="button" onclick="editItem('certificates','${esc(item.id)}')">Edit</button>
                     <button class="btn btn-danger btn-mini" type="button" onclick="deleteItem('certificates','${esc(item.id)}')">Delete</button>

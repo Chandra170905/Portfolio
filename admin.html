@@ -27,16 +27,16 @@
 
         .admin-shell {
             display: grid;
-            grid-template-columns: minmax(220px, 250px) minmax(0, 1fr);
+            grid-template-columns: minmax(208px, 228px) minmax(0, 1fr);
             gap: 18px;
             align-items: start;
         }
 
         .admin-sidebar {
             position: sticky;
-            top: 96px;
+            top: 88px;
             display: grid;
-            gap: 14px;
+            gap: 10px;
         }
 
         .admin-content {
@@ -45,8 +45,8 @@
 
         .admin-head {
             display: grid;
-            gap: 10px;
-            padding: 16px;
+            gap: 8px;
+            padding: 12px;
             border: 1px solid var(--line);
             border-radius: 18px;
             background: color-mix(in oklab, var(--surface) 90%, transparent);
@@ -59,13 +59,13 @@
         }
 
         .admin-head h1 {
-            font-size: 1.2rem;
+            font-size: 1.06rem;
             line-height: 1.2;
         }
 
         .admin-head p {
-            font-size: .86rem;
-            line-height: 1.45;
+            font-size: .78rem;
+            line-height: 1.4;
         }
 
         .admin-meta,
@@ -78,6 +78,7 @@
 
         .admin-meta {
             display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 8px;
             color: var(--muted);
             font-size: .82rem;
@@ -89,8 +90,9 @@
 
         .admin-nav {
             display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 8px;
-            padding: 12px;
+            padding: 10px;
             border: 1px solid var(--line);
             border-radius: 18px;
             background: color-mix(in oklab, var(--surface) 90%, transparent);
@@ -99,14 +101,14 @@
 
         .admin-nav-btn {
             width: 100%;
-            padding: 10px 12px;
+            padding: 9px 10px;
             border: 1px solid var(--line);
             border-radius: 10px;
             cursor: pointer;
             background: var(--surface);
             color: var(--text);
             font-size: .8rem;
-            text-align: left;
+            text-align: center;
             transition: background .2s ease, border-color .2s ease;
         }
 
@@ -207,11 +209,19 @@
             display: flex;
             justify-content: space-between;
             gap: 14px;
-            align-items: flex-start;
+            align-items: stretch;
             border: 1px solid var(--line);
             border-radius: 14px;
             padding: 14px;
             background: color-mix(in oklab, var(--surface) 92%, transparent);
+        }
+
+        .item-info {
+            flex: 1 1 auto;
+            min-width: 0;
+            display: grid;
+            gap: 6px;
+            align-content: start;
         }
 
         .item-info h4 {
@@ -240,6 +250,9 @@
         }
 
         .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             padding: 10px 16px;
             border: 1px solid transparent;
             border-radius: 10px;
@@ -311,13 +324,30 @@
         }
 
         .item-card .item-actions {
-            justify-content: flex-end;
+            width: 116px;
+            flex: 0 0 116px;
+            display: grid;
+            gap: 8px;
+            align-content: start;
         }
 
         .order-actions {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 8px;
+            width: 100%;
+        }
+
+        .order-actions .btn,
+        .item-card .item-actions > .btn {
+            width: 100%;
+        }
+
+        .order-actions .btn {
+            min-width: 0;
+            padding-inline: 0;
+            font-size: 15px;
+            line-height: 1;
         }
 
         .success-message,
@@ -350,18 +380,6 @@
             border-color: #dc3545;
         }
 
-        .deploy-note {
-            padding: 14px 16px;
-            border-radius: 14px;
-            border: 1px solid rgba(251, 191, 36, .28);
-            background: rgba(251, 191, 36, .08);
-            color: #f7d67c;
-        }
-
-        .deploy-note strong {
-            color: #fff1bf;
-        }
-
         body.light .btn-danger {
             background: rgba(220, 53, 69, .1);
             color: #8d1526;
@@ -371,16 +389,6 @@
         body.light .btn-danger:hover {
             background: rgba(220, 53, 69, .16);
             color: #71101f;
-        }
-
-        body.light .deploy-note {
-            background: rgba(251, 191, 36, .18);
-            border-color: rgba(191, 138, 0, .26);
-            color: #755100;
-        }
-
-        body.light .deploy-note strong {
-            color: #5d4000;
         }
 
         .admin-loading {
@@ -424,15 +432,7 @@
             }
 
             .admin-meta {
-                grid-template-columns: 1fr;
-            }
-
-            .admin-nav {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .admin-nav-btn {
-                text-align: center;
             }
 
             .admin-nav-btn::before {
@@ -446,6 +446,11 @@
 
             .item-card {
                 flex-direction: column;
+            }
+
+            .item-card .item-actions {
+                width: 100%;
+                flex: 1 1 auto;
             }
         }
     </style>
@@ -494,8 +499,6 @@
                 <div class="admin-head">
                     <h1>Portfolio Admin</h1>
                     <p>Add, edit, or delete portfolio content here and publish it through the live backend.</p>
-                    <p class="deploy-note"><strong>Backend note:</strong> once Supabase is configured, saves from this page
-                        update the hosted portfolio content instead of staying in one browser.</p>
                     <div class="admin-meta">
                         <span class="admin-stat"><strong>Last Saved</strong><span id="lastSaved">-</span></span>
                         <span class="admin-stat"><strong>Projects</strong><span id="countProjects">0</span></span>

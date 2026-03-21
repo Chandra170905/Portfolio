@@ -41,6 +41,7 @@
 
         .admin-content {
             min-width: 0;
+            display: grid;
         }
 
         .admin-head {
@@ -139,11 +140,11 @@
             border-radius: 20px;
             box-shadow: var(--shadow);
             padding: 22px;
-            margin-bottom: 20px;
         }
 
         .admin-section.active {
             display: block;
+            min-height: min(760px, calc(100vh - 170px));
         }
 
         .admin-grid {
@@ -436,6 +437,10 @@
 
             .admin-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .admin-section.active {
+                min-height: auto;
             }
         }
 

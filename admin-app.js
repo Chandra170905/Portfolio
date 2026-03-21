@@ -398,14 +398,20 @@
     };
 
     const renderAll = () => {
-        renderList("projectsList", currentContent.projects, (item) => `
+        renderList("projectsList", currentContent.projects, (item, index) => `
             <article class="item-card">
                 <div class="item-info">
+                    <span class="item-order">#${index + 1}</span>
                     <h4>${esc(item.title)}</h4>
                     <p>${esc(item.description)}</p>
                     <small>${esc(item.image || item.url)}</small>
                 </div>
                 <div class="item-actions">
+                    <div class="order-actions">
+                        <button class="btn btn-secondary btn-mini" type="button" onclick="moveItem('projects','${esc(item.id)}','top')" ${index === 0 ? "disabled" : ""}>Top</button>
+                        <button class="btn btn-secondary btn-mini" type="button" onclick="moveItem('projects','${esc(item.id)}','up')" ${index === 0 ? "disabled" : ""}>Up</button>
+                        <button class="btn btn-secondary btn-mini" type="button" onclick="moveItem('projects','${esc(item.id)}','down')" ${index === currentContent.projects.length - 1 ? "disabled" : ""}>Down</button>
+                    </div>
                     <button class="btn btn-secondary btn-mini" type="button" onclick="editItem('projects','${esc(item.id)}')">Edit</button>
                     <button class="btn btn-danger btn-mini" type="button" onclick="deleteItem('projects','${esc(item.id)}')">Delete</button>
                 </div>
@@ -425,14 +431,20 @@
             </article>
         `);
 
-        renderList("certificatesList", currentContent.certificates, (item) => `
+        renderList("certificatesList", currentContent.certificates, (item, index) => `
             <article class="item-card">
                 <div class="item-info">
+                    <span class="item-order">#${index + 1}</span>
                     <h4>${esc(item.title)}</h4>
                     <p>${esc(item.description)}</p>
                     <small>${esc(normalizeCertificateCategory(item.category))} | ${item.storagePath ? "Supabase Storage" : "Static file"}</small>
                 </div>
                 <div class="item-actions">
+                    <div class="order-actions">
+                        <button class="btn btn-secondary btn-mini" type="button" onclick="moveItem('certificates','${esc(item.id)}','top')" ${index === 0 ? "disabled" : ""}>Top</button>
+                        <button class="btn btn-secondary btn-mini" type="button" onclick="moveItem('certificates','${esc(item.id)}','up')" ${index === 0 ? "disabled" : ""}>Up</button>
+                        <button class="btn btn-secondary btn-mini" type="button" onclick="moveItem('certificates','${esc(item.id)}','down')" ${index === currentContent.certificates.length - 1 ? "disabled" : ""}>Down</button>
+                    </div>
                     <button class="btn btn-secondary btn-mini" type="button" onclick="editItem('certificates','${esc(item.id)}')">Edit</button>
                     <button class="btn btn-danger btn-mini" type="button" onclick="deleteItem('certificates','${esc(item.id)}')">Delete</button>
                 </div>
@@ -455,6 +467,25 @@
         renderAll();
         msg(successMessage, "success");
         return true;
+    };
+
+    const moveItem = async (type, id, direction) => {
+        const list = Array.isArray(currentContent[type]) ? currentContent[type].slice() : [];
+        const currentIndex = list.findIndex((item) => String(item.id) === String(id));
+        if (currentIndex === -1) return;
+
+        let targetIndex = currentIndex;
+        if (direction === "top") targetIndex = 0;
+        if (direction === "up") targetIndex = Math.max(0, currentIndex - 1);
+        if (direction === "down") targetIndex = Math.min(list.length - 1, currentIndex + 1);
+        if (targetIndex === currentIndex) return;
+
+        const [moved] = list.splice(currentIndex, 1);
+        list.splice(targetIndex, 0, moved);
+        currentContent[type] = list;
+
+        const label = type === "projects" ? "Project order" : "Certificate order";
+        await syncContent(`${label} updated on the live portfolio.`);
     };
 
     const deleteItem = async (type, id) => {
@@ -513,6 +544,7 @@
 
     window.deleteItem = deleteItem;
     window.editItem = editItem;
+    window.moveItem = moveItem;
 
     const redirectToLogin = (reason = "") => {
         const url = new URL("login.html", window.location.href);

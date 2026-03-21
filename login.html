@@ -21,22 +21,33 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         body.login-page {
+            min-height: 100dvh;
             background:
                 radial-gradient(820px 420px at 84% -4%, color-mix(in oklab, #22d3ee 10%, transparent), transparent 68%),
                 radial-gradient(680px 340px at 0% 8%, color-mix(in oklab, #22c55e 8%, transparent), transparent 72%),
                 var(--bg);
         }
 
+        body.login-page main,
+        #admin-login.section {
+            min-height: 100dvh;
+        }
+
+        #admin-login.section {
+            padding: 0;
+            display: grid;
+        }
+
         .login-wrap {
-            min-height: 100vh;
+            min-height: 100dvh;
             display: grid;
             place-items: center;
-            padding: 26px;
+            padding: 18px;
         }
 
         .login-card {
-            width: min(540px, 94vw);
-            padding: 22px;
+            width: min(405px, 90vw);
+            padding: 20px;
             position: relative;
             overflow: hidden;
             isolation: isolate;
@@ -257,10 +268,6 @@
             color: #4ade80;
         }
 
-        .login-chip.is-route {
-            color: #22d3ee;
-        }
-
         .login-chip.is-success {
             color: #c4f8d2;
         }
@@ -274,8 +281,8 @@
         }
 
         .login-emblem {
-            width: 96px;
-            height: 96px;
+            width: 84px;
+            height: 84px;
             flex: 0 0 auto;
             display: grid;
             place-items: center;
@@ -291,8 +298,8 @@
         }
 
         .login-emblem svg {
-            width: 48px;
-            height: 48px;
+            width: 42px;
+            height: 42px;
             display: block;
             color: color-mix(in oklab, #f8fafc 88%, #22d3ee);
             image-rendering: pixelated;
@@ -394,17 +401,6 @@
             margin-top: 10px;
         }
 
-        .login-footnote {
-            margin-top: 12px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .login-footnote .login-chip {
-            font-size: 0.48rem;
-        }
-
         @keyframes loginScan {
             0% {
                 transform: translateY(0);
@@ -451,10 +447,11 @@
 
         @media (max-width: 620px) {
             .login-wrap {
-                padding: 18px;
+                padding: 14px;
             }
 
             .login-card {
+                width: min(405px, 92vw);
                 padding: 18px;
             }
 
@@ -509,8 +506,6 @@
                         <div class="login-badge-stack">
                             <p class="eyebrow">Restricted</p>
                             <div class="login-chip-row">
-                                <span class="login-chip is-live">Live Auth</span>
-                                <span class="login-chip is-route">Admin Route</span>
                                 <span class="login-chip is-success" id="loginStateChip">Ready</span>
                             </div>
                         </div>
@@ -554,11 +549,6 @@
                         <div class="toast" id="loginToast" role="status" aria-live="polite">Login successful.
                             Redirecting...</div>
                     </form>
-
-                    <div class="login-footnote" aria-hidden="true">
-                        <span class="login-chip is-route">Portfolio Admin</span>
-                        <span class="login-chip is-live">Supabase Secure</span>
-                    </div>
                 </div>
             </div>
         </section>

@@ -2109,20 +2109,8 @@ const initSitParticles = () => {
 initSitParticles();
 
 if (sitTrigger) {
-    let clicks = 0;
-    let resetTimer = 0;
-
     sitTrigger.addEventListener("click", () => {
-        clicks += 1;
-        window.clearTimeout(resetTimer);
-        resetTimer = window.setTimeout(() => {
-            clicks = 0;
-        }, 1500);
-
-        if (clicks >= 4) {
-            clicks = 0;
-            window.location.href = new URL("login.html", window.location.href).toString();
-        }
+        window.location.href = new URL("login.html", window.location.href).toString();
     });
 }
 

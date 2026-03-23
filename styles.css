@@ -11,10 +11,10 @@
     --line: rgba(255, 255, 255, 0.08);
     --line-strong: rgba(255, 255, 255, 0.16);
     --shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
-    --font-body: Cambria, Georgia, "Times New Roman", Times, serif;
-    --font-display: Cambria, Georgia, "Times New Roman", Times, serif;
-    --font-sci: Cambria, Georgia, "Times New Roman", Times, serif;
-    --font-retro: Cambria, Georgia, "Times New Roman", Times, serif;
+    --font-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-display: "Space Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-sci: "Orbitron", "Space Grotesk", system-ui, sans-serif;
+    --font-retro: "Press Start 2P", "Space Grotesk", system-ui, sans-serif;
 }
 
 body.light {
@@ -40,7 +40,10 @@ body {
     font-family: var(--font-body);
     color: var(--text);
     line-height: 1.6;
-    background: var(--bg);
+    background:
+        radial-gradient(720px 380px at 85% -5%, color-mix(in oklab, var(--accent) 18%, transparent), transparent 70%),
+        radial-gradient(680px 330px at 0% 8%, color-mix(in oklab, var(--surface-soft) 90%, transparent), transparent 76%),
+        var(--bg);
     position: relative;
 }
 
@@ -67,11 +70,32 @@ body.theme-transition * {
 }
 
 body::before {
-    content: none;
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.04) 0px,
+        rgba(255, 255, 255, 0.04) 1px,
+        rgba(0, 0, 0, 0.06) 1px,
+        rgba(0, 0, 0, 0.06) 2px
+    );
+    opacity: 0.45;
+    mix-blend-mode: overlay;
+    z-index: 9999;
 }
 
 body::after {
-    content: none;
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.08), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05), transparent 50%);
+    opacity: 0.55;
+    mix-blend-mode: overlay;
+    z-index: 9999;
 }
 
 .bg-3d {
@@ -80,12 +104,6 @@ body::after {
     pointer-events: none;
     z-index: -2;
     overflow: hidden;
-}
-
-.bg-3d,
-.retro-sprite-field,
-.pacman-egg {
-    display: none;
 }
 
 .retro-sprite-field,
@@ -856,7 +874,7 @@ body:not(.light) .admin-nav-btn:hover {
 
 .quick-stats strong {
     display: block;
-    font-family: var(--font-display);
+    font-family: "Space Grotesk", sans-serif;
     font-size: 1.24rem;
 }
 
@@ -1719,7 +1737,7 @@ body .admin-nav-btn {
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-family: var(--font-display);
+    font-family: "Space Grotesk", sans-serif;
     font-size: 0.82rem;
     color: #f4fffb;
     background: var(--platform-bg, var(--accent));
@@ -1801,8 +1819,8 @@ body .admin-nav-btn {
 .contact-gate {
     display: flex;
     justify-content: flex-start;
-    margin-top: 14px;
-    margin-left: 0;
+    margin-top: 10px;
+    margin-left: -14px;
 }
 
 .contact-form {
@@ -2042,26 +2060,73 @@ body .admin-nav-btn {
 }
 
 .sit-trigger {
-    min-width: 180px;
-    padding-inline: 22px;
-    font-size: 0.74rem;
-    letter-spacing: 0.06em;
-    line-height: 1.2;
-    cursor: pointer;
-    transform: none;
-}
-
-.sit-trigger:focus-visible {
-    outline: 2px solid color-mix(in oklab, var(--accent) 50%, white);
-    outline-offset: 3px;
+    border: none;
+    background: transparent;
+    padding: 0;
+    position: relative;
+    display: block;
+    isolation: isolate;
+    overflow: visible;
+    line-height: 0;
+    cursor: default;
+    -webkit-tap-highlight-color: transparent;
+    transform: translate(6%, 26%);
 }
 
 @media (max-width: 760px) {
     .sit-trigger {
-        min-width: 160px;
-        transform: none;
-        padding-inline: 18px;
+        transform: translate(0%, 14%);
     }
+
+    .sit-image {
+        width: min(320px, 72vw);
+    }
+
+    .sit-trigger::before {
+        width: min(320px, 72vw);
+        height: calc(min(320px, 72vw) * 0.82);
+    }
+}
+
+.sit-image {
+    width: 410px;
+    height: auto;
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    transition: opacity 420ms ease, filter 420ms ease;
+    will-change: opacity, filter;
+}
+
+.sit-trigger::before {
+    content: "";
+    display: block;
+    width: 410px;
+    height: calc(410px * 0.82);
+}
+
+.sit-image-dark {
+    opacity: 1;
+}
+
+.sit-image-light {
+    opacity: 0;
+}
+
+body.light .sit-image-dark {
+    opacity: 0;
+}
+
+body.light .sit-image-light {
+    opacity: 1;
+}
+
+.sit-particle-layer {
+    position: absolute;
+    inset: -10% -8% -6%;
+    pointer-events: none;
+    z-index: 3;
 }
 
 .sit-particle {
@@ -2275,8 +2340,20 @@ body.light .sit-particle::before {
     }
 
     .sit-trigger {
-        min-width: 100%;
-        transform: none;
+        transform: translate(-2%, 8%);
+    }
+
+    .sit-image {
+        width: min(260px, 70vw);
+    }
+
+    .sit-trigger::before {
+        width: min(260px, 70vw);
+        height: calc(min(260px, 70vw) * 0.82);
+    }
+
+    .sit-particle-layer {
+        inset: -8% -6% -4%;
     }
 
     .modal {
